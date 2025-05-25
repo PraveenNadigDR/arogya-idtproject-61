@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mic, Send, MessageCircle, Stethoscope, Calendar, Pill } from "lucide-react";
+import { Mic, Send, MessageCircle, Stethoscope, Calendar, Pill, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface AIAssistantProps {
@@ -13,6 +12,9 @@ interface AIAssistantProps {
 const AIAssistant = ({ language }: AIAssistantProps) => {
   const [message, setMessage] = useState("");
   const [isListening, setIsListening] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiKey, setApiKey] = useState("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");
+  const [showSettings, setShowSettings] = useState(false);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -68,7 +70,48 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     }
   ];
 
-  const handleSendMessage = (messageText = message) => {
+  const callOpenRouterAPI = async (userMessage: string) => {
+    if (!apiKey) {
+      throw new Error("API key not provided");
+    }
+
+    const systemPrompt = language === "en" 
+      ? "You are a helpful health assistant for Shreyas, a 19-year-old from Holenarasipura village near Hassan, Karnataka. Provide practical health advice, help with symptoms, medicine information, and doctor appointments. Keep responses concise and helpful. Focus on local healthcare options in Hassan district."
+      : "ನೀವು ಹಾಸನ್ ಜಿಲ್ಲೆಯ ಹೊಳೆನರಸೀಪುರ ಗ್ರಾಮದ 19 ವರ್ಷದ ಶ್ರೇಯಸ್‌ಗೆ ಸಹಾಯಕಾರಿ ಆರೋಗ್ಯ ಸಹಾಯಕರು. ಪ್ರಾಯೋಗಿಕ ಆರೋಗ್ಯ ಸಲಹೆ, ಲಕ್ಷಣಗಳೊಂದಿಗೆ ಸಹಾಯ, ಔಷಧ ಮಾಹಿತಿ ಮತ್ತು ವೈದ್ಯರ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗಳನ್ನು ಒದಗಿಸಿ. ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಸಂಕ್ಷಿಪ್ತ ಮತ್ತು ಸಹಾಯಕವಾಗಿ ಇರಿಸಿ.";
+
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': window.location.origin,
+      },
+      body: JSON.stringify({
+        model: 'meta-llama/llama-3.1-8b-instruct:free',
+        messages: [
+          {
+            role: 'system',
+            content: systemPrompt
+          },
+          {
+            role: 'user',
+            content: userMessage
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API call failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0]?.message?.content || "Sorry, I couldn't process your request.";
+  };
+
+  const handleSendMessage = async (messageText = message) => {
     if (!messageText.trim()) return;
 
     const userMessage = {
@@ -80,9 +123,23 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
 
     setMessages(prev => [...prev, userMessage]);
     setMessage("");
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const aiResponse = await callOpenRouterAPI(messageText);
+      
+      const assistantMessage = {
+        id: Date.now() + 1,
+        type: "assistant",
+        content: aiResponse,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('API call failed:', error);
+      
+      // Fallback to simulated response
       let response = "";
       const lowerMessage = messageText.toLowerCase();
 
@@ -90,18 +147,10 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
         response = language === "en" 
           ? "For fever: Rest well, drink plenty of fluids, and take paracetamol as prescribed. If fever persists for more than 3 days or goes above 102°F, consult Dr. Ramesh at Hassan PHC immediately."
           : "ಜ್ವರಕ್ಕೆ: ಚೆನ್ನಾಗಿ ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳಿ, ಸಾಕಷ್ಟು ನೀರು ಕುಡಿಯಿರಿ, ಮತ್ತು ನಿರ್ದೇಶಿಸಿದಂತೆ ಪ್ಯಾರಾಸಿಟಮಾಲ್ ತೆಗೆದುಕೊಳ್ಳಿ. ಜ್ವರವು 3 ದಿನಗಳಿಗಿಂತ ಹೆಚ್ಚು ಕಾಲ ಇದ್ದರೆ ಅಥವಾ 102°F ಗಿಂತ ಹೆಚ್ಚಾದರೆ, ತಕ್ಷಣ ಹಾಸನ್ PHC ನಲ್ಲಿ ಡಾ. ರಮೇಶ್ ಅವರನ್ನು ಸಂಪರ್ಕಿಸಿ.";
-      } else if (lowerMessage.includes("appointment") || lowerMessage.includes("ಅಪಾಯಿಂಟ್ಮೆಂಟ್")) {
-        response = language === "en" 
-          ? "I can help you book an appointment! Dr. Ramesh is available tomorrow at 2 PM at Hassan PHC. Shall I book this slot for you? The consultation fee is ₹50."
-          : "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಲು ನಾನು ನಿಮಗೆ ಸಹಾಯ ಮಾಡಬಹುದು! ಡಾ. ರಮೇಶ್ ನಾಳೆ ಮಧ್ಯಾಹ್ನ 2 ಗಂಟೆಗೆ ಹಾಸನ್ PHC ನಲ್ಲಿ ಲಭ್ಯವಿದ್ದಾರೆ. ನಾನು ಈ ಸ್ಲಾಟ್ ಅನ್ನು ನಿಮಗಾಗಿ ಬುಕ್ ಮಾಡಬೇಕೇ? ಸಮಾಲೋಚನೆ ಶುಲ್ಕ ₹50.";
-      } else if (lowerMessage.includes("medicine") || lowerMessage.includes("ಔಷಧ")) {
-        response = language === "en" 
-          ? "I can help identify medicines! You can take a photo of the medicine packaging, and I'll tell you what it's for, dosage, and timing. Always consult your doctor before taking any new medicine."
-          : "ಔಷಧಗಳನ್ನು ಗುರುತಿಸಲು ನಾನು ಸಹಾಯ ಮಾಡಬಹುದು! ನೀವು ಔಷಧದ ಪ್ಯಾಕೇಜಿಂಗ್‌ನ ಫೋಟೋ ತೆಗೆದುಕೊಳ್ಳಬಹುದು, ಮತ್ತು ಅದು ಯಾವುದಕ್ಕೆ, ಪ್ರಮಾಣ ಮತ್ತು ಸಮಯವನ್ನು ನಾನು ನಿಮಗೆ ಹೇಳುತ್ತೇನೆ. ಯಾವುದೇ ಹೊಸ ಔಷಧವನ್ನು ತೆಗೆದುಕೊಳ್ಳುವ ಮೊದಲು ಯಾವಾಗಲೂ ನಿಮ್ಮ ವೈದ್ಯರನ್ನು ಸಂಪರ್ಕಿಸಿ.";
       } else {
         response = language === "en" 
-          ? "I understand your concern. For the best advice, I recommend consulting with a healthcare professional. Would you like me to help you find a nearby doctor or book an appointment?"
-          : "ನಿಮ್ಮ ಕಳವಳವನ್ನು ನಾನು ಅರ್ಥಮಾಡಿಕೊಂಡಿದ್ದೇನೆ. ಉತ್ತಮ ಸಲಹೆಗಾಗಿ, ಆರೋಗ್ಯ ವೃತ್ತಿಪರರನ್ನು ಸಂಪರ್ಕಿಸಲು ನಾನು ಶಿಫಾರಸು ಮಾಡುತ್ತೇನೆ. ಹತ್ತಿರದ ವೈದ್ಯರನ್ನು ಹುಡುಕಲು ಅಥವಾ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಲು ನಾನು ನಿಮಗೆ ಸಹಾಯ ಮಾಡಬೇಕೇ?";
+          ? "I'm having trouble connecting to the AI service. Please check your internet connection or try again later."
+          : "AI ಸೇವೆಗೆ ಸಂಪರ್ಕಿಸುವಲ್ಲಿ ಸಮಸ್ಯೆ ಇದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಅಥವಾ ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.";
       }
 
       const assistantMessage = {
@@ -112,7 +161,14 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-    }, 1000);
+      
+      toast({
+        title: language === "en" ? "Connection Issue" : "ಸಂಪರ್ಕ ಸಮಸ್ಯೆ",
+        description: language === "en" ? "Using offline mode" : "ಆಫ್‌ಲೈನ್ ಮೋಡ್ ಬಳಸಲಾಗುತ್ತಿದೆ"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleVoiceInput = () => {
@@ -143,12 +199,40 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       {/* Header */}
       <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 mb-4">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg text-blue-800 flex items-center gap-2">
-            <MessageCircle className="h-5 w-5" />
-            {currentText.title}
-          </CardTitle>
-          <p className="text-sm text-blue-600">{currentText.subtitle}</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MessageCircle className="h-5 w-5 text-blue-800" />
+              <div>
+                <CardTitle className="text-lg text-blue-800">{currentText.title}</CardTitle>
+                <p className="text-sm text-blue-600">{currentText.subtitle}</p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowSettings(!showSettings)}
+              className="text-blue-600 hover:text-blue-800"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+          </div>
         </CardHeader>
+        {showSettings && (
+          <CardContent className="pt-0">
+            <div className="space-y-2">
+              <label className="text-xs text-blue-700">
+                {language === "en" ? "OpenRouter API Key:" : "OpenRouter API ಕೀ:"}
+              </label>
+              <Input
+                type="password"
+                value={apiKey}
+                onChange={(e) => setApiKey(e.target.value)}
+                placeholder="sk-or-v1-..."
+                className="text-xs"
+              />
+            </div>
+          </CardContent>
+        )}
       </Card>
 
       {/* Quick Questions */}
@@ -161,6 +245,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
               variant="outline"
               size="sm"
               onClick={() => handleQuickQuestion(q.question)}
+              disabled={isLoading}
               className="w-full text-left justify-start border-green-200 text-green-700 hover:bg-green-50"
             >
               <q.icon className="h-4 w-4 mr-2" />
@@ -192,6 +277,18 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
             </div>
           </div>
         ))}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="bg-white border border-gray-200 text-gray-800 p-3 rounded-lg">
+              <div className="text-xs opacity-70 mb-1">{currentText.assistant}</div>
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.2s'}}></div>
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '0.4s'}}></div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Input */}
@@ -201,14 +298,15 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
             placeholder={currentText.typePlaceholder}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+            onKeyPress={(e) => e.key === "Enter" && !isLoading && handleSendMessage()}
+            disabled={isLoading}
             className="pr-12"
           />
           <Button
             size="sm"
             variant="ghost"
             onClick={handleVoiceInput}
-            disabled={isListening}
+            disabled={isListening || isLoading}
             className={`absolute right-1 top-1 h-8 w-8 p-0 ${
               isListening ? "text-red-600 animate-pulse" : "text-gray-400 hover:text-green-600"
             }`}
@@ -218,7 +316,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
         </div>
         <Button
           onClick={() => handleSendMessage()}
-          disabled={!message.trim()}
+          disabled={!message.trim() || isLoading}
           className="bg-green-600 hover:bg-green-700"
         >
           <Send className="h-4 w-4" />
