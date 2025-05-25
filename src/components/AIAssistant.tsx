@@ -9,6 +9,14 @@ interface AIAssistantProps {
   language: string;
 }
 
+interface Message {
+  id: number;
+  type: string;
+  content: string;
+  timestamp: string;
+  image?: string;
+}
+
 const AIAssistant = ({ language }: AIAssistantProps) => {
   const [message, setMessage] = useState("");
   const [isListening, setIsListening] = useState(false);
@@ -16,7 +24,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const [apiKey, setApiKey] = useState("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");
   const [showSettings, setShowSettings] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
       type: "assistant",
@@ -142,11 +150,11 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const handleSendMessage = async (messageText = message) => {
     if (!messageText.trim() && !uploadedImage) return;
 
-    const userMessage = {
+    const userMessage: Message = {
       id: Date.now(),
       type: "user",
       content: messageText,
-      image: uploadedImage,
+      image: uploadedImage || undefined,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
@@ -158,7 +166,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     try {
       const aiResponse = await callOpenRouterAPI(messageText);
       
-      const assistantMessage = {
+      const assistantMessage: Message = {
         id: Date.now() + 1,
         type: "assistant",
         content: aiResponse,
@@ -187,7 +195,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
           : "AI ಸೇವೆಗೆ ಸಂಪರ್ಕಿಸುವಲ್ಲಿ ಸಮಸ್ಯೆ ಇದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಅಥವಾ ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.";
       }
 
-      const assistantMessage = {
+      const assistantMessage: Message = {
         id: Date.now() + 1,
         type: "assistant",
         content: response,
