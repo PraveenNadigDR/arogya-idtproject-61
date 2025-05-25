@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -71,6 +70,10 @@ const Index = () => {
 
   const currentText = text[language];
 
+  const handleNavigateToChat = () => {
+    setActiveSection("assistant");
+  };
+
   const renderActiveSection = () => {
     switch(activeSection) {
       case "diary":
@@ -78,7 +81,7 @@ const Index = () => {
       case "doctor":
         return <DoctorFinder language={language} />;
       case "medicines":
-        return <MedicineTracker language={language} />;
+        return <MedicineTracker language={language} onNavigateToChat={handleNavigateToChat} />;
       case "family":
         return <FamilyHealth language={language} />;
       case "tips":

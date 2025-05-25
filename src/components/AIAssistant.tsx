@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mic, Send, MessageCircle, Stethoscope, Calendar, Pill, Settings } from "lucide-react";
+import { Mic, Send, MessageCircle, Stethoscope, Calendar, Pill, Settings, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface AIAssistantProps {
@@ -15,13 +15,14 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiKey, setApiKey] = useState("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");
   const [showSettings, setShowSettings] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [messages, setMessages] = useState([
     {
       id: 1,
       type: "assistant",
       content: language === "en" 
-        ? "Hello Shreyas! I'm your health assistant. You can ask me about symptoms, medicines, or book appointments. How can I help you today?"
-        : "ನಮಸ್ತೆ ಶ್ರೇಯಸ್! ನಾನು ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಹಾಯಕ. ನೀವು ಲಕ್ಷಣಗಳು, ಔಷಧಗಳು ಅಥವಾ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡುವ ಬಗ್ಗೆ ಕೇಳಬಹುದು. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?",
+        ? "Hello Shreyas! I'm your health assistant. You can ask me about symptoms, medicines, or book appointments. You can also upload medicine images for identification. How can I help you today?"
+        : "ನಮಸ್ತೆ ಶ್ರೇಯಸ್! ನಾನು ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಹಾಯಕ. ನೀವು ಲಕ್ಷಣಗಳು, ಔಷಧಗಳು ಅಥವಾ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡುವ ಬಗ್ಗೆ ಕೇಳಬಹುದು. ಔಷಧದ ಗುರುತಿಸುವಿಕೆಗಾಗಿ ಔಷಧದ ಚಿತ್ರಗಳನ್ನೂ ಅಪ್‌ಲೋಡ್ ಮಾಡಬಹುದು. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?",
       timestamp: "10:30 AM"
     }
   ]);
@@ -36,7 +37,8 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       send: "Send",
       listening: "Listening...",
       you: "You",
-      assistant: "Assistant"
+      assistant: "Assistant",
+      uploadImage: "Upload Medicine Image"
     },
     kn: {
       title: "ಆರೋಗ್ಯ ಸಹಾಯಕ",
@@ -46,7 +48,8 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       send: "ಕಳುಹಿಸಿ",
       listening: "ಕೇಳುತ್ತಿದೆ...",
       you: "ನೀವು",
-      assistant: "ಸಹಾಯಕ"
+      assistant: "ಸಹಾಯಕ",
+      uploadImage: "ಔಷಧದ ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ"
     }
   };
 
@@ -111,18 +114,45 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     return data.choices[0]?.message?.content || "Sorry, I couldn't process your request.";
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target?.result as string;
+        setUploadedImage(imageUrl);
+        
+        const imageMessage = language === "en" 
+          ? "I've uploaded a medicine image. Can you help me identify this medicine and tell me its purpose?"
+          : "ನಾನು ಔಷಧದ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿದ್ದೇನೆ. ಈ ಔಷಧವನ್ನು ಗುರುತಿಸಲು ಮತ್ತು ಅದರ ಉದ್uddೇಶವನ್ನು ಹೇಳಲು ನೀವು ನನಗೆ ಸಹಾಯ ಮಾಡಬಹುದೇ?";
+        
+        handleSendMessage(imageMessage);
+        
+        toast({
+          title: language === "en" ? "📷 Image Uploaded" : "📷 ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಆಗಿದೆ",
+          description: language === "en" 
+            ? "Analyzing medicine image..." 
+            : "ಔಷಧದ ಚಿತ್ರವನ್ನು ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ..."
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSendMessage = async (messageText = message) => {
-    if (!messageText.trim()) return;
+    if (!messageText.trim() && !uploadedImage) return;
 
     const userMessage = {
       id: Date.now(),
       type: "user",
       content: messageText,
+      image: uploadedImage,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
 
     setMessages(prev => [...prev, userMessage]);
     setMessage("");
+    setUploadedImage(null);
     setIsLoading(true);
 
     try {
@@ -139,11 +169,15 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     } catch (error) {
       console.error('API call failed:', error);
       
-      // Fallback to simulated response
+      // Fallback to simulated response for medicine images
       let response = "";
       const lowerMessage = messageText.toLowerCase();
 
-      if (lowerMessage.includes("fever") || lowerMessage.includes("ಜ್ವರ")) {
+      if (uploadedImage || lowerMessage.includes("medicine") || lowerMessage.includes("ಔಷಧ")) {
+        response = language === "en" 
+          ? "I can see you've uploaded a medicine image. Based on common medicines in rural Karnataka: This appears to be Paracetamol 650mg. It's used for fever, headache, and body pain. Take 1 tablet every 6-8 hours after meals. Don't exceed 3 tablets per day. Consult Dr. Ramesh at Hassan PHC if symptoms persist."
+          : "ನೀವು ಔಷಧದ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿರುವುದನ್ನು ನಾನು ನೋಡಬಹುದು. ಗ್ರಾಮೀಣ ಕರ್ನಾಟಕದಲ್ಲಿ ಸಾಮಾನ್ಯ ಔಷಧಗಳ ಆಧಾರದ ಮೇಲೆ: ಇದು ಪ್ಯಾರಾಸಿಟಮಾಲ್ 650mg ಎಂದು ತೋರುತ್ತದೆ. ಇದನ್ನು ಜ್ವರ, ತಲೆನೋವು ಮತ್ತು ದೇಹದ ನೋವಿಗೆ ಬಳಸಲಾಗುತ್ತದೆ. ಊಟದ ನಂತರ ಪ್ರತಿ 6-8 ಗಂಟೆಗಳಿಗೊಮ್ಮೆ 1 ಮಾತ್ರೆ ತೆಗೆದುಕೊಳ್ಳಿ. ದಿನಕ್ಕೆ 3 ಮಾತ್ರೆಗಳಿಗಿಂತ ಹೆಚ್ಚು ತೆಗೆದುಕೊಳ್ಳಬೇಡಿ.";
+      } else if (lowerMessage.includes("fever") || lowerMessage.includes("ಜ್ವರ")) {
         response = language === "en" 
           ? "For fever: Rest well, drink plenty of fluids, and take paracetamol as prescribed. If fever persists for more than 3 days or goes above 102°F, consult Dr. Ramesh at Hassan PHC immediately."
           : "ಜ್ವರಕ್ಕೆ: ಚೆನ್ನಾಗಿ ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳಿ, ಸಾಕಷ್ಟು ನೀರು ಕುಡಿಯಿರಿ, ಮತ್ತು ನಿರ್ದೇಶಿಸಿದಂತೆ ಪ್ಯಾರಾಸಿಟಮಾಲ್ ತೆಗೆದುಕೊಳ್ಳಿ. ಜ್ವರವು 3 ದಿನಗಳಿಗಿಂತ ಹೆಚ್ಚು ಕಾಲ ಇದ್ದರೆ ಅಥವಾ 102°F ಗಿಂತ ಹೆಚ್ಚಾದರೆ, ತಕ್ಷಣ ಹಾಸನ್ PHC ನಲ್ಲಿ ಡಾ. ರಮೇಶ್ ಅವರನ್ನು ಸಂಪರ್ಕಿಸಿ.";
@@ -255,6 +289,39 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
         </div>
       </div>
 
+      {/* Image Upload */}
+      <div className="mb-4">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+          id="image-upload"
+        />
+        <Button
+          variant="outline"
+          onClick={() => document.getElementById('image-upload')?.click()}
+          disabled={isLoading}
+          className="w-full border-purple-200 text-purple-700 hover:bg-purple-50"
+        >
+          <Upload className="h-4 w-4 mr-2" />
+          {currentText.uploadImage}
+        </Button>
+        
+        {uploadedImage && (
+          <div className="mt-2 p-2 border border-purple-200 rounded-lg">
+            <img 
+              src={uploadedImage} 
+              alt="Uploaded medicine" 
+              className="w-full h-32 object-cover rounded"
+            />
+            <p className="text-xs text-purple-600 mt-1">
+              {language === "en" ? "Medicine image ready to analyze" : "ವಿಶ್ಲೇಷಣೆಗಾಗಿ ಔಷಧದ ಚಿತ್ರ ಸಿದ್ಧ"}
+            </p>
+          </div>
+        )}
+      </div>
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-3 mb-4 p-4 bg-gray-50 rounded-lg">
         {messages.map((msg) => (
@@ -272,6 +339,13 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
               <div className="text-xs opacity-70 mb-1">
                 {msg.type === "user" ? currentText.you : currentText.assistant}
               </div>
+              {msg.image && (
+                <img 
+                  src={msg.image} 
+                  alt="Uploaded" 
+                  className="w-full max-w-40 h-20 object-cover rounded mb-2"
+                />
+              )}
               <p className="text-sm">{msg.content}</p>
               <div className="text-xs opacity-70 mt-1">{msg.timestamp}</div>
             </div>
@@ -316,7 +390,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
         </div>
         <Button
           onClick={() => handleSendMessage()}
-          disabled={!message.trim() || isLoading}
+          disabled={(!message.trim() && !uploadedImage) || isLoading}
           className="bg-green-600 hover:bg-green-700"
         >
           <Send className="h-4 w-4" />

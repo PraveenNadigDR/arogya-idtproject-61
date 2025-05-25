@@ -1,17 +1,17 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Bell, Clock, Calendar, Pill } from "lucide-react";
+import { Camera, Bell, Clock, Calendar, Pill, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface MedicineTrackerProps {
   language: string;
+  onNavigateToChat?: () => void;
 }
 
-const MedicineTracker = ({ language }: MedicineTrackerProps) => {
+const MedicineTracker = ({ language, onNavigateToChat }: MedicineTrackerProps) => {
   const [scanning, setScanning] = useState(false);
   const { toast } = useToast();
 
@@ -19,7 +19,7 @@ const MedicineTracker = ({ language }: MedicineTrackerProps) => {
     en: {
       title: "Medicine Tracker",
       subtitle: "Scan, Track & Remember",
-      scanMedicine: "Scan Medicine",
+      scanMedicine: "Ask AI About Medicine",
       addReminder: "Add Reminder",
       todaysReminders: "Today's Reminders",
       upcoming: "Upcoming",
@@ -32,12 +32,14 @@ const MedicineTracker = ({ language }: MedicineTrackerProps) => {
       morning: "Morning",
       afternoon: "Afternoon",
       evening: "Evening",
-      night: "Night"
+      night: "Night",
+      smartRecognition: "🔍 Smart Medicine Recognition",
+      chatForHelp: "Use AI chat to identify medicines and get dosage instructions"
     },
     kn: {
       title: "ಔಷಧ ಟ್ರ್ಯಾಕರ್",
       subtitle: "ಸ್ಕ್ಯಾನ್, ಟ್ರ್ಯಾಕ್ ಮತ್ತು ನೆನಪಿಸಿಕೊಳ್ಳಿ",
-      scanMedicine: "ಔಷಧ ಸ್ಕ್ಯಾನ್ ಮಾಡಿ",
+      scanMedicine: "ಔಷಧದ ಬಗ್ಗೆ AI ಯನ್ನು ಕೇಳಿ",
       addReminder: "ಜ್ಞಾಪನೆ ಸೇರಿಸಿ",
       todaysReminders: "ಇಂದಿನ ಜ್ಞಾಪನೆಗಳು",
       upcoming: "ಮುಂಬರುವ",
@@ -50,7 +52,9 @@ const MedicineTracker = ({ language }: MedicineTrackerProps) => {
       morning: "ಬೆಳಿಗ್ಗೆ",
       afternoon: "ಮಧ್ಯಾಹ್ನ",
       evening: "ಸಂಜೆ",
-      night: "ರಾತ್ರಿ"
+      night: "ರಾತ್ರಿ",
+      smartRecognition: "🔍 ಸ್ಮಾರ್ಟ್ ಔಷಧ ಗುರುತಿಸುವಿಕೆ",
+      chatForHelp: "ಔಷಧಗಳನ್ನು ಗುರುತಿಸಲು ಮತ್ತು ಪ್ರಮಾಣದ ಸೂಚನೆಗಳನ್ನು ಪಡೆಯಲು AI ಚಾಟ್ ಬಳಸಿ"
     }
   };
 
@@ -96,24 +100,34 @@ const MedicineTracker = ({ language }: MedicineTrackerProps) => {
   ];
 
   const handleScanMedicine = () => {
-    setScanning(true);
-    toast({
-      title: language === "en" ? "📷 Scanning Medicine..." : "📷 ಔಷಧವನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡುತ್ತಿದೆ...",
-      description: language === "en" 
-        ? "Point camera at medicine package" 
-        : "ಔಷಧದ ಪ್ಯಾಕೇಜ್‌ನ ಮೇಲೆ ಕ್ಯಾಮೆರಾವನ್ನು ತೋರಿಸಿ"
-    });
-
-    // Simulate scanning
-    setTimeout(() => {
-      setScanning(false);
+    if (onNavigateToChat) {
+      onNavigateToChat();
       toast({
-        title: language === "en" ? "✅ Medicine Recognized!" : "✅ ಔಷಧವನ್ನು ಗುರುತಿಸಲಾಗಿದೆ!",
+        title: language === "en" ? "🤖 Opening AI Assistant" : "🤖 AI ಸಹಾಯಕವನ್ನು ತೆರೆಯುತ್ತಿದೆ",
         description: language === "en" 
-          ? "Paracetamol 650mg - Added to your tracker" 
-          : "ಪ್ಯಾರಾಸಿಟಮಾಲ್ 650mg - ನಿಮ್ಮ ಟ್ರ್ಯಾಕರ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ"
+          ? "Upload your medicine image in the chat for identification" 
+          : "ಗುರುತಿಸುವಿಕೆಗಾಗಿ ಚಾಟ್‌ನಲ್ಲಿ ನಿಮ್ಮ ಔಷಧದ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ"
       });
-    }, 3000);
+    } else {
+      setScanning(true);
+      toast({
+        title: language === "en" ? "📷 Scanning Medicine..." : "📷 ಔಷಧವನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡುತ್ತಿದೆ...",
+        description: language === "en" 
+          ? "Point camera at medicine package" 
+          : "ಔಷಧದ ಪ್ಯಾಕೇಜ್‌ನ ಮೇಲೆ ಕ್ಯಾಮೆರಾವನ್ನು ತೋರಿಸಿ"
+      });
+
+      // Simulate scanning
+      setTimeout(() => {
+        setScanning(false);
+        toast({
+          title: language === "en" ? "✅ Medicine Recognized!" : "✅ ಔಷಧವನ್ನು ಗುರುತಿಸಲಾಗಿದೆ!",
+          description: language === "en" 
+            ? "Paracetamol 650mg - Added to your tracker" 
+            : "ಪ್ಯಾರಾಸಿಟಮಾಲ್ 650mg - ನಿಮ್ಮ ಟ್ರ್ಯಾಕರ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ"
+        });
+      }, 3000);
+    }
   };
 
   const handleMedicineTaken = (medicineId: number) => {
@@ -163,7 +177,7 @@ const MedicineTracker = ({ language }: MedicineTrackerProps) => {
           disabled={scanning}
           className={`h-16 flex-col bg-blue-600 hover:bg-blue-700 ${scanning ? 'animate-pulse' : ''}`}
         >
-          <Camera className="h-6 w-6 mb-1" />
+          <MessageCircle className="h-6 w-6 mb-1" />
           <span className="text-sm">{currentText.scanMedicine}</span>
         </Button>
         
@@ -247,17 +261,14 @@ const MedicineTracker = ({ language }: MedicineTrackerProps) => {
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
             <div className="bg-green-100 p-2 rounded-full">
-              <Camera className="h-5 w-5 text-green-600" />
+              <MessageCircle className="h-5 w-5 text-green-600" />
             </div>
             <div className="flex-1">
               <h4 className="font-medium text-green-800">
-                {language === "en" ? "🔍 Smart Medicine Recognition" : "🔍 ಸ್ಮಾರ್ಟ್ ಔಷಧ ಗುರುತಿಸುವಿಕೆ"}
+                {currentText.smartRecognition}
               </h4>
               <p className="text-sm text-green-600">
-                {language === "en" 
-                  ? "Scan any medicine to get dosage instructions in Kannada" 
-                  : "ಕನ್ನಡದಲ್ಲಿ ಪ್ರಮಾಣದ ಸೂಚನೆಗಳನ್ನು ಪಡೆಯಲು ಯಾವುದೇ ಔಷಧವನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡಿ"
-                }
+                {currentText.chatForHelp}
               </p>
             </div>
           </div>
