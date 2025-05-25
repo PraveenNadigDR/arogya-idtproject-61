@@ -1,7 +1,9 @@
+
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Heart, 
   Phone, 
@@ -13,7 +15,8 @@ import {
   Book,
   Ambulance,
   Mic,
-  User
+  User,
+  Video
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import EmergencyButton from "@/components/EmergencyButton";
@@ -27,6 +30,7 @@ import AIAssistant from "@/components/AIAssistant";
 const Index = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
   const [language, setLanguage] = useState("en");
+  const [showVideoCall, setShowVideoCall] = useState(false);
   const { toast } = useToast();
 
   const toggleLanguage = () => {
@@ -50,7 +54,9 @@ const Index = () => {
       family: "Family Health",
       tips: "Health Tips",
       assistant: "Ask Health Query",
-      profile: "Profile"
+      profile: "Profile",
+      videoCall: "Video Call Doctor",
+      callInProgress: "Call in Progress..."
     },
     kn: {
       title: "ಆರೋಗ್ಯ ಮಿತ್ರ",
@@ -64,7 +70,9 @@ const Index = () => {
       family: "ಕುಟುಂಬದ ಆರೋಗ್ಯ",
       tips: "ಆರೋಗ್ಯ ಸಲಹೆಗಳು",
       assistant: "ಆರೋಗ್ಯ ಪ್ರಶ್ನೆ ಕೇಳಿ",
-      profile: "ಪ್ರೊಫೈಲ್"
+      profile: "ಪ್ರೊಫೈಲ್",
+      videoCall: "ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್",
+      callInProgress: "ಕಾಲ್ ಪ್ರಗತಿಯಲ್ಲಿದೆ..."
     }
   };
 
@@ -72,6 +80,16 @@ const Index = () => {
 
   const handleNavigateToChat = () => {
     setActiveSection("assistant");
+  };
+
+  const handleVideoCall = () => {
+    setShowVideoCall(true);
+    toast({
+      title: language === "en" ? "📹 Connecting to Doctor" : "📹 ವೈದ್ಯರೊಂದಿಗೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ",
+      description: language === "en" 
+        ? "Dr. Ramesh will join shortly" 
+        : "ಡಾ. ರಮೇಶ್ ಶೀಘ್ರದಲ್ಲೇ ಸೇರುತ್ತಾರೆ"
+    });
   };
 
   const renderActiveSection = () => {
@@ -134,15 +152,40 @@ const Index = () => {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("medicines")}>
-                <CardContent className="p-4 text-center">
-                  <Camera className="h-8 w-8 text-purple-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-800">{currentText.medicines}</h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {language === "en" ? "Scan & Track" : "ಸ್ಕ್ಯಾನ್ ಮತ್ತು ಟ್ರ್ಯಾಕ್"}
-                  </p>
-                </CardContent>
-              </Card>
+              <Dialog open={showVideoCall} onOpenChange={setShowVideoCall}>
+                <DialogTrigger asChild>
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleVideoCall}>
+                    <CardContent className="p-4 text-center">
+                      <Video className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                      <h3 className="font-medium text-gray-800">{currentText.videoCall}</h3>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {language === "en" ? "Consult Online" : "ಆನ್‌ಲೈನ್ ಸಲಹೆ"}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>{currentText.videoCall}</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="bg-gray-900 rounded-lg h-48 flex items-center justify-center">
+                      <div className="text-center text-white">
+                        <Video className="h-12 w-12 mx-auto mb-2" />
+                        <p className="text-sm">{currentText.callInProgress}</p>
+                        <p className="text-xs opacity-75 mt-1">
+                          {language === "en" ? "Dr. Ramesh - Hassan PHC" : "ಡಾ. ರಮೇಶ್ - ಹಾಸನ್ PHC"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 justify-center">
+                      <Button variant="destructive" onClick={() => setShowVideoCall(false)}>
+                        {language === "en" ? "End Call" : "ಕಾಲ್ ಕೊನೆಗೊಳಿಸಿ"}
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
               <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("diary")}>
                 <CardContent className="p-4 text-center">
