@@ -1,9 +1,18 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Bell, Clock, Calendar, Pill, MessageCircle } from "lucide-react";
+import { 
+  Pill, 
+  Clock, 
+  Camera, 
+  Plus,
+  MessageCircle,
+  Bell,
+  CheckCircle2
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface MedicineTrackerProps {
@@ -12,266 +21,243 @@ interface MedicineTrackerProps {
 }
 
 const MedicineTracker = ({ language, onNavigateToChat }: MedicineTrackerProps) => {
-  const [scanning, setScanning] = useState(false);
+  const [medicines, setMedicines] = useState([
+    {
+      id: 1,
+      name: "Paracetamol 650mg",
+      dosage: "1 tablet",
+      frequency: "Every 8 hours",
+      timesTaken: [true, true, false],
+      nextDose: "6:00 PM",
+      daysLeft: 3
+    },
+    {
+      id: 2,
+      name: "Vitamin D3",
+      dosage: "1 capsule",
+      frequency: "Once daily",
+      timesTaken: [true],
+      nextDose: "Morning",
+      daysLeft: 27
+    }
+  ]);
+
+  const [newMedicine, setNewMedicine] = useState({
+    name: "",
+    dosage: "",
+    frequency: ""
+  });
+
   const { toast } = useToast();
 
   const text = {
     en: {
       title: "Medicine Tracker",
-      subtitle: "Scan, Track & Remember",
-      scanMedicine: "Ask AI About Medicine",
-      addReminder: "Add Reminder",
-      todaysReminders: "Today's Reminders",
-      upcoming: "Upcoming",
+      subtitle: "Track your daily medications",
+      todaySchedule: "Today's Schedule",
+      nextDose: "Next dose",
+      daysLeft: "days left",
       taken: "Taken",
-      missed: "Missed",
+      pending: "Pending",
+      addMedicine: "Add New Medicine",
+      medicineName: "Medicine Name",
       dosage: "Dosage",
       frequency: "Frequency",
-      beforeMeals: "Before meals",
-      afterMeals: "After meals",
-      morning: "Morning",
-      afternoon: "Afternoon",
-      evening: "Evening",
-      night: "Night",
-      smartRecognition: "🔍 Smart Medicine Recognition",
-      chatForHelp: "Use AI chat to identify medicines and get dosage instructions"
+      add: "Add Medicine",
+      markTaken: "Mark as Taken",
+      askAI: "Ask AI about Medicine",
+      scanMedicine: "Ask AI to identify medicine",
+      allDone: "All Done! ✅"
     },
     kn: {
       title: "ಔಷಧ ಟ್ರ್ಯಾಕರ್",
-      subtitle: "ಸ್ಕ್ಯಾನ್, ಟ್ರ್ಯಾಕ್ ಮತ್ತು ನೆನಪಿಸಿಕೊಳ್ಳಿ",
-      scanMedicine: "ಔಷಧದ ಬಗ್ಗೆ AI ಯನ್ನು ಕೇಳಿ",
-      addReminder: "ಜ್ಞಾಪನೆ ಸೇರಿಸಿ",
-      todaysReminders: "ಇಂದಿನ ಜ್ಞಾಪನೆಗಳು",
-      upcoming: "ಮುಂಬರುವ",
-      taken: "ತೆಗೆದುಕೊಂಡಿದೆ",
-      missed: "ತಪ್ಪಿಸಿಕೊಂಡಿದೆ",
+      subtitle: "ನಿಮ್ಮ ದೈನಂದಿನ ಔಷಧಗಳನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ",
+      todaySchedule: "ಇಂದಿನ ವೇಳಾಪಟ್ಟಿ",
+      nextDose: "ಮುಂದಿನ ಡೋಸ್",
+      daysLeft: "ದಿನಗಳು ಬಾಕಿ",
+      taken: "ತೆಗೆದುಕೊಂಡಿದ್ದೇನೆ",
+      pending: "ಬಾಕಿ ಇದೆ",
+      addMedicine: "ಹೊಸ ಔಷಧ ಸೇರಿಸಿ",
+      medicineName: "ಔಷಧದ ಹೆಸರು",
       dosage: "ಪ್ರಮಾಣ",
       frequency: "ಆವರ್ತನ",
-      beforeMeals: "ಊಟದ ಮೊದಲು",
-      afterMeals: "ಊಟದ ನಂತರ",
-      morning: "ಬೆಳಿಗ್ಗೆ",
-      afternoon: "ಮಧ್ಯಾಹ್ನ",
-      evening: "ಸಂಜೆ",
-      night: "ರಾತ್ರಿ",
-      smartRecognition: "🔍 ಸ್ಮಾರ್ಟ್ ಔಷಧ ಗುರುತಿಸುವಿಕೆ",
-      chatForHelp: "ಔಷಧಗಳನ್ನು ಗುರುತಿಸಲು ಮತ್ತು ಪ್ರಮಾಣದ ಸೂಚನೆಗಳನ್ನು ಪಡೆಯಲು AI ಚಾಟ್ ಬಳಸಿ"
+      add: "ಔಷಧ ಸೇರಿಸಿ",
+      markTaken: "ತೆಗೆದುಕೊಂಡಿದ್ದೇನೆ ಎಂದು ಗುರುತಿಸಿ",
+      askAI: "ಔಷಧದ ಬಗ್ಗೆ AI ಯಿಂದ ಕೇಳಿ",
+      scanMedicine: "ಔಷಧವನ್ನು ಗುರುತಿಸಲು AI ಯಿಂದ ಕೇಳಿ",
+      allDone: "ಎಲ್ಲಾ ಮುಗಿಯಿತು! ✅"
     }
   };
 
   const currentText = text[language];
 
-  const todaysMedicines = [
-    {
-      id: 1,
-      name: "Metformin 500mg",
-      time: "08:00 AM",
-      dosage: "1 tablet",
-      timing: language === "en" ? "After breakfast" : "ಬೆಳಿಗ್ಗಿನ ಊಟದ ನಂತರ",
-      status: "taken",
-      takenAt: "08:15 AM"
-    },
-    {
-      id: 2,
-      name: "Vitamin D3",
-      time: "01:00 PM",
-      dosage: "1 capsule",
-      timing: language === "en" ? "After lunch" : "ಮಧ್ಯಾಹ್ನದ ಊಟದ ನಂತರ",
-      status: "upcoming",
-      takenAt: null
-    },
-    {
-      id: 3,
-      name: "Blood Pressure Medicine",
-      time: "08:00 PM",
-      dosage: "1/2 tablet",
-      timing: language === "en" ? "After dinner" : "ರಾತ್ರಿಯ ಊಟದ ನಂತರ",
-      status: "upcoming",
-      takenAt: null
-    },
-    {
-      id: 4,
-      name: "Calcium",
-      time: "09:00 AM",
-      dosage: "1 tablet",
-      timing: language === "en" ? "Before breakfast" : "ಬೆಳಿಗ್ಗಿನ ಊಟದ ಮೊದಲು",
-      status: "missed",
-      takenAt: null
-    }
-  ];
-
-  const handleScanMedicine = () => {
-    if (onNavigateToChat) {
-      onNavigateToChat();
+  const handleAddMedicine = () => {
+    if (newMedicine.name && newMedicine.dosage && newMedicine.frequency) {
+      const medicine = {
+        id: Date.now(),
+        name: newMedicine.name,
+        dosage: newMedicine.dosage,
+        frequency: newMedicine.frequency,
+        timesTaken: [false],
+        nextDose: "As prescribed",
+        daysLeft: 30
+      };
+      
+      setMedicines([...medicines, medicine]);
+      setNewMedicine({ name: "", dosage: "", frequency: "" });
+      
       toast({
-        title: language === "en" ? "🤖 Opening AI Assistant" : "🤖 AI ಸಹಾಯಕವನ್ನು ತೆರೆಯುತ್ತಿದೆ",
+        title: language === "en" ? "✅ Medicine Added" : "✅ ಔಷಧ ಸೇರಿಸಲಾಗಿದೆ",
         description: language === "en" 
-          ? "Upload your medicine image in the chat for identification" 
-          : "ಗುರುತಿಸುವಿಕೆಗಾಗಿ ಚಾಟ್‌ನಲ್ಲಿ ನಿಮ್ಮ ಔಷಧದ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ"
+          ? `${medicine.name} added to your tracker` 
+          : `${medicine.name} ನಿಮ್ಮ ಟ್ರ್ಯಾಕರ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ`
       });
-    } else {
-      setScanning(true);
-      toast({
-        title: language === "en" ? "📷 Scanning Medicine..." : "📷 ಔಷಧವನ್ನು ಸ್ಕ್ಯಾನ್ ಮಾಡುತ್ತಿದೆ...",
-        description: language === "en" 
-          ? "Point camera at medicine package" 
-          : "ಔಷಧದ ಪ್ಯಾಕೇಜ್‌ನ ಮೇಲೆ ಕ್ಯಾಮೆರಾವನ್ನು ತೋರಿಸಿ"
-      });
-
-      // Simulate scanning
-      setTimeout(() => {
-        setScanning(false);
-        toast({
-          title: language === "en" ? "✅ Medicine Recognized!" : "✅ ಔಷಧವನ್ನು ಗುರುತಿಸಲಾಗಿದೆ!",
-          description: language === "en" 
-            ? "Paracetamol 650mg - Added to your tracker" 
-            : "ಪ್ಯಾರಾಸಿಟಮಾಲ್ 650mg - ನಿಮ್ಮ ಟ್ರ್ಯಾಕರ್‌ಗೆ ಸೇರಿಸಲಾಗಿದೆ"
-        });
-      }, 3000);
     }
   };
 
-  const handleMedicineTaken = (medicineId: number) => {
+  const markAsTaken = (medicineId: number, doseIndex: number) => {
+    setMedicines(medicines.map(med => {
+      if (med.id === medicineId) {
+        const newTimesTaken = [...med.timesTaken];
+        newTimesTaken[doseIndex] = true;
+        return { ...med, timesTaken: newTimesTaken };
+      }
+      return med;
+    }));
+
     toast({
-      title: language === "en" ? "✅ Medicine Taken!" : "✅ ಔಷಧ ತೆಗೆದುಕೊಂಡಿದೆ!",
-      description: language === "en" 
-        ? "Recorded in your health diary" 
-        : "ನಿಮ್ಮ ಆರೋಗ್ಯ ಡೈರಿಯಲ್ಲಿ ದಾಖಲಿಸಲಾಗಿದೆ"
+      title: language === "en" ? "✅ Dose Recorded" : "✅ ಡೋಸ್ ದಾಖಲಿಸಲಾಗಿದೆ",
+      description: language === "en" ? "Keep up the good work!" : "ಒಳ್ಳೆಯ ಕೆಲಸ ಮುಂದುವರಿಸಿ!"
     });
   };
 
-  const getStatusColor = (status: string) => {
-    switch(status) {
-      case "taken": return "bg-green-100 text-green-800";
-      case "upcoming": return "bg-blue-100 text-blue-800";
-      case "missed": return "bg-red-100 text-red-800";
-      default: return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch(status) {
-      case "taken": return currentText.taken;
-      case "upcoming": return currentText.upcoming;
-      case "missed": return currentText.missed;
-      default: return status;
+  const handleAskAI = () => {
+    if (onNavigateToChat) {
+      onNavigateToChat();
+      toast({
+        title: language === "en" ? "💬 Navigating to AI Assistant" : "💬 AI ಸಹಾಯಕಕ್ಕೆ ನ್ಯಾವಿಗೇಟ್ ಮಾಡಲಾಗುತ್ತಿದೆ",
+        description: language === "en" 
+          ? "Ask any questions about your medicines" 
+          : "ನಿಮ್ಮ ಔಷಧಗಳ ಬಗ್ಗೆ ಯಾವುದೇ ಪ್ರಶ್ನೆಗಳನ್ನು ಕೇಳಿ"
+      });
     }
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Header */}
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg text-purple-800 flex items-center gap-2">
-            <Pill className="h-5 w-5" />
-            {currentText.title}
-          </CardTitle>
-          <p className="text-sm text-purple-600">{currentText.subtitle}</p>
+      <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+        <CardHeader>
+          <div className="flex items-center gap-3">
+            <Pill className="h-6 w-6 text-purple-600" />
+            <div>
+              <CardTitle className="text-lg text-purple-800">{currentText.title}</CardTitle>
+              <p className="text-sm text-purple-600">{currentText.subtitle}</p>
+            </div>
+          </div>
         </CardHeader>
       </Card>
 
-      {/* Scan Medicine */}
-      <div className="grid grid-cols-2 gap-3">
-        <Button 
-          onClick={handleScanMedicine}
-          disabled={scanning}
-          className={`h-16 flex-col bg-blue-600 hover:bg-blue-700 ${scanning ? 'animate-pulse' : ''}`}
-        >
-          <MessageCircle className="h-6 w-6 mb-1" />
-          <span className="text-sm">{currentText.scanMedicine}</span>
-        </Button>
-        
-        <Button 
-          variant="outline"
-          className="h-16 flex-col border-green-300 text-green-700 hover:bg-green-50"
-        >
-          <Bell className="h-6 w-6 mb-1" />
-          <span className="text-sm">{currentText.addReminder}</span>
-        </Button>
-      </div>
+      {/* AI Assistant Button */}
+      <Button
+        onClick={handleAskAI}
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+      >
+        <MessageCircle className="h-4 w-4 mr-2" />
+        {currentText.askAI}
+      </Button>
 
-      {/* Today's Reminders */}
-      <div>
-        <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-          <Calendar className="h-4 w-4" />
-          {currentText.todaysReminders}
-        </h3>
-        
-        <div className="space-y-3">
-          {todaysMedicines.map((medicine) => (
-            <Card key={medicine.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-800">{medicine.name}</h4>
-                    <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{medicine.time}</span>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {medicine.dosage} • {medicine.timing}
-                    </p>
-                    {medicine.takenAt && (
-                      <p className="text-xs text-green-600 mt-1">
-                        {language === "en" ? "Taken at" : "ತೆಗೆದುಕೊಂಡ ಸಮಯ"}: {medicine.takenAt}
-                      </p>
-                    )}
-                  </div>
-                  <Badge className={getStatusColor(medicine.status)}>
-                    {getStatusText(medicine.status)}
-                  </Badge>
+      {/* Today's Medicine Schedule */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Clock className="h-5 w-5 text-blue-600" />
+            {currentText.todaySchedule}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {medicines.map((medicine) => (
+            <div key={medicine.id} className="border rounded-lg p-4 space-y-3">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <h3 className="font-medium text-gray-800">{medicine.name}</h3>
+                  <p className="text-sm text-gray-600">{medicine.dosage} • {medicine.frequency}</p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    {currentText.nextDose}: {medicine.nextDose}
+                  </p>
                 </div>
+                <Badge variant="outline" className="text-xs">
+                  {medicine.daysLeft} {currentText.daysLeft}
+                </Badge>
+              </div>
 
-                {medicine.status === "upcoming" && (
-                  <Button 
-                    size="sm" 
-                    className="w-full bg-green-600 hover:bg-green-700"
-                    onClick={() => handleMedicineTaken(medicine.id)}
+              {/* Dose tracking */}
+              <div className="flex gap-2">
+                {medicine.timesTaken.map((taken, index) => (
+                  <Button
+                    key={index}
+                    size="sm"
+                    variant={taken ? "default" : "outline"}
+                    onClick={() => !taken && markAsTaken(medicine.id, index)}
+                    disabled={taken}
+                    className={`flex-1 ${
+                      taken 
+                        ? "bg-green-600 hover:bg-green-700" 
+                        : "border-green-300 text-green-700 hover:bg-green-50"
+                    }`}
                   >
-                    {language === "en" ? "Mark as Taken" : "ತೆಗೆದುಕೊಂಡಿದೆ ಎಂದು ಗುರುತಿಸಿ"}
+                    {taken ? (
+                      <CheckCircle2 className="h-4 w-4 mr-1" />
+                    ) : (
+                      <Clock className="h-4 w-4 mr-1" />
+                    )}
+                    {taken ? currentText.taken : currentText.pending}
                   </Button>
-                )}
+                ))}
+              </div>
 
-                {medicine.status === "missed" && (
-                  <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      className="flex-1 bg-green-600 hover:bg-green-700"
-                      onClick={() => handleMedicineTaken(medicine.id)}
-                    >
-                      {language === "en" ? "Take Now" : "ಈಗ ತೆಗೆದುಕೊಳ್ಳಿ"}
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      className="flex-1 border-yellow-300 text-yellow-700 hover:bg-yellow-50"
-                    >
-                      {language === "en" ? "Skip" : "ಬಿಟ್ಟುಬಿಡಿ"}
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+              {medicine.timesTaken.every(taken => taken) && (
+                <div className="text-center text-green-600 font-medium text-sm">
+                  {currentText.allDone}
+                </div>
+              )}
+            </div>
           ))}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      {/* Medicine Recognition Feature */}
-      <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
-        <CardContent className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-green-100 p-2 rounded-full">
-              <MessageCircle className="h-5 w-5 text-green-600" />
-            </div>
-            <div className="flex-1">
-              <h4 className="font-medium text-green-800">
-                {currentText.smartRecognition}
-              </h4>
-              <p className="text-sm text-green-600">
-                {currentText.chatForHelp}
-              </p>
-            </div>
-          </div>
+      {/* Add New Medicine */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base flex items-center gap-2">
+            <Plus className="h-5 w-5 text-green-600" />
+            {currentText.addMedicine}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Input
+            placeholder={currentText.medicineName}
+            value={newMedicine.name}
+            onChange={(e) => setNewMedicine({...newMedicine, name: e.target.value})}
+          />
+          <Input
+            placeholder={currentText.dosage}
+            value={newMedicine.dosage}
+            onChange={(e) => setNewMedicine({...newMedicine, dosage: e.target.value})}
+          />
+          <Input
+            placeholder={currentText.frequency}
+            value={newMedicine.frequency}
+            onChange={(e) => setNewMedicine({...newMedicine, frequency: e.target.value})}
+          />
+          <Button
+            onClick={handleAddMedicine}
+            className="w-full bg-green-600 hover:bg-green-700"
+            disabled={!newMedicine.name || !newMedicine.dosage || !newMedicine.frequency}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            {currentText.add}
+          </Button>
         </CardContent>
       </Card>
     </div>
