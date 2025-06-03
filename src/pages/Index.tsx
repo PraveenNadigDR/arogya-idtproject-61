@@ -16,12 +16,13 @@ import {
   User,
   Video,
   Pill,
-  Thermometer,
   Activity,
   Clock,
   MapPin,
   Star,
-  Zap
+  Zap,
+  Sun,
+  Droplets
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import EmergencyButton from "@/components/EmergencyButton";
@@ -33,6 +34,10 @@ import AIAssistant from "@/components/AIAssistant";
 import AmbulanceService from "@/components/AmbulanceService";
 import Profile from "@/components/Profile";
 import Telepharmacy from "@/components/Telepharmacy";
+import WeatherWidget from "@/components/WeatherWidget";
+import QuickHealthCheck from "@/components/QuickHealthCheck";
+import HealthMetrics from "@/components/HealthMetrics";
+import MedicineReminder from "@/components/MedicineReminder";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -71,7 +76,9 @@ const Index = () => {
       healthStatus: "Health Status",
       lastCheckup: "Last Checkup",
       nextAppointment: "Next Appointment",
-      medicineReminder: "Medicine Reminder"
+      medicineReminder: "Medicine Reminder",
+      quickCheck: "Quick Health Check",
+      todaysMetrics: "Today's Metrics"
     },
     kn: {
       title: "ಆರೋಗ್ಯ ಮಿತ್ರ",
@@ -95,7 +102,9 @@ const Index = () => {
       healthStatus: "ಆರೋಗ್ಯ ಸ್ಥಿತಿ",
       lastCheckup: "ಕೊನೆಯ ಪರೀಕ್ಷೆ",
       nextAppointment: "ಮುಂದಿನ ಅಪಾಯಿಂಟ್ಮೆಂಟ್",
-      medicineReminder: "ಔಷಧ ಜ್ಞಾಪನೆ"
+      medicineReminder: "ಔಷಧ ಜ್ಞಾಪನೆ",
+      quickCheck: "ತ್ವರಿತ ಆರೋಗ್ಯ ಪರೀಕ್ಷೆ",
+      todaysMetrics: "ಇಂದಿನ ಮಾಪಕಗಳು"
     }
   };
 
@@ -137,55 +146,68 @@ const Index = () => {
         return (
           <div className="space-y-6">
             {/* Enhanced Welcome Section with Health Status */}
-            <Card className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 border-green-200 shadow-lg">
-              <CardContent className="p-6">
+            <Card className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 border-green-200 shadow-xl overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-200/30 to-emerald-300/30 rounded-full -translate-y-16 translate-x-16"></div>
+              <CardContent className="p-6 relative">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-2xl shadow-md">
+                  <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-4 rounded-3xl shadow-lg">
                     <Heart className="h-8 w-8 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h2 className="text-xl font-bold text-green-800">{currentText.welcomeMessage}</h2>
-                    <div className="flex items-center gap-2 text-green-600 text-sm mt-1">
+                    <h2 className="text-xl font-bold text-green-800 mb-1">{currentText.welcomeMessage}</h2>
+                    <div className="flex items-center gap-2 text-green-600 text-sm">
                       <MapPin className="h-4 w-4" />
                       <span>{language === "en" ? "Holenarasipura, Hassan" : "ಹೊಳೆನರಸೀಪುರ, ಹಾಸನ್"}</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="flex items-center gap-1 text-green-700">
-                      <Activity className="h-4 w-4" />
-                      <span className="text-sm font-medium">98%</span>
+                    <div className="flex items-center gap-1 text-green-700 mb-1">
+                      <Activity className="h-5 w-5" />
+                      <span className="text-lg font-bold">98%</span>
                     </div>
                     <p className="text-xs text-green-600">{currentText.healthStatus}</p>
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-3 gap-3 mb-4">
-                  <div className="bg-white/60 rounded-lg p-3 text-center">
-                    <Calendar className="h-5 w-5 text-green-600 mx-auto mb-1" />
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center shadow-sm">
+                    <Calendar className="h-5 w-5 text-green-600 mx-auto mb-2" />
                     <p className="text-xs text-green-700 font-medium">{currentText.lastCheckup}</p>
-                    <p className="text-xs text-green-600">Jan 15</p>
+                    <p className="text-xs text-green-600 font-semibold">Jan 15</p>
                   </div>
-                  <div className="bg-white/60 rounded-lg p-3 text-center">
-                    <Clock className="h-5 w-5 text-blue-600 mx-auto mb-1" />
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center shadow-sm">
+                    <Clock className="h-5 w-5 text-blue-600 mx-auto mb-2" />
                     <p className="text-xs text-blue-700 font-medium">{currentText.nextAppointment}</p>
-                    <p className="text-xs text-blue-600">Jan 25</p>
+                    <p className="text-xs text-blue-600 font-semibold">Jan 25</p>
                   </div>
-                  <div className="bg-white/60 rounded-lg p-3 text-center">
-                    <Pill className="h-5 w-5 text-orange-600 mx-auto mb-1" />
+                  <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center shadow-sm">
+                    <Pill className="h-5 w-5 text-orange-600 mx-auto mb-2" />
                     <p className="text-xs text-orange-700 font-medium">{currentText.medicineReminder}</p>
-                    <p className="text-xs text-orange-600">2 pills</p>
+                    <p className="text-xs text-orange-600 font-semibold">2 pills</p>
                   </div>
                 </div>
 
-                <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+                <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200 px-3 py-1">
                   <Star className="h-3 w-3 mr-1" />
                   {language === "en" ? "🌿 Stay Healthy, Stay Happy" : "🌿 ಆರೋಗ್ಯವಾಗಿರಿ, ಸಂತೋಷವಾಗಿರಿ"}
                 </Badge>
               </CardContent>
             </Card>
 
+            {/* Weather Widget */}
+            <WeatherWidget language={language} />
+
             {/* Emergency Button with Enhanced Design */}
             <EmergencyButton language={language} />
+
+            {/* Quick Health Check */}
+            <QuickHealthCheck language={language} />
+
+            {/* Health Metrics Dashboard */}
+            <HealthMetrics language={language} />
+
+            {/* Medicine Reminder */}
+            <MedicineReminder language={language} />
 
             {/* Quick Actions Section */}
             <div>
@@ -195,9 +217,10 @@ const Index = () => {
               </div>
               
               <div className="grid grid-cols-2 gap-4">
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50" onClick={() => setActiveSection("doctor")}>
-                  <CardContent className="p-4 text-center">
-                    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50 overflow-hidden relative" onClick={() => setActiveSection("doctor")}>
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-blue-200/30 rounded-full -translate-y-10 translate-x-10"></div>
+                  <CardContent className="p-4 text-center relative">
+                    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-lg">
                       <Search className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold text-blue-800">{currentText.findDoctor}</h3>
@@ -207,9 +230,10 @@ const Index = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-red-100 bg-gradient-to-br from-red-50 to-pink-50" onClick={() => setActiveSection("ambulance")}>
-                  <CardContent className="p-4 text-center">
-                    <div className="bg-gradient-to-br from-red-500 to-pink-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer border-red-100 bg-gradient-to-br from-red-50 to-pink-50 overflow-hidden relative" onClick={() => setActiveSection("ambulance")}>
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-red-200/30 rounded-full -translate-y-10 translate-x-10"></div>
+                  <CardContent className="p-4 text-center relative">
+                    <div className="bg-gradient-to-br from-red-500 to-pink-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-lg">
                       <Ambulance className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold text-red-800">{currentText.ambulance}</h3>
@@ -221,9 +245,10 @@ const Index = () => {
 
                 <Dialog open={showVideoCall} onOpenChange={setShowVideoCall}>
                   <DialogTrigger asChild>
-                    <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-green-100 bg-gradient-to-br from-green-50 to-emerald-50" onClick={handleVideoCall}>
-                      <CardContent className="p-4 text-center">
-                        <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                    <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer border-green-100 bg-gradient-to-br from-green-50 to-emerald-50 overflow-hidden relative" onClick={handleVideoCall}>
+                      <div className="absolute top-0 right-0 w-20 h-20 bg-green-200/30 rounded-full -translate-y-10 translate-x-10"></div>
+                      <CardContent className="p-4 text-center relative">
+                        <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-lg">
                           <Video className="h-6 w-6 text-white" />
                         </div>
                         <h3 className="font-semibold text-green-800">{currentText.videoCall}</h3>
@@ -256,9 +281,10 @@ const Index = () => {
                   </DialogContent>
                 </Dialog>
 
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-purple-100 bg-gradient-to-br from-purple-50 to-violet-50" onClick={() => setActiveSection("telepharmacy")}>
-                  <CardContent className="p-4 text-center">
-                    <div className="bg-gradient-to-br from-purple-500 to-violet-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer border-purple-100 bg-gradient-to-br from-purple-50 to-violet-50 overflow-hidden relative" onClick={() => setActiveSection("telepharmacy")}>
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-purple-200/30 rounded-full -translate-y-10 translate-x-10"></div>
+                  <CardContent className="p-4 text-center relative">
+                    <div className="bg-gradient-to-br from-purple-500 to-violet-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-lg">
                       <Pill className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold text-purple-800">{currentText.telepharmacy}</h3>
@@ -278,9 +304,10 @@ const Index = () => {
               </div>
               
               <div className="grid grid-cols-2 gap-4">
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50" onClick={() => setActiveSection("diary")}>
-                  <CardContent className="p-4 text-center">
-                    <div className="bg-gradient-to-br from-emerald-500 to-green-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50 overflow-hidden relative" onClick={() => setActiveSection("diary")}>
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-emerald-200/30 rounded-full -translate-y-10 translate-x-10"></div>
+                  <CardContent className="p-4 text-center relative">
+                    <div className="bg-gradient-to-br from-emerald-500 to-green-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-lg">
                       <Book className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold text-emerald-800">{currentText.diary}</h3>
@@ -290,10 +317,11 @@ const Index = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-orange-100 bg-gradient-to-br from-orange-50 to-amber-50" onClick={() => setActiveSection("tips")}>
-                  <CardContent className="p-4 text-center">
-                    <div className="bg-gradient-to-br from-orange-500 to-amber-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
-                      <Thermometer className="h-6 w-6 text-white" />
+                <Card className="hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer border-orange-100 bg-gradient-to-br from-orange-50 to-amber-50 overflow-hidden relative" onClick={() => setActiveSection("tips")}>
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-orange-200/30 rounded-full -translate-y-10 translate-x-10"></div>
+                  <CardContent className="p-4 text-center relative">
+                    <div className="bg-gradient-to-br from-orange-500 to-amber-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-lg">
+                      <Star className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold text-orange-800">{currentText.tips}</h3>
                     <p className="text-xs text-orange-600 mt-1">
@@ -305,16 +333,17 @@ const Index = () => {
             </div>
 
             {/* Enhanced Health Tips Section */}
-            <Card className="bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-50 border-yellow-200 shadow-lg">
-              <CardContent className="p-6">
+            <Card className="bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-50 border-yellow-200 shadow-xl overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-200/30 to-orange-300/30 rounded-full -translate-y-16 translate-x-16"></div>
+              <CardContent className="p-6 relative">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="bg-gradient-to-br from-orange-400 to-yellow-500 p-2 rounded-xl">
+                  <div className="bg-gradient-to-br from-orange-400 to-yellow-500 p-3 rounded-2xl shadow-lg">
                     <Star className="h-6 w-6 text-white" />
                   </div>
                   <h3 className="font-bold text-orange-800 text-lg">{currentText.todaysTip}</h3>
                 </div>
                 
-                <div className="bg-white/60 rounded-lg p-4 mb-4">
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-4 shadow-sm">
                   <p className="text-sm text-orange-700 leading-relaxed">
                     {language === "en" 
                       ? "💧 Drink warm water with honey and lemon in the morning for better digestion and immunity. This simple remedy helps cleanse your system and boosts energy levels naturally."
@@ -326,7 +355,7 @@ const Index = () => {
                 <div className="flex gap-2">
                   <Button 
                     size="sm" 
-                    className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white shadow-md"
+                    className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white shadow-lg"
                     onClick={() => setActiveSection("tips")}
                   >
                     <Heart className="h-4 w-4 mr-1" />
@@ -351,11 +380,11 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
       {/* Enhanced Header */}
-      <div className="bg-white shadow-lg border-b border-green-100">
+      <div className="bg-white shadow-xl border-b border-green-100 sticky top-0 z-50 backdrop-blur-lg bg-white/95">
         <div className="max-w-md mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-2xl shadow-lg">
+              <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-3xl shadow-xl">
                 <Heart className="h-7 w-7 text-white" />
               </div>
               <div>
@@ -369,7 +398,7 @@ const Index = () => {
               variant="outline"
               size="sm"
               onClick={toggleLanguage}
-              className="border-green-300 text-green-700 hover:bg-green-50 font-medium shadow-sm"
+              className="border-green-300 text-green-700 hover:bg-green-50 font-medium shadow-md hover:shadow-lg transition-all duration-200"
             >
               {language === "en" ? "ಕನ್ನಡ" : "English"}
             </Button>
@@ -383,7 +412,7 @@ const Index = () => {
       </div>
 
       {/* Enhanced Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-green-100 shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-green-100 shadow-2xl">
         <div className="max-w-md mx-auto">
           <div className="flex items-center justify-around py-3">
             <Button
@@ -392,7 +421,7 @@ const Index = () => {
               onClick={() => setActiveSection("dashboard")}
               className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
                 activeSection === "dashboard" 
-                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg scale-105" 
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-xl scale-110" 
                   : "text-gray-600 hover:text-green-600 hover:bg-green-50"
               }`}
             >
@@ -408,7 +437,7 @@ const Index = () => {
               onClick={() => setActiveSection("family")}
               className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
                 activeSection === "family" 
-                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg scale-105" 
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-xl scale-110" 
                   : "text-gray-600 hover:text-green-600 hover:bg-green-50"
               }`}
             >
@@ -422,7 +451,7 @@ const Index = () => {
               onClick={() => setActiveSection("assistant")}
               className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
                 activeSection === "assistant" 
-                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg scale-105" 
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-xl scale-110" 
                   : "text-gray-600 hover:text-green-600 hover:bg-green-50"
               }`}
             >
@@ -438,7 +467,7 @@ const Index = () => {
               onClick={() => setActiveSection("profile")}
               className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
                 activeSection === "profile" 
-                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg scale-105" 
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-xl scale-110" 
                   : "text-gray-600 hover:text-green-600 hover:bg-green-50"
               }`}
             >
