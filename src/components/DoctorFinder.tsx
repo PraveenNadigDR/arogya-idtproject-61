@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -51,7 +52,11 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
     { id: "general", name: language === "en" ? "General" : "ಸಾಮಾನ್ಯ" },
     { id: "pediatric", name: language === "en" ? "Child Care" : "ಮಕ್ಕಳ ಆರೈಕೆ" },
     { id: "diabetes", name: language === "en" ? "Diabetes" : "ಮಧುಮೇಹ" },
-    { id: "heart", name: language === "en" ? "Heart" : "ಹೃದಯ" }
+    { id: "heart", name: language === "en" ? "Heart" : "ಹೃದಯ" },
+    { id: "orthopedic", name: language === "en" ? "Bone & Joint" : "ಮೂಳೆ ಮತ್ತು ಕೀಲು" },
+    { id: "gynecology", name: language === "en" ? "Women's Health" : "ಮಹಿಳೆಯರ ಆರೋಗ್ಯ" },
+    { id: "dermatology", name: language === "en" ? "Skin" : "ಚರ್ಮ" },
+    { id: "ent", name: language === "en" ? "ENT" : "ಇಎನ್‌ಟಿ" }
   ];
 
   const doctors = [
@@ -60,6 +65,7 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
       name: language === "en" ? "Dr. Ramesh Kumar" : "ಡಾ. ರಮೇಶ್ ಕುಮಾರ್",
       specialty: language === "en" ? "General Medicine" : "ಸಾಮಾನ್ಯ ವೈದ್ಯಕೀಯ",
       hospital: language === "en" ? "Hassan Primary Health Centre" : "ಹಾಸನ್ ಪ್ರಾಥಮಿಕ ಆರೋಗ್ಯ ಕೇಂದ್ರ",
+      location: language === "en" ? "Hassan Main Road" : "ಹಾಸನ್ ಮುಖ್ಯ ರಸ್ತೆ",
       distance: 2.5,
       rating: 4.8,
       reviews: 156,
@@ -67,13 +73,15 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
       status: "available",
       phone: "+91 9876543210",
       languages: language === "en" ? "Kannada, Hindi, English" : "ಕನ್ನಡ, ಹಿಂದಿ, ಇಂಗ್ಲಿಷ್",
-      experience: language === "en" ? "15 years experience" : "15 ವರ್ಷಗಳ ಅನುಭವ"
+      experience: language === "en" ? "15 years experience" : "15 ವರ್ಷಗಳ ಅನುಭವ",
+      category: "general"
     },
     {
       id: 2,
       name: language === "en" ? "Dr. Priya Sharma" : "ಡಾ. ಪ್ರಿಯಾ ಶರ್ಮಾ",
       specialty: language === "en" ? "Pediatrician" : "ಮಕ್ಕಳ ವೈದ್ಯ",
       hospital: language === "en" ? "Holenarasipura Community Health Centre" : "ಹೊಳೆನರಸೀಪುರ ಸಮುದಾಯ ಆರೋಗ್ಯ ಕೇಂದ್ರ",
+      location: language === "en" ? "Holenarasipura Market" : "ಹೊಳೆನರಸೀಪುರ ಮಾರುಕಟ್ಟೆ",
       distance: 1.2,
       rating: 4.9,
       reviews: 89,
@@ -81,13 +89,15 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
       status: "busy",
       phone: "+91 9876543211",
       languages: language === "en" ? "Kannada, English" : "ಕನ್ನಡ, ಇಂಗ್ಲಿಷ್",
-      experience: language === "en" ? "8 years experience" : "8 ವರ್ಷಗಳ ಅನುಭವ"
+      experience: language === "en" ? "8 years experience" : "8 ವರ್ಷಗಳ ಅನುಭವ",
+      category: "pediatric"
     },
     {
       id: 3,
       name: language === "en" ? "Dr. Suresh Patil" : "ಡಾ. ಸುರೇಶ್ ಪಾಟೀಲ್",
       specialty: language === "en" ? "Diabetes Specialist" : "ಮಧುಮೇಹ ತಜ್ಞ",
       hospital: language === "en" ? "Hassan District Hospital" : "ಹಾಸನ್ ಜಿಲ್ಲಾ ಆಸ್ಪತ್ರೆ",
+      location: language === "en" ? "Hospital Road, Hassan" : "ಆಸ್ಪತ್ರೆ ರಸ್ತೆ, ಹಾಸನ್",
       distance: 3.8,
       rating: 4.7,
       reviews: 203,
@@ -95,7 +105,88 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
       status: "available",
       phone: "+91 9876543212",
       languages: language === "en" ? "Kannada, Hindi" : "ಕನ್ನಡ, ಹಿಂದಿ",
-      experience: language === "en" ? "20 years experience" : "20 ವರ್ಷಗಳ ಅನುಭವ"
+      experience: language === "en" ? "20 years experience" : "20 ವರ್ಷಗಳ ಅನುಭವ",
+      category: "diabetes"
+    },
+    {
+      id: 4,
+      name: language === "en" ? "Dr. Anitha Reddy" : "ಡಾ. ಅನಿತಾ ರೆಡ್ಡಿ",
+      specialty: language === "en" ? "Cardiologist" : "ಹೃದಯ ತಜ್ಞ",
+      hospital: language === "en" ? "Sagar Heart Centre" : "ಸಾಗರ್ ಹಾರ್ಟ್ ಸೆಂಟರ್",
+      location: language === "en" ? "BM Road, Hassan" : "ಬಿಎಂ ರಸ್ತೆ, ಹಾಸನ್",
+      distance: 4.2,
+      rating: 4.9,
+      reviews: 245,
+      fee: 200,
+      status: "available",
+      phone: "+91 9876543213",
+      languages: language === "en" ? "Kannada, English, Telugu" : "ಕನ್ನಡ, ಇಂಗ್ಲಿಷ್, ತೆಲುಗು",
+      experience: language === "en" ? "12 years experience" : "12 ವರ್ಷಗಳ ಅನುಭವ",
+      category: "heart"
+    },
+    {
+      id: 5,
+      name: language === "en" ? "Dr. Mahesh Gowda" : "ಡಾ. ಮಹೇಶ್ ಗೌಡ",
+      specialty: language === "en" ? "Orthopedic Surgeon" : "ಮೂಳೆ ಶಸ್ತ್ರಚಿಕಿತ್ಸಕ",
+      hospital: language === "en" ? "Hassan Bone & Joint Clinic" : "ಹಾಸನ್ ಬೋನ್ ಆ್ಯಂಡ್ ಜಾಯಿಂಟ್ ಕ್ಲಿನಿಕ್",
+      location: language === "en" ? "Vidyaranyapuram, Hassan" : "ವಿದ್ಯಾರಣ್ಯಪುರಂ, ಹಾಸನ್",
+      distance: 5.1,
+      rating: 4.6,
+      reviews: 134,
+      fee: 150,
+      status: "busy",
+      phone: "+91 9876543214",
+      languages: language === "en" ? "Kannada, Hindi" : "ಕನ್ನಡ, ಹಿಂದಿ",
+      experience: language === "en" ? "18 years experience" : "18 ವರ್ಷಗಳ ಅನುಭವ",
+      category: "orthopedic"
+    },
+    {
+      id: 6,
+      name: language === "en" ? "Dr. Lakshmi Devi" : "ಡಾ. ಲಕ್ಷ್ಮೀ ದೇವಿ",
+      specialty: language === "en" ? "Gynecologist" : "ಸ್ತ್ರೀರೋಗ ತಜ್ಞೆ",
+      hospital: language === "en" ? "Women's Care Hospital" : "ವುಮೆನ್ಸ್ ಕೇರ್ ಹಾಸ್ಪಿಟಲ್",
+      location: language === "en" ? "Alur Road, Hassan" : "ಅಲೂರ್ ರಸ್ತೆ, ಹಾಸನ್",
+      distance: 6.3,
+      rating: 4.8,
+      reviews: 178,
+      fee: 120,
+      status: "available",
+      phone: "+91 9876543215",
+      languages: language === "en" ? "Kannada, English" : "ಕನ್ನಡ, ಇಂಗ್ಲಿಷ್",
+      experience: language === "en" ? "14 years experience" : "14 ವರ್ಷಗಳ ಅನುಭವ",
+      category: "gynecology"
+    },
+    {
+      id: 7,
+      name: language === "en" ? "Dr. Ravi Shankar" : "ಡಾ. ರವಿ ಶಂಕರ್",
+      specialty: language === "en" ? "Dermatologist" : "ಚರ್ಮ ತಜ್ಞ",
+      hospital: language === "en" ? "Skin Care Clinic" : "ಸ್ಕಿನ್ ಕೇರ್ ಕ್ಲಿನಿಕ್",
+      location: language === "en" ? "Sakleshpura Road, Hassan" : "ಸಕಲೇಶಪುರ ರಸ್ತೆ, ಹಾಸನ್",
+      distance: 3.7,
+      rating: 4.5,
+      reviews: 92,
+      fee: 80,
+      status: "available",
+      phone: "+91 9876543216",
+      languages: language === "en" ? "Kannada, Hindi, English" : "ಕನ್ನಡ, ಹಿಂದಿ, ಇಂಗ್ಲಿಷ್",
+      experience: language === "en" ? "10 years experience" : "10 ವರ್ಷಗಳ ಅನುಭವ",
+      category: "dermatology"
+    },
+    {
+      id: 8,
+      name: language === "en" ? "Dr. Nagaraj B.S" : "ಡಾ. ನಾಗರಾಜ್ ಬಿ.ಎಸ್",
+      specialty: language === "en" ? "ENT Specialist" : "ಇಎನ್‌ಟಿ ತಜ್ಞ",
+      hospital: language === "en" ? "Hassan ENT Centre" : "ಹಾಸನ್ ಇಎನ್‌ಟಿ ಸೆಂಟರ್",
+      location: language === "en" ? "Race Course Road, Hassan" : "ರೇಸ್ ಕೋರ್ಸ್ ರಸ್ತೆ, ಹಾಸನ್",
+      distance: 4.8,
+      rating: 4.7,
+      reviews: 167,
+      fee: 90,
+      status: "offline",
+      phone: "+91 9876543217",
+      languages: language === "en" ? "Kannada, English" : "ಕನ್ನಡ, ಇಂಗ್ಲಿಷ್",
+      experience: language === "en" ? "16 years experience" : "16 ವರ್ಷಗಳ ಅನುಭವ",
+      category: "ent"
     }
   ];
 
@@ -135,6 +226,17 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
     }
   };
 
+  const filteredDoctors = doctors.filter(doctor => {
+    const matchesSearch = searchQuery === "" || 
+      doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doctor.hospital.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesSpecialty = selectedSpecialty === "all" || doctor.category === selectedSpecialty;
+    
+    return matchesSearch && matchesSpecialty;
+  });
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -145,6 +247,9 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
             {currentText.title}
           </CardTitle>
           <p className="text-sm text-blue-600">{currentText.subtitle}</p>
+          <p className="text-xs text-blue-500">
+            {language === "en" ? `${filteredDoctors.length} doctors found` : `${filteredDoctors.length} ವೈದ್ಯರು ಸಿಕ್ಕಿದ್ದಾರೆ`}
+          </p>
         </CardHeader>
       </Card>
 
@@ -182,7 +287,7 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
 
       {/* Doctors List */}
       <div className="space-y-3">
-        {doctors.map((doctor) => (
+        {filteredDoctors.map((doctor) => (
           <Card key={doctor.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4">
               <div className="flex justify-between items-start mb-3">
@@ -201,17 +306,20 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
                   <MapPin className="h-3 w-3" />
                   <span>{doctor.hospital}</span>
                 </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <MapPin className="h-3 w-3" />
+                  <span>{doctor.location} • {doctor.distance} {currentText.distance}</span>
+                </div>
                 <div className="flex items-center justify-between text-xs text-gray-500">
-                  <span>{doctor.distance} {currentText.distance}</span>
                   <div className="flex items-center gap-1">
                     <Star className="h-3 w-3 text-yellow-500 fill-current" />
                     <span>{doctor.rating} ({doctor.reviews} {currentText.reviews})</span>
                   </div>
+                  <span className="text-sm font-medium text-green-600">
+                    ₹{doctor.fee}
+                  </span>
                 </div>
                 <p className="text-xs text-gray-500">{doctor.languages}</p>
-                <p className="text-sm font-medium text-green-600">
-                  {currentText.fee}: ₹{doctor.fee}
-                </p>
               </div>
 
               <div className="flex gap-2">
@@ -237,6 +345,15 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
           </Card>
         ))}
       </div>
+
+      {/* No results message */}
+      {filteredDoctors.length === 0 && (
+        <Card className="text-center p-6">
+          <p className="text-gray-500">
+            {language === "en" ? "No doctors found. Try adjusting your search." : "ವೈದ್ಯರು ಸಿಗಲಿಲ್ಲ. ನಿಮ್ಮ ಹುಡುಕಾಟ ಬದಲಾಯಿಸಿ ಪ್ರಯತ್ನಿಸಿ."}
+          </p>
+        </Card>
+      )}
 
       {/* Doctor on Wheels Alert */}
       <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
