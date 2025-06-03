@@ -1,11 +1,12 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Search, MapPin, Phone, Star, Clock, Users, Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import AppointmentBooking from "@/components/AppointmentBooking";
 
 interface DoctorFinderProps {
   language: string;
@@ -14,6 +15,8 @@ interface DoctorFinderProps {
 const DoctorFinder = ({ language }: DoctorFinderProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [showBooking, setShowBooking] = useState(false);
   const { toast } = useToast();
 
   const text = {
@@ -191,12 +194,8 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
   ];
 
   const handleBookAppointment = (doctor: any) => {
-    toast({
-      title: language === "en" ? "📅 Booking Appointment..." : "📅 ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡುತ್ತಿದೆ...",
-      description: language === "en" 
-        ? `Connecting you with ${doctor.name}` 
-        : `${doctor.name} ಅವರೊಂದಿಗೆ ಸಂಪರ್ಕಿಸುತ್ತಿದೆ`
-    });
+    setSelectedDoctor(doctor);
+    setShowBooking(true);
   };
 
   const handleCall = (doctor: any) => {
@@ -376,6 +375,22 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Appointment Booking Dialog */}
+      <Dialog open={showBooking} onOpenChange={setShowBooking}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle></DialogTitle>
+          </DialogHeader>
+          {selectedDoctor && (
+            <AppointmentBooking
+              doctor={selectedDoctor}
+              language={language}
+              onClose={() => setShowBooking(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

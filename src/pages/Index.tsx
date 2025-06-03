@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,25 +6,26 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { 
   Heart, 
   Phone, 
-  Camera, 
   Calendar, 
   Users, 
   Search,
-  Bell,
   Book,
   Ambulance,
   Mic,
   User,
-  Video
+  Video,
+  Pill
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import EmergencyButton from "@/components/EmergencyButton";
 import ArogyaDiary from "@/components/ArogyaDiary";
 import DoctorFinder from "@/components/DoctorFinder";
-import MedicineTracker from "@/components/MedicineTracker";
 import FamilyHealth from "@/components/FamilyHealth";
 import HealthTips from "@/components/HealthTips";
 import AIAssistant from "@/components/AIAssistant";
+import AmbulanceService from "@/components/AmbulanceService";
+import Profile from "@/components/Profile";
+import Telepharmacy from "@/components/Telepharmacy";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -49,7 +49,7 @@ const Index = () => {
       emergency: "Emergency Help",
       findDoctor: "Find Doctor",
       ambulance: "Ambulance",
-      medicines: "Medicine Tracker",
+      telepharmacy: "Pharmacy",
       diary: "Arogya Diary",
       family: "Family Health",
       tips: "Health Tips",
@@ -65,7 +65,7 @@ const Index = () => {
       emergency: "ತುರ್ತು ಸಹಾಯ",
       findDoctor: "ವೈದ್ಯರನ್ನು ಹುಡುಕಿ",
       ambulance: "ಆಂಬುಲೆನ್ಸ್",
-      medicines: "ಔಷಧ ಟ್ರ್ಯಾಕರ್",
+      telepharmacy: "ಔಷಧಾಲಯ",
       diary: "ಆರೋಗ್ಯ ಡೈರಿ",
       family: "ಕುಟುಂಬದ ಆರೋಗ್ಯ",
       tips: "ಆರೋಗ್ಯ ಸಲಹೆಗಳು",
@@ -98,14 +98,18 @@ const Index = () => {
         return <ArogyaDiary language={language} />;
       case "doctor":
         return <DoctorFinder language={language} />;
-      case "medicines":
-        return <MedicineTracker language={language} onNavigateToChat={handleNavigateToChat} />;
+      case "ambulance":
+        return <AmbulanceService language={language} />;
+      case "telepharmacy":
+        return <Telepharmacy language={language} />;
       case "family":
         return <FamilyHealth language={language} />;
       case "tips":
         return <HealthTips language={language} />;
       case "assistant":
         return <AIAssistant language={language} />;
+      case "profile":
+        return <Profile language={language} />;
       default:
         return (
           <div className="space-y-6">
@@ -142,7 +146,7 @@ const Index = () => {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("ambulance")}>
                 <CardContent className="p-4 text-center">
                   <Ambulance className="h-8 w-8 text-red-600 mx-auto mb-2" />
                   <h3 className="font-medium text-gray-800">{currentText.ambulance}</h3>
@@ -187,12 +191,35 @@ const Index = () => {
                 </DialogContent>
               </Dialog>
 
+              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("telepharmacy")}>
+                <CardContent className="p-4 text-center">
+                  <Pill className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                  <h3 className="font-medium text-gray-800">{currentText.telepharmacy}</h3>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {language === "en" ? "Find Medicines" : "ಔಷಧಗಳನ್ನು ಹುಡುಕಿ"}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Secondary Actions */}
+            <div className="grid grid-cols-2 gap-4">
               <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("diary")}>
                 <CardContent className="p-4 text-center">
                   <Book className="h-8 w-8 text-green-600 mx-auto mb-2" />
                   <h3 className="font-medium text-gray-800">{currentText.diary}</h3>
                   <p className="text-xs text-gray-500 mt-1">
                     {language === "en" ? "Health Records" : "ಆರೋಗ್ಯ ದಾಖಲೆಗಳು"}
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("tips")}>
+                <CardContent className="p-4 text-center">
+                  <Heart className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                  <h3 className="font-medium text-gray-800">{currentText.tips}</h3>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {language === "en" ? "Health Education" : "ಆರೋಗ್ಯ ಶಿಕ್ಷಣ"}
                   </p>
                 </CardContent>
               </Card>
@@ -308,9 +335,14 @@ const Index = () => {
             </Button>
 
             <Button
-              variant="ghost"
+              variant={activeSection === "profile" ? "default" : "ghost"}
               size="sm"
-              className="flex-col h-auto py-2 px-2 text-gray-600 hover:text-green-600"
+              onClick={() => setActiveSection("profile")}
+              className={`flex-col h-auto py-2 px-2 ${
+                activeSection === "profile" 
+                  ? "bg-green-600 hover:bg-green-700" 
+                  : "text-gray-600 hover:text-green-600"
+              }`}
             >
               <User className="h-4 w-4 mb-1" />
               <span className="text-xs">{currentText.profile}</span>
