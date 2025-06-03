@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, User, Phone } from "lucide-react";
+import { Calendar, Clock, User, Phone, Stethoscope, MapPin, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface AppointmentBookingProps {
@@ -33,7 +33,9 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
       bookAppointment: "Confirm Booking",
       cancel: "Cancel",
       appointmentBooked: "Appointment Booked!",
-      bookingConfirmed: "Your appointment has been confirmed"
+      bookingConfirmed: "Your appointment has been confirmed",
+      consultationFee: "Consultation Fee",
+      estimatedTime: "Estimated Duration"
     },
     kn: {
       title: "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ",
@@ -45,7 +47,9 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
       bookAppointment: "ಬುಕಿಂಗ್ ದೃಢೀಕರಿಸಿ",
       cancel: "ರದ್ದುಮಾಡಿ",
       appointmentBooked: "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಆಗಿದೆ!",
-      bookingConfirmed: "ನಿಮ್ಮ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ"
+      bookingConfirmed: "ನಿಮ್ಮ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ",
+      consultationFee: "ಸಮಾಲೋಚನೆ ಶುಲ್ಕ",
+      estimatedTime: "ಅಂದಾಜು ಅವಧಿ"
     }
   };
 
@@ -73,39 +77,76 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
+    <Card className="w-full max-w-md mx-auto shadow-xl border-0">
+      <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
+        <CardTitle className="text-lg flex items-center gap-2 text-blue-800">
           <Calendar className="h-5 w-5" />
           {currentText.title}
         </CardTitle>
-        <div className="text-sm text-gray-600">
-          <p className="font-medium">{doctor.name}</p>
-          <p>{doctor.specialty}</p>
+        
+        {/* Enhanced Doctor Info */}
+        <div className="bg-white rounded-lg p-4 mt-3 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-2 rounded-xl">
+              <Stethoscope className="h-5 w-5 text-white" />
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-gray-800">{doctor.name}</p>
+              <p className="text-sm text-blue-600">{doctor.specialty}</p>
+              <div className="flex items-center gap-1 mt-1">
+                <MapPin className="h-3 w-3 text-gray-500" />
+                <span className="text-xs text-gray-600">{doctor.location}</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 text-yellow-500" />
+                <span className="text-sm font-medium">4.8</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3 mt-3">
+            <div className="text-center bg-green-50 rounded-lg p-2">
+              <p className="text-xs text-green-600 font-medium">{currentText.consultationFee}</p>
+              <p className="text-sm font-semibold text-green-700">₹200</p>
+            </div>
+            <div className="text-center bg-blue-50 rounded-lg p-2">
+              <p className="text-xs text-blue-600 font-medium">{currentText.estimatedTime}</p>
+              <p className="text-sm font-semibold text-blue-700">30 min</p>
+            </div>
+          </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      
+      <CardContent className="space-y-5 p-6">
         <div>
-          <label className="text-sm font-medium">{currentText.selectDate}</label>
+          <label className="text-sm font-semibold text-gray-700 mb-2 block">{currentText.selectDate}</label>
           <Input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
             min={new Date().toISOString().split('T')[0]}
+            className="border-2 border-gray-200 focus:border-blue-400 rounded-lg"
           />
         </div>
 
         <div>
-          <label className="text-sm font-medium">{currentText.selectTime}</label>
-          <div className="grid grid-cols-3 gap-2 mt-2">
+          <label className="text-sm font-semibold text-gray-700 mb-3 block">{currentText.selectTime}</label>
+          <div className="grid grid-cols-3 gap-2">
             {availableTimes.map((time) => (
               <Button
                 key={time}
                 variant={selectedTime === time ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedTime(time)}
-                className={selectedTime === time ? "bg-green-600 hover:bg-green-700" : ""}
+                className={`transition-all duration-200 ${
+                  selectedTime === time 
+                    ? "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg scale-105" 
+                    : "border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50"
+                }`}
               >
+                <Clock className="h-3 w-3 mr-1" />
                 {time}
               </Button>
             ))}
@@ -113,46 +154,56 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
         </div>
 
         <div>
-          <label className="text-sm font-medium">{currentText.patientName}</label>
-          <Input
-            value={patientName}
-            onChange={(e) => setPatientName(e.target.value)}
-            placeholder={language === "en" ? "Enter patient name" : "ರೋಗಿಯ ಹೆಸರು ನಮೂದಿಸಿ"}
-          />
+          <label className="text-sm font-semibold text-gray-700 mb-2 block">{currentText.patientName}</label>
+          <div className="relative">
+            <User className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+            <Input
+              value={patientName}
+              onChange={(e) => setPatientName(e.target.value)}
+              placeholder={language === "en" ? "Enter patient name" : "ರೋಗಿಯ ಹೆಸರು ನಮೂದಿಸಿ"}
+              className="pl-10 border-2 border-gray-200 focus:border-blue-400 rounded-lg"
+            />
+          </div>
         </div>
 
         <div>
-          <label className="text-sm font-medium">{currentText.phoneNumber}</label>
-          <Input
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+91 9876543210"
-            type="tel"
-          />
+          <label className="text-sm font-semibold text-gray-700 mb-2 block">{currentText.phoneNumber}</label>
+          <div className="relative">
+            <Phone className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+            <Input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+91 9876543210"
+              type="tel"
+              className="pl-10 border-2 border-gray-200 focus:border-blue-400 rounded-lg"
+            />
+          </div>
         </div>
 
         <div>
-          <label className="text-sm font-medium">{currentText.symptoms}</label>
+          <label className="text-sm font-semibold text-gray-700 mb-2 block">{currentText.symptoms}</label>
           <Textarea
             value={symptoms}
             onChange={(e) => setSymptoms(e.target.value)}
             placeholder={language === "en" ? "Describe symptoms or reason for visit" : "ಲಕ್ಷಣಗಳು ಅಥವಾ ಭೇಟಿಯ ಕಾರಣವನ್ನು ವಿವರಿಸಿ"}
             rows={3}
+            className="border-2 border-gray-200 focus:border-blue-400 rounded-lg resize-none"
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-3 pt-2">
           <Button
             onClick={onClose}
             variant="outline"
-            className="flex-1"
+            className="flex-1 border-2 border-gray-300 hover:bg-gray-50"
           >
             {currentText.cancel}
           </Button>
           <Button
             onClick={handleBooking}
-            className="flex-1 bg-green-600 hover:bg-green-700"
+            className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg"
           >
+            <Calendar className="h-4 w-4 mr-2" />
             {currentText.bookAppointment}
           </Button>
         </div>

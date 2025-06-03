@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +15,13 @@ import {
   Mic,
   User,
   Video,
-  Pill
+  Pill,
+  Thermometer,
+  Activity,
+  Clock,
+  MapPin,
+  Star,
+  Zap
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import EmergencyButton from "@/components/EmergencyButton";
@@ -56,7 +63,15 @@ const Index = () => {
       assistant: "Ask Health Query",
       profile: "Profile",
       videoCall: "Video Call Doctor",
-      callInProgress: "Call in Progress..."
+      callInProgress: "Call in Progress...",
+      quickActions: "Quick Actions",
+      healthServices: "Health Services",
+      todaysTip: "Today's Health Tip",
+      moreTips: "More Tips",
+      healthStatus: "Health Status",
+      lastCheckup: "Last Checkup",
+      nextAppointment: "Next Appointment",
+      medicineReminder: "Medicine Reminder"
     },
     kn: {
       title: "ಆರೋಗ್ಯ ಮಿತ್ರ",
@@ -72,7 +87,15 @@ const Index = () => {
       assistant: "ಆರೋಗ್ಯ ಪ್ರಶ್ನೆ ಕೇಳಿ",
       profile: "ಪ್ರೊಫೈಲ್",
       videoCall: "ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್",
-      callInProgress: "ಕಾಲ್ ಪ್ರಗತಿಯಲ್ಲಿದೆ..."
+      callInProgress: "ಕಾಲ್ ಪ್ರಗತಿಯಲ್ಲಿದೆ...",
+      quickActions: "ತ್ವರಿತ ಕ್ರಿಯೆಗಳು",
+      healthServices: "ಆರೋಗ್ಯ ಸೇವೆಗಳು",
+      todaysTip: "ಇಂದಿನ ಆರೋಗ್ಯ ಸಲಹೆ",
+      moreTips: "ಇನ್ನಷ್ಟು ಸಲಹೆಗಳು",
+      healthStatus: "ಆರೋಗ್ಯ ಸ್ಥಿತಿ",
+      lastCheckup: "ಕೊನೆಯ ಪರೀಕ್ಷೆ",
+      nextAppointment: "ಮುಂದಿನ ಅಪಾಯಿಂಟ್ಮೆಂಟ್",
+      medicineReminder: "ಔಷಧ ಜ್ಞಾಪನೆ"
     }
   };
 
@@ -113,138 +136,211 @@ const Index = () => {
       default:
         return (
           <div className="space-y-6">
-            {/* Welcome Section */}
-            <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+            {/* Enhanced Welcome Section with Health Status */}
+            <Card className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 border-green-200 shadow-lg">
               <CardContent className="p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <Heart className="h-8 w-8 text-green-600" />
-                  <div>
-                    <h2 className="text-xl font-semibold text-green-800">{currentText.welcomeMessage}</h2>
-                    <p className="text-green-600 text-sm">
-                      {language === "en" ? "Holenarasipura, Hassan" : "ಹೊಳೆನರಸೀಪುರ, ಹಾಸನ್"}
-                    </p>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-2xl shadow-md">
+                    <Heart className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold text-green-800">{currentText.welcomeMessage}</h2>
+                    <div className="flex items-center gap-2 text-green-600 text-sm mt-1">
+                      <MapPin className="h-4 w-4" />
+                      <span>{language === "en" ? "Holenarasipura, Hassan" : "ಹೊಳೆನರಸೀಪುರ, ಹಾಸನ್"}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center gap-1 text-green-700">
+                      <Activity className="h-4 w-4" />
+                      <span className="text-sm font-medium">98%</span>
+                    </div>
+                    <p className="text-xs text-green-600">{currentText.healthStatus}</p>
                   </div>
                 </div>
-                <Badge variant="secondary" className="bg-green-100 text-green-700">
+                
+                <div className="grid grid-cols-3 gap-3 mb-4">
+                  <div className="bg-white/60 rounded-lg p-3 text-center">
+                    <Calendar className="h-5 w-5 text-green-600 mx-auto mb-1" />
+                    <p className="text-xs text-green-700 font-medium">{currentText.lastCheckup}</p>
+                    <p className="text-xs text-green-600">Jan 15</p>
+                  </div>
+                  <div className="bg-white/60 rounded-lg p-3 text-center">
+                    <Clock className="h-5 w-5 text-blue-600 mx-auto mb-1" />
+                    <p className="text-xs text-blue-700 font-medium">{currentText.nextAppointment}</p>
+                    <p className="text-xs text-blue-600">Jan 25</p>
+                  </div>
+                  <div className="bg-white/60 rounded-lg p-3 text-center">
+                    <Pill className="h-5 w-5 text-orange-600 mx-auto mb-1" />
+                    <p className="text-xs text-orange-700 font-medium">{currentText.medicineReminder}</p>
+                    <p className="text-xs text-orange-600">2 pills</p>
+                  </div>
+                </div>
+
+                <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+                  <Star className="h-3 w-3 mr-1" />
                   {language === "en" ? "🌿 Stay Healthy, Stay Happy" : "🌿 ಆರೋಗ್ಯವಾಗಿರಿ, ಸಂತೋಷವಾಗಿರಿ"}
                 </Badge>
               </CardContent>
             </Card>
 
-            {/* Emergency Button */}
+            {/* Emergency Button with Enhanced Design */}
             <EmergencyButton language={language} />
 
-            {/* Quick Actions Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("doctor")}>
-                <CardContent className="p-4 text-center">
-                  <Search className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-800">{currentText.findDoctor}</h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {language === "en" ? "Near Hassan" : "ಹಾಸನ್ ಸಮೀಪದಲ್ಲಿ"}
-                  </p>
-                </CardContent>
-              </Card>
+            {/* Quick Actions Section */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Zap className="h-5 w-5 text-blue-600" />
+                <h3 className="text-lg font-semibold text-gray-800">{currentText.quickActions}</h3>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-blue-100 bg-gradient-to-br from-blue-50 to-indigo-50" onClick={() => setActiveSection("doctor")}>
+                  <CardContent className="p-4 text-center">
+                    <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                      <Search className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-blue-800">{currentText.findDoctor}</h3>
+                    <p className="text-xs text-blue-600 mt-1">
+                      {language === "en" ? "12 doctors nearby" : "12 ವೈದ್ಯರು ಹತ್ತಿರದಲ್ಲಿ"}
+                    </p>
+                  </CardContent>
+                </Card>
 
-              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("ambulance")}>
-                <CardContent className="p-4 text-center">
-                  <Ambulance className="h-8 w-8 text-red-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-800">{currentText.ambulance}</h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {language === "en" ? "24/7 Available" : "೨೪/೭ ಲಭ್ಯ"}
-                  </p>
-                </CardContent>
-              </Card>
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-red-100 bg-gradient-to-br from-red-50 to-pink-50" onClick={() => setActiveSection("ambulance")}>
+                  <CardContent className="p-4 text-center">
+                    <div className="bg-gradient-to-br from-red-500 to-pink-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                      <Ambulance className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-red-800">{currentText.ambulance}</h3>
+                    <p className="text-xs text-red-600 mt-1">
+                      {language === "en" ? "Available 24/7" : "೨೪/೭ ಲಭ್ಯ"}
+                    </p>
+                  </CardContent>
+                </Card>
 
-              <Dialog open={showVideoCall} onOpenChange={setShowVideoCall}>
-                <DialogTrigger asChild>
-                  <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={handleVideoCall}>
-                    <CardContent className="p-4 text-center">
-                      <Video className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                      <h3 className="font-medium text-gray-800">{currentText.videoCall}</h3>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {language === "en" ? "Consult Online" : "ಆನ್‌ಲೈನ್ ಸಲಹೆ"}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>{currentText.videoCall}</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div className="bg-gray-900 rounded-lg h-48 flex items-center justify-center">
-                      <div className="text-center text-white">
-                        <Video className="h-12 w-12 mx-auto mb-2" />
-                        <p className="text-sm">{currentText.callInProgress}</p>
-                        <p className="text-xs opacity-75 mt-1">
-                          {language === "en" ? "Dr. Ramesh - Hassan PHC" : "ಡಾ. ರಮೇಶ್ - ಹಾಸನ್ PHC"}
+                <Dialog open={showVideoCall} onOpenChange={setShowVideoCall}>
+                  <DialogTrigger asChild>
+                    <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-green-100 bg-gradient-to-br from-green-50 to-emerald-50" onClick={handleVideoCall}>
+                      <CardContent className="p-4 text-center">
+                        <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                          <Video className="h-6 w-6 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-green-800">{currentText.videoCall}</h3>
+                        <p className="text-xs text-green-600 mt-1">
+                          {language === "en" ? "Instant consultation" : "ತಕ್ಷಣ ಸಲಹೆ"}
                         </p>
+                      </CardContent>
+                    </Card>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>{currentText.videoCall}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div className="bg-gray-900 rounded-lg h-48 flex items-center justify-center">
+                        <div className="text-center text-white">
+                          <Video className="h-12 w-12 mx-auto mb-2" />
+                          <p className="text-sm">{currentText.callInProgress}</p>
+                          <p className="text-xs opacity-75 mt-1">
+                            {language === "en" ? "Dr. Ramesh - Hassan PHC" : "ಡಾ. ರಮೇಶ್ - ಹಾಸನ್ PHC"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex gap-2 justify-center">
+                        <Button variant="destructive" onClick={() => setShowVideoCall(false)}>
+                          {language === "en" ? "End Call" : "ಕಾಲ್ ಕೊನೆಗೊಳಿಸಿ"}
+                        </Button>
                       </div>
                     </div>
-                    <div className="flex gap-2 justify-center">
-                      <Button variant="destructive" onClick={() => setShowVideoCall(false)}>
-                        {language === "en" ? "End Call" : "ಕಾಲ್ ಕೊನೆಗೊಳಿಸಿ"}
-                      </Button>
+                  </DialogContent>
+                </Dialog>
+
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-purple-100 bg-gradient-to-br from-purple-50 to-violet-50" onClick={() => setActiveSection("telepharmacy")}>
+                  <CardContent className="p-4 text-center">
+                    <div className="bg-gradient-to-br from-purple-500 to-violet-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                      <Pill className="h-6 w-6 text-white" />
                     </div>
+                    <h3 className="font-semibold text-purple-800">{currentText.telepharmacy}</h3>
+                    <p className="text-xs text-purple-600 mt-1">
+                      {language === "en" ? "Order medicines" : "ಔಷಧಗಳನ್ನು ಆರ್ಡರ್ ಮಾಡಿ"}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Health Services Section */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Heart className="h-5 w-5 text-orange-600" />
+                <h3 className="text-lg font-semibold text-gray-800">{currentText.healthServices}</h3>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50" onClick={() => setActiveSection("diary")}>
+                  <CardContent className="p-4 text-center">
+                    <div className="bg-gradient-to-br from-emerald-500 to-green-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                      <Book className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-emerald-800">{currentText.diary}</h3>
+                    <p className="text-xs text-emerald-600 mt-1">
+                      {language === "en" ? "Track your health" : "ನಿಮ್ಮ ಆರೋಗ್ಯವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ"}
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer border-orange-100 bg-gradient-to-br from-orange-50 to-amber-50" onClick={() => setActiveSection("tips")}>
+                  <CardContent className="p-4 text-center">
+                    <div className="bg-gradient-to-br from-orange-500 to-amber-600 p-3 rounded-xl mx-auto mb-3 w-fit shadow-md">
+                      <Thermometer className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-orange-800">{currentText.tips}</h3>
+                    <p className="text-xs text-orange-600 mt-1">
+                      {language === "en" ? "Health education" : "ಆರೋಗ್ಯ ಶಿಕ್ಷಣ"}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Enhanced Health Tips Section */}
+            <Card className="bg-gradient-to-br from-yellow-50 via-orange-50 to-amber-50 border-yellow-200 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="bg-gradient-to-br from-orange-400 to-yellow-500 p-2 rounded-xl">
+                    <Star className="h-6 w-6 text-white" />
                   </div>
-                </DialogContent>
-              </Dialog>
-
-              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("telepharmacy")}>
-                <CardContent className="p-4 text-center">
-                  <Pill className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-800">{currentText.telepharmacy}</h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {language === "en" ? "Find Medicines" : "ಔಷಧಗಳನ್ನು ಹುಡುಕಿ"}
+                  <h3 className="font-bold text-orange-800 text-lg">{currentText.todaysTip}</h3>
+                </div>
+                
+                <div className="bg-white/60 rounded-lg p-4 mb-4">
+                  <p className="text-sm text-orange-700 leading-relaxed">
+                    {language === "en" 
+                      ? "💧 Drink warm water with honey and lemon in the morning for better digestion and immunity. This simple remedy helps cleanse your system and boosts energy levels naturally."
+                      : "💧 ಉತ್ತಮ ಜೀರಣಕ್ರಿಯೆ ಮತ್ತು ರೋಗನಿರೋಧಕ ಶಕ್ತಿಗಾಗಿ ಬೆಳಿಗ್ಗೆ ಜೇನು ಮತ್ತು ನಿಂಬೆಯೊಂದಿಗೆ ಬೆಚ್ಚಗಿನ ನೀರು ಕುಡಿಯಿರಿ. ಈ ಸರಳ ಪರಿಹಾರವು ನಿಮ್ಮ ವ್ಯವಸ್ಥೆಯನ್ನು ಶುದ್ಧೀಕರಿಸಲು ಮತ್ತು ನೈಸರ್ಗಿಕವಾಗಿ ಶಕ್ತಿಯ ಮಟ್ಟವನ್ನು ಹೆಚ್ಚಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+                    }
                   </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Secondary Actions */}
-            <div className="grid grid-cols-2 gap-4">
-              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("diary")}>
-                <CardContent className="p-4 text-center">
-                  <Book className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-800">{currentText.diary}</h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {language === "en" ? "Health Records" : "ಆರೋಗ್ಯ ದಾಖಲೆಗಳು"}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveSection("tips")}>
-                <CardContent className="p-4 text-center">
-                  <Heart className="h-8 w-8 text-orange-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-800">{currentText.tips}</h3>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {language === "en" ? "Health Education" : "ಆರೋಗ್ಯ ಶಿಕ್ಷಣ"}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Health Tips Today */}
-            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200">
-              <CardContent className="p-4">
-                <h3 className="font-semibold text-orange-800 mb-2">
-                  {language === "en" ? "🌟 Today's Health Tip" : "🌟 ಇಂದಿನ ಆರೋಗ್ಯ ಸಲಹೆ"}
-                </h3>
-                <p className="text-sm text-orange-700">
-                  {language === "en" 
-                    ? "Drink warm water with honey and lemon in the morning for better digestion and immunity."
-                    : "ಉತ್ತಮ ಜೀರಣಕ್ರಿಯೆ ಮತ್ತು ರೋಗನಿರೋಧಕ ಶಕ್ತಿಗಾಗಿ ಬೆಳಿಗ್ಗೆ ಜೇನು ಮತ್ತು ನಿಂಬೆಯೊಂದಿಗೆ ಬೆಚ್ಚಗಿನ ನೀರು ಕುಡಿಯಿರಿ."
-                  }
-                </p>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  className="mt-2 border-orange-300 text-orange-700 hover:bg-orange-100"
-                  onClick={() => setActiveSection("tips")}
-                >
-                  {language === "en" ? "More Tips" : "ಇನ್ನಷ್ಟು ಸಲಹೆಗಳು"}
-                </Button>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm" 
+                    className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white shadow-md"
+                    onClick={() => setActiveSection("tips")}
+                  >
+                    <Heart className="h-4 w-4 mr-1" />
+                    {currentText.moreTips}
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    className="border-orange-300 text-orange-700 hover:bg-orange-100"
+                  >
+                    <Star className="h-4 w-4 mr-1" />
+                    {language === "en" ? "Save Tip" : "ಸಲಹೆ ಉಳಿಸಿ"}
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -254,24 +350,26 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b border-green-100">
-        <div className="max-w-md mx-auto px-4 py-3">
+      {/* Enhanced Header */}
+      <div className="bg-white shadow-lg border-b border-green-100">
+        <div className="max-w-md mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-green-100 p-2 rounded-full">
-                <Heart className="h-6 w-6 text-green-600" />
+              <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-3 rounded-2xl shadow-lg">
+                <Heart className="h-7 w-7 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-green-800">{currentText.title}</h1>
-                <p className="text-xs text-green-600">{currentText.subtitle}</p>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-green-700 to-emerald-600 bg-clip-text text-transparent">
+                  {currentText.title}
+                </h1>
+                <p className="text-xs text-green-600 font-medium">{currentText.subtitle}</p>
               </div>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={toggleLanguage}
-              className="border-green-300 text-green-700 hover:bg-green-50"
+              className="border-green-300 text-green-700 hover:bg-green-50 font-medium shadow-sm"
             >
               {language === "en" ? "ಕನ್ನಡ" : "English"}
             </Button>
@@ -284,22 +382,22 @@ const Index = () => {
         {renderActiveSection()}
       </div>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-green-100 shadow-lg">
+      {/* Enhanced Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-green-100 shadow-2xl">
         <div className="max-w-md mx-auto">
-          <div className="flex items-center justify-around py-2">
+          <div className="flex items-center justify-around py-3">
             <Button
               variant={activeSection === "dashboard" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveSection("dashboard")}
-              className={`flex-col h-auto py-2 px-2 ${
+              className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
                 activeSection === "dashboard" 
-                  ? "bg-green-600 hover:bg-green-700" 
-                  : "text-gray-600 hover:text-green-600"
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg scale-105" 
+                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
               }`}
             >
-              <Heart className="h-4 w-4 mb-1" />
-              <span className="text-xs">
+              <Heart className="h-5 w-5 mb-1" />
+              <span className="text-xs font-medium">
                 {language === "en" ? "Home" : "ಮನೆ"}
               </span>
             </Button>
@@ -308,28 +406,28 @@ const Index = () => {
               variant={activeSection === "family" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveSection("family")}
-              className={`flex-col h-auto py-2 px-2 ${
+              className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
                 activeSection === "family" 
-                  ? "bg-green-600 hover:bg-green-700" 
-                  : "text-gray-600 hover:text-green-600"
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg scale-105" 
+                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
               }`}
             >
-              <Users className="h-4 w-4 mb-1" />
-              <span className="text-xs">{currentText.family}</span>
+              <Users className="h-5 w-5 mb-1" />
+              <span className="text-xs font-medium">{currentText.family}</span>
             </Button>
 
             <Button
               variant={activeSection === "assistant" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveSection("assistant")}
-              className={`flex-col h-auto py-2 px-2 ${
+              className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
                 activeSection === "assistant" 
-                  ? "bg-green-600 hover:bg-green-700" 
-                  : "text-gray-600 hover:text-green-600"
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg scale-105" 
+                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
               }`}
             >
-              <Mic className="h-4 w-4 mb-1" />
-              <span className="text-xs">
+              <Mic className="h-5 w-5 mb-1" />
+              <span className="text-xs font-medium">
                 {language === "en" ? "Ask" : "ಕೇಳಿ"}
               </span>
             </Button>
@@ -338,21 +436,21 @@ const Index = () => {
               variant={activeSection === "profile" ? "default" : "ghost"}
               size="sm"
               onClick={() => setActiveSection("profile")}
-              className={`flex-col h-auto py-2 px-2 ${
+              className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
                 activeSection === "profile" 
-                  ? "bg-green-600 hover:bg-green-700" 
-                  : "text-gray-600 hover:text-green-600"
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-lg scale-105" 
+                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
               }`}
             >
-              <User className="h-4 w-4 mb-1" />
-              <span className="text-xs">{currentText.profile}</span>
+              <User className="h-5 w-5 mb-1" />
+              <span className="text-xs font-medium">{currentText.profile}</span>
             </Button>
           </div>
         </div>
       </div>
 
       {/* Padding for bottom navigation */}
-      <div className="h-16"></div>
+      <div className="h-20"></div>
     </div>
   );
 };
