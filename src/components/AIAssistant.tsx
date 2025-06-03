@@ -220,32 +220,23 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-200px)] max-h-[600px]">
-      {/* Header */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200 mb-4">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MessageCircle className="h-5 w-5 text-blue-800" />
-              <div>
-                <CardTitle className="text-lg text-blue-800">{currentText.title}</CardTitle>
-                <p className="text-sm text-blue-600">{currentText.subtitle}</p>
-              </div>
+    <div className="w-full max-w-4xl mx-auto h-[calc(100vh-120px)] flex flex-col">
+      {/* Settings - Only shown when toggled */}
+      {showSettings && (
+        <Card className="mb-4">
+          <CardContent className="p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-sm font-medium">{currentText.title}</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowSettings(false)}
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowSettings(!showSettings)}
-              className="text-blue-600 hover:text-blue-800"
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-          </div>
-        </CardHeader>
-        {showSettings && (
-          <CardContent className="pt-0">
             <div className="space-y-2">
-              <label className="text-xs text-blue-700">
+              <label className="text-xs text-gray-600">
                 {language === "en" ? "OpenRouter API Key:" : "OpenRouter API ಕೀ:"}
               </label>
               <Input
@@ -257,13 +248,23 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
               />
             </div>
           </CardContent>
-        )}
-      </Card>
+        </Card>
+      )}
 
       {/* Quick Questions */}
       <div className="mb-4">
-        <h3 className="text-sm font-medium text-gray-700 mb-2">{currentText.quickQuestions}</h3>
-        <div className="space-y-2">
+        <div className="flex justify-between items-center mb-2">
+          <h3 className="text-sm font-medium text-gray-700">{currentText.quickQuestions}</h3>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSettings(!showSettings)}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
           {quickQuestions.map((q) => (
             <Button
               key={q.id}
@@ -271,7 +272,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
               size="sm"
               onClick={() => handleQuickQuestion(q.question)}
               disabled={isLoading}
-              className="w-full text-left justify-start border-green-200 text-green-700 hover:bg-green-50"
+              className="text-left justify-start border-green-200 text-green-700 hover:bg-green-50"
             >
               <q.icon className="h-4 w-4 mr-2" />
               {q.question}
