@@ -1,11 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Book, QrCode, Share2, Calendar, Heart, Thermometer } from "lucide-react";
+import { Book, QrCode, Share2, Calendar, Heart, Thermometer, Activity, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ArogyaDiaryProps {
@@ -19,7 +19,14 @@ const ArogyaDiary = ({ language }: ArogyaDiaryProps) => {
     notes: "",
     date: new Date().toISOString().split('T')[0]
   });
+  const [storedRecords, setStoredRecords] = useState([]);
   const { toast } = useToast();
+
+  // Load records from localStorage
+  useEffect(() => {
+    const records = JSON.parse(localStorage.getItem('arogyaDiaryRecords') || '[]');
+    setStoredRecords(records);
+  }, []);
 
   const text = {
     en: {
@@ -54,7 +61,7 @@ const ArogyaDiary = ({ language }: ArogyaDiaryProps) => {
 
   const currentText = text[language];
 
-  const healthRecords = [
+  const defaultHealthRecords = [
     {
       id: 1,
       type: "checkup",
@@ -72,19 +79,33 @@ const ArogyaDiary = ({ language }: ArogyaDiaryProps) => {
       medicine: "Metformin 500mg",
       dosage: language === "en" ? "Twice daily after meals" : "ಊಟದ ನಂತರ ದಿನಕ್ಕೆ ಎರಡು ಬಾರಿ",
       status: "ongoing"
-    },
-    {
-      id: 3,
-      type: "emergency",
-      title: language === "en" ? "Fever Treatment" : "ಜ್ವರದ ಚಿಕಿತ್ಸೆ",
-      date: "2024-01-05",
-      temperature: "102°F",
-      treatment: language === "en" ? "Paracetamol, Rest" : "ಪ್ಯಾರಾಸಿಟಮಾಲ್, ವಿಶ್ರಾಂತಿ",
-      status: "recovered"
     }
   ];
 
+  // Combine stored records with default records
+  const allHealthRecords = [...storedRecords, ...defaultHealthRecords];
+
   const handleSaveEntry = () => {
+    const newRecord = {
+      id: Date.now(),
+      type: newEntry.type,
+      title: language === "en" ? "Manual Entry" : "ಹಸ್ತಚಾಲಿತ ನಮೂದು",
+      date: newEntry.date,
+      notes: newEntry.notes,
+      status: "recorded"
+    };
+
+    const updatedRecords = [newRecord, ...storedRecords];
+    localStorage.setItem('arogyaDiaryRecords', JSON.stringify(updatedRecords));
+    setStoredRecords(updatedRecords);
+
+    // Reset form
+    setNewEntry({
+      type: "checkup",
+      notes: "",
+      date: new Date().toISOString().split('T')[0]
+    });
+
     toast({
       title: language === "en" ? "✅ Entry Saved!" : "✅ ನಮೂದು ಉಳಿಸಲಾಗಿದೆ!",
       description: language === "en" 
@@ -107,6 +128,7 @@ const ArogyaDiary = ({ language }: ArogyaDiaryProps) => {
       case "normal": return "bg-green-100 text-green-800";
       case "ongoing": return "bg-blue-100 text-blue-800";
       case "recovered": return "bg-purple-100 text-purple-800";
+      case "recorded": return "bg-yellow-100 text-yellow-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
@@ -116,8 +138,42 @@ const ArogyaDiary = ({ language }: ArogyaDiaryProps) => {
       case "checkup": return <Heart className="h-4 w-4" />;
       case "medicine": return <Calendar className="h-4 w-4" />;
       case "emergency": return <Thermometer className="h-4 w-4" />;
+      case "vitals": return <Activity className="h-4 w-4" />;
       default: return <Book className="h-4 w-4" />;
     }
+  };
+
+  const renderVitalsData = (vitals) => {
+    if (!vitals) return null;
+    
+    return (
+      <div className="grid grid-cols-2 gap-2 mt-2">
+        {vitals.bloodPressure && (
+          <div className="flex items-center gap-1">
+            <Heart className="h-3 w-3 text-red-500" />
+            <span className="text-xs text-gray-600">BP: {vitals.bloodPressure}</span>
+          </div>
+        )}
+        {vitals.heartRate && (
+          <div className="flex items-center gap-1">
+            <Activity className="h-3 w-3 text-blue-500" />
+            <span className="text-xs text-gray-600">HR: {vitals.heartRate}</span>
+          </div>
+        )}
+        {vitals.temperature && (
+          <div className="flex items-center gap-1">
+            <Thermometer className="h-3 w-3 text-orange-500" />
+            <span className="text-xs text-gray-600">Temp: {vitals.temperature}</span>
+          </div>
+        )}
+        {vitals.weight && (
+          <div className="flex items-center gap-1">
+            <TrendingUp className="h-3 w-3 text-green-500" />
+            <span className="text-xs text-gray-600">Weight: {vitals.weight}</span>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -177,7 +233,7 @@ const ArogyaDiary = ({ language }: ArogyaDiaryProps) => {
       <div>
         <h3 className="font-semibold text-gray-800 mb-3">{currentText.recentEntries}</h3>
         <div className="space-y-3">
-          {healthRecords.map((record) => (
+          {allHealthRecords.map((record) => (
             <Card key={record.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between">
@@ -206,6 +262,10 @@ const ArogyaDiary = ({ language }: ArogyaDiaryProps) => {
                         <p className="text-xs text-gray-500">{record.treatment}</p>
                       </div>
                     )}
+                    {record.notes && (
+                      <p className="text-sm text-gray-600 mt-1">{record.notes}</p>
+                    )}
+                    {record.vitals && renderVitalsData(record.vitals)}
                   </div>
                   <Badge className={getStatusColor(record.status)}>
                     {record.status}

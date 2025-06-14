@@ -34,7 +34,7 @@ const QuickHealthCheck = ({ language }: QuickHealthCheckProps) => {
       tempPlaceholder: "98.6°F",
       weightPlaceholder: "65 kg",
       recorded: "Vitals Recorded!",
-      recordedDesc: "Your health data has been saved",
+      recordedDesc: "Your health data has been saved to Arogya Diary",
       normal: "Normal",
       checkReminder: "Regular health checks help prevent diseases"
     },
@@ -50,7 +50,7 @@ const QuickHealthCheck = ({ language }: QuickHealthCheckProps) => {
       tempPlaceholder: "98.6°F",
       weightPlaceholder: "65 kg",
       recorded: "ಮಾಪಕಗಳನ್ನು ದಾಖಲಿಸಲಾಗಿದೆ!",
-      recordedDesc: "ನಿಮ್ಮ ಆರೋಗ್ಯ ಡೇಟಾವನ್ನು ಉಳಿಸಲಾಗಿದೆ",
+      recordedDesc: "ನಿಮ್ಮ ಆರೋಗ್ಯ ಡೇಟಾವನ್ನು ಆರೋಗ್ಯ ಡೈರಿಗೆ ಉಳಿಸಲಾಗಿದೆ",
       normal: "ಸಾಮಾನ್ಯ",
       checkReminder: "ನಿಯಮಿತ ಆರೋಗ್ಯ ಪರೀಕ್ಷೆಗಳು ರೋಗಗಳನ್ನು ತಡೆಯಲು ಸಹಾಯ ಮಾಡುತ್ತವೆ"
     }
@@ -58,15 +58,43 @@ const QuickHealthCheck = ({ language }: QuickHealthCheckProps) => {
 
   const currentText = text[language];
 
+  const saveVitalsToStorage = (vitalsData) => {
+    const existingRecords = JSON.parse(localStorage.getItem('arogyaDiaryRecords') || '[]');
+    const newRecord = {
+      id: Date.now(),
+      type: "vitals",
+      title: language === "en" ? "Health Vitals Check" : "ಆರೋಗ್ಯ ಮಾಪಕಗಳ ಪರೀಕ್ಷೆ",
+      date: new Date().toISOString().split('T')[0],
+      vitals: vitalsData,
+      status: "recorded"
+    };
+    
+    const updatedRecords = [newRecord, ...existingRecords];
+    localStorage.setItem('arogyaDiaryRecords', JSON.stringify(updatedRecords));
+  };
+
   const handleRecord = () => {
+    if (!vitals.bloodPressure && !vitals.heartRate && !vitals.temperature && !vitals.weight) {
+      toast({
+        title: language === "en" ? "No Data" : "ಡೇಟಾ ಇಲ್ಲ",
+        description: language === "en" ? "Please enter at least one vital sign" : "ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ಒಂದು ಮಾಪಕವನ್ನು ನಮೂದಿಸಿ"
+      });
+      return;
+    }
+
     setIsRecording(true);
     
     setTimeout(() => {
       setIsRecording(false);
+      
+      // Save to localStorage for Arogya Diary
+      saveVitalsToStorage(vitals);
+      
       toast({
         title: currentText.recorded,
         description: currentText.recordedDesc
       });
+      
       // Reset form
       setVitals({
         bloodPressure: "",
