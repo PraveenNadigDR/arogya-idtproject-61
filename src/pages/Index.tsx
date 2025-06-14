@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,7 +25,6 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import EmergencyButton from "@/components/EmergencyButton";
 import EmergencyServices from "@/components/EmergencyServices";
 import ArogyaDiary from "@/components/ArogyaDiary";
 import DoctorFinder from "@/components/DoctorFinder";
@@ -202,9 +200,6 @@ const Index = () => {
 
             {/* Weather Widget */}
             <WeatherWidget language={language} />
-
-            {/* Emergency Button with Enhanced Design */}
-            <EmergencyButton language={language} />
 
             {/* Quick Health Check */}
             <QuickHealthCheck language={language} />

@@ -14,8 +14,9 @@ const EmergencyServices = ({ language }: EmergencyServicesProps) => {
   const [emergencyActive, setEmergencyActive] = useState(false);
   const [locationShared, setLocationShared] = useState(false);
   const [ambulanceTracking, setAmbulanceTracking] = useState(false);
+  const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const [ambulanceLocation, setAmbulanceLocation] = useState({ lat: 13.0037, lng: 76.1024 });
-  const [userLocation] = useState({ lat: 13.0827, lng: 76.0997 });
   const [estimatedArrival, setEstimatedArrival] = useState("12-15");
   const { toast } = useToast();
 
@@ -48,7 +49,11 @@ const EmergencyServices = ({ language }: EmergencyServicesProps) => {
       tip4: "Keep the patient comfortable",
       police: "Police: 100",
       fire: "Fire: 101",
-      helpline: "Women Helpline: 1091"
+      helpline: "Women Helpline: 1091",
+      gettingLocation: "Getting your location...",
+      locationError: "Unable to get location",
+      allowLocation: "Please allow location access",
+      locationAccuracy: "Location Accuracy"
     },
     kn: {
       title: "ತುರ್ತು ಸೇವೆಗಳು",
@@ -78,11 +83,44 @@ const EmergencyServices = ({ language }: EmergencyServicesProps) => {
       tip4: "ರೋಗಿಯನ್ನು ಆರಾಮದಾಯಕವಾಗಿ ಇರಿಸಿ",
       police: "ಪೊಲೀಸ್: 100",
       fire: "ಅಗ್ನಿಶಾಮಕ: 101",
-      helpline: "ಮಹಿಳಾ ಸಹಾಯವಾಣಿ: 1091"
+      helpline: "ಮಹಿಳಾ ಸಹಾಯವಾಣಿ: 1091",
+      gettingLocation: "ನಿಮ್ಮ ಸ್ಥಳವನ್ನು ಪಡೆಯುತ್ತಿದೆ...",
+      locationError: "ಸ್ಥಳವನ್ನು ಪಡೆಯಲು ಸಾಧ್ಯವಿಲ್ಲ",
+      allowLocation: "ದಯವಿಟ್ಟು ಸ್ಥಳದ ಪ್ರವೇಶವನ್ನು ಅನುಮತಿಸಿ",
+      locationAccuracy: "ಸ್ಥಳದ ನಿಖರತೆ"
     }
   };
 
   const currentText = text[language];
+
+  // Get user's current location
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation is not supported by this browser");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const location = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        setUserLocation(location);
+        setLocationError(null);
+        console.log("User location obtained:", location);
+      },
+      (error) => {
+        console.error("Location error:", error);
+        setLocationError(error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
+  };
 
   // Simulate ambulance movement
   useEffect(() => {
@@ -112,11 +150,23 @@ const EmergencyServices = ({ language }: EmergencyServicesProps) => {
   };
 
   const handleShareLocation = () => {
+    if (!userLocation) {
+      getCurrentLocation();
+      toast({
+        title: currentText.gettingLocation,
+        description: currentText.allowLocation
+      });
+      return;
+    }
+
     setLocationShared(true);
     toast({
       title: currentText.locationShared,
-      description: currentText.locationSharedDesc
+      description: `${currentText.locationSharedDesc}\nLat: ${userLocation.lat.toFixed(6)}, Lng: ${userLocation.lng.toFixed(6)}`
     });
+
+    // Simulate sharing location with emergency services
+    console.log("Location shared with emergency services:", userLocation);
   };
 
   const handleTrackAmbulance = () => {
@@ -128,6 +178,8 @@ const EmergencyServices = ({ language }: EmergencyServicesProps) => {
   };
 
   const calculateDistance = () => {
+    if (!userLocation) return "Unknown";
+    
     const distance = Math.sqrt(
       Math.pow(ambulanceLocation.lat - userLocation.lat, 2) + 
       Math.pow(ambulanceLocation.lng - userLocation.lng, 2)
@@ -185,9 +237,31 @@ const EmergencyServices = ({ language }: EmergencyServicesProps) => {
                 : currentText.shareLocation
               }
             </Button>
-            {locationShared && (
-              <div className="mt-2 text-xs text-blue-700 text-center">
-                📍 {language === "en" ? "Holenarasipura, Hassan - Shared with emergency services" : "ಹೊಳೆನರಸೀಪುರ, ಹಾಸನ್ - ತುರ್ತು ಸೇವೆಗಳೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಲಾಗಿದೆ"}
+            
+            {/* Location Details */}
+            {userLocation && (
+              <div className="mt-3 p-3 bg-white/80 rounded-lg">
+                <div className="text-xs text-blue-700 space-y-1">
+                  <div className="flex justify-between">
+                    <span className="font-medium">📍 {currentText.yourLocation}:</span>
+                  </div>
+                  <div className="font-mono text-xs">
+                    Lat: {userLocation.lat.toFixed(6)}
+                  </div>
+                  <div className="font-mono text-xs">
+                    Lng: {userLocation.lng.toFixed(6)}
+                  </div>
+                  <div className="flex items-center gap-1 text-green-600">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <span>{currentText.locationAccuracy}: High</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {locationError && (
+              <div className="mt-2 text-xs text-red-600 text-center">
+                ⚠️ {currentText.locationError}: {locationError}
               </div>
             )}
           </CardContent>
@@ -245,11 +319,20 @@ const EmergencyServices = ({ language }: EmergencyServicesProps) => {
               <div className="space-y-2 text-xs text-gray-600">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span>{currentText.yourLocation}: Holenarasipura</span>
+                  <span>
+                    {currentText.yourLocation}: 
+                    {userLocation 
+                      ? ` ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`
+                      : " Location not available"
+                    }
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                  <span>{currentText.ambulanceLocation}: Hassan District Hospital</span>
+                  <span>
+                    {currentText.ambulanceLocation}: 
+                    {` ${ambulanceLocation.lat.toFixed(4)}, ${ambulanceLocation.lng.toFixed(4)}`}
+                  </span>
                 </div>
               </div>
 
