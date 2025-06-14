@@ -22,10 +22,12 @@ import {
   Star,
   Zap,
   Sun,
-  Droplets
+  Droplets,
+  AlertTriangle
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import EmergencyButton from "@/components/EmergencyButton";
+import EmergencyServices from "@/components/EmergencyServices";
 import ArogyaDiary from "@/components/ArogyaDiary";
 import DoctorFinder from "@/components/DoctorFinder";
 import FamilyHealth from "@/components/FamilyHealth";
@@ -59,6 +61,7 @@ const Index = () => {
       subtitle: "Your Village Health Companion",
       welcomeMessage: "Namaste Shreyas! How can we help your family today?",
       emergency: "Emergency Help",
+      emergencyServices: "Emergency",
       findDoctor: "Find Doctor",
       ambulance: "Ambulance",
       telepharmacy: "Pharmacy",
@@ -85,6 +88,7 @@ const Index = () => {
       subtitle: "ನಿಮ್ಮ ಹಳ್ಳಿಯ ಆರೋಗ್ಯ ಸಹಾಯಕ",
       welcomeMessage: "ನಮಸ್ತೆ ಶ್ರೇಯಸ್! ಇಂದು ನಿಮ್ಮ ಕುಟುಂಬಕ್ಕೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?",
       emergency: "ತುರ್ತು ಸಹಾಯ",
+      emergencyServices: "ತುರ್ತು",
       findDoctor: "ವೈದ್ಯರನ್ನು ಹುಡುಕಿ",
       ambulance: "ಆಂಬುಲೆನ್ಸ್",
       telepharmacy: "ಔಷಧಾಲಯ",
@@ -126,6 +130,8 @@ const Index = () => {
 
   const renderActiveSection = () => {
     switch(activeSection) {
+      case "emergency":
+        return <EmergencyServices language={language} />;
       case "diary":
         return <ArogyaDiary language={language} />;
       case "doctor":
@@ -432,17 +438,17 @@ const Index = () => {
             </Button>
 
             <Button
-              variant={activeSection === "family" ? "default" : "ghost"}
+              variant={activeSection === "emergency" ? "default" : "ghost"}
               size="sm"
-              onClick={() => setActiveSection("family")}
+              onClick={() => setActiveSection("emergency")}
               className={`flex-col h-auto py-2 px-3 transition-all duration-300 ${
-                activeSection === "family" 
-                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 shadow-xl scale-110" 
-                  : "text-gray-600 hover:text-green-600 hover:bg-green-50"
+                activeSection === "emergency" 
+                  ? "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 shadow-xl scale-110" 
+                  : "text-gray-600 hover:text-red-600 hover:bg-red-50"
               }`}
             >
-              <Users className="h-5 w-5 mb-1" />
-              <span className="text-xs font-medium">{currentText.family}</span>
+              <AlertTriangle className="h-5 w-5 mb-1" />
+              <span className="text-xs font-medium">{currentText.emergencyServices}</span>
             </Button>
 
             <Button
