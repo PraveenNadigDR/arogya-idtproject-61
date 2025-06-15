@@ -1,7 +1,7 @@
 
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { User, Edit, LogOut } from "lucide-react";
+import { User, Edit, LogOut, Crown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -33,35 +33,42 @@ const ProfileHeader = ({ language, isEditing, onEditToggle, text }: ProfileHeade
   };
 
   return (
-    <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
-      <CardHeader className="pb-3">
+    <Card className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-0 shadow-xl ring-1 ring-blue-200/30 hover:shadow-2xl transition-all duration-300">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-lg text-blue-800 flex items-center gap-2">
-              <User className="h-5 w-5" />
-              {text.title}
-            </CardTitle>
-            <p className="text-sm text-blue-600">
-              {language === "en" ? "Manage your health profile" : "ನಿಮ್ಮ ಆರೋಗ್ಯ ಪ್ರೊಫೈಲ್ ನಿರ್ವಹಿಸಿ"}
-            </p>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <User className="h-6 w-6 text-white" />
+              </div>
+              <Crown className="h-4 w-4 text-yellow-500 absolute -top-1 -right-1" />
+            </div>
+            <div>
+              <CardTitle className="text-xl text-blue-800 flex items-center gap-2">
+                {text.title}
+              </CardTitle>
+              <p className="text-sm text-blue-600 mt-1">
+                {language === "en" ? "Manage your health profile" : "ನಿಮ್ಮ ಆರೋಗ್ಯ ಪ್ರೊಫೈಲ್ ನಿರ್ವಹಿಸಿ"}
+              </p>
+            </div>
           </div>
           <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={onEditToggle}
-              className="border-blue-300 text-blue-700 hover:bg-blue-50"
+              className="border-blue-300 text-blue-700 hover:bg-blue-50 transition-all duration-300 hover:scale-105 hover:shadow-md"
             >
-              <Edit className="h-4 w-4 mr-1" />
+              <Edit className="h-4 w-4 mr-2" />
               {text.edit}
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleSignOut}
-              className="border-red-300 text-red-700 hover:bg-red-50"
+              className="border-red-300 text-red-700 hover:bg-red-50 transition-all duration-300 hover:scale-105 hover:shadow-md"
             >
-              <LogOut className="h-4 w-4 mr-1" />
+              <LogOut className="h-4 w-4 mr-2" />
               {text.signOut}
             </Button>
           </div>
