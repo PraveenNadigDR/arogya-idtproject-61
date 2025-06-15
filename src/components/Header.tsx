@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { User as UserIcon, Heart, Bell, Moon, Sun } from 'lucide-react';
+import { User as UserIcon, Heart, Moon, Sun } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -60,18 +60,8 @@ const Header = ({ onNavigateToProfile }: HeaderProps) => {
               </div>
             </div>
             
-            {/* Enhanced Action Buttons with premium interactions */}
+            {/* Enhanced Action Buttons with premium interactions - Notification button removed */}
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative w-12 h-12 rounded-3xl bg-gradient-to-br from-slate-100/80 to-blue-100/80 dark:from-gray-700/80 dark:to-gray-600/80 hover:from-slate-200/90 hover:to-blue-200/90 dark:hover:from-gray-600/90 dark:hover:to-gray-500/90 border border-slate-200/60 dark:border-gray-600/60 shadow-lg backdrop-blur-xl transition-all duration-700 hover:scale-110 hover:rotate-3 hover:shadow-2xl hover:shadow-blue-500/30 animate-bounce-slow group"
-              >
-                <Bell className="h-5 w-5 text-slate-600 dark:text-slate-300 transition-all duration-500 group-hover:animate-wiggle drop-shadow-sm" />
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-orange-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
-                <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-r from-yellow-400 to-red-400 rounded-full animate-ping delay-500 opacity-75"></div>
-              </Button>
-              
               <Button
                 variant="ghost"
                 size="sm"

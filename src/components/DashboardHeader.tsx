@@ -134,15 +134,15 @@ const DashboardHeader = ({ language }: DashboardHeaderProps) => {
           {language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}
         </div>
         
-        {/* Enhanced decorative line with blinking ball */}
+        {/* Enhanced decorative line with blinking ball - Fixed animation */}
         <div className={`flex items-center justify-center gap-8 mb-12 ${!prefersReducedMotion ? 'animate-fade-in-up' : ''}`} style={{animationDelay: '0.3s'}} aria-hidden="true">
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-blue-500 to-purple-500 rounded-full shadow-lg shadow-blue-500/20"></div>
           
-          {/* Restored blinking ball with enhanced design */}
+          {/* Fixed blinking ball with proper animation */}
           <div className="relative">
             <div className={`w-12 h-12 bg-gradient-to-br from-blue-500 via-purple-500 to-emerald-500 rounded-full shadow-2xl shadow-blue-500/40 ${!prefersReducedMotion ? 'animate-pulse' : ''}`}></div>
-            {/* Additional blinking effect */}
-            <div className={`absolute inset-0 w-12 h-12 bg-gradient-to-br from-blue-400 via-purple-400 to-emerald-400 rounded-full ${!prefersReducedMotion ? 'animate-ping' : ''} opacity-75`}></div>
+            {/* Enhanced blinking effect */}
+            <div className={`absolute inset-0 w-12 h-12 bg-gradient-to-br from-blue-300 via-purple-300 to-emerald-300 rounded-full opacity-75 ${!prefersReducedMotion ? 'animate-ping' : ''}`}></div>
             {/* Inner glow */}
             <div className={`absolute inset-2 w-8 h-8 bg-white/30 rounded-full ${!prefersReducedMotion ? 'animate-pulse' : ''}`} style={{animationDelay: '0.5s'}}></div>
           </div>
