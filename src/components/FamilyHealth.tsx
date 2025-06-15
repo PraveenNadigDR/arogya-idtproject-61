@@ -2,17 +2,64 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Users, User, Heart, Calendar, Plus, Thermometer } from "lucide-react";
+import { Users, User, Heart, Calendar, Plus, Thermometer, X, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface FamilyHealthProps {
   language: string;
 }
 
+interface FamilyMember {
+  id: number;
+  name: string;
+  age: number;
+  relation: string;
+  avatar: string;
+  healthStatus: string;
+  lastCheckup: string;
+  medicines: number;
+  upcomingAppointments: number;
+  conditions: string[];
+}
+
 const FamilyHealth = ({ language }: FamilyHealthProps) => {
+  const { user } = useAuth();
   const [selectedMember, setSelectedMember] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newMember, setNewMember] = useState({
+    name: "",
+    age: "",
+    relation: "",
+    conditions: ""
+  });
   const { toast } = useToast();
+
+  // Load family members from localStorage
+  const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>(() => {
+    if (!user) return [];
+    
+    const stored = localStorage.getItem(`family_members_${user.id}`);
+    const storedMembers = stored ? JSON.parse(stored) : [];
+    
+    // Always include the user as the first member
+    const userProfile = {
+      id: 0,
+      name: language === "en" ? `${user.user_metadata?.full_name || user.email?.split('@')[0] || "You"} (You)` : `${user.user_metadata?.full_name || user.email?.split('@')[0] || "ನೀವು"} (ನೀವು)`,
+      age: 19, // Default age, can be updated from profile
+      relation: language === "en" ? "Self" : "ನೀವು",
+      avatar: "👨‍💼",
+      healthStatus: "normal",
+      lastCheckup: "2024-01-15",
+      medicines: 2,
+      upcomingAppointments: 1,
+      conditions: language === "en" ? ["Healthy"] : ["ಆರೋಗ್ಯವಾಗಿದೆ"]
+    };
+
+    return [userProfile, ...storedMembers];
+  });
 
   const text = {
     en: {
@@ -26,7 +73,18 @@ const FamilyHealth = ({ language }: FamilyHealthProps) => {
       upcoming: "Upcoming",
       normal: "Normal",
       attention: "Needs Attention",
-      critical: "Critical"
+      critical: "Critical",
+      name: "Name",
+      age: "Age",
+      relation: "Relation",
+      conditions: "Health Conditions",
+      save: "Save Member",
+      cancel: "Cancel",
+      memberAdded: "✅ Family Member Added!",
+      memberAddedDesc: "The family member has been added successfully",
+      memberRemoved: "Family member removed",
+      noMembers: "No family members added yet",
+      addFirstMember: "Add your first family member to start tracking their health"
     },
     kn: {
       title: "ಕುಟುಂಬದ ಆರೋಗ್ಯ",
@@ -39,92 +97,83 @@ const FamilyHealth = ({ language }: FamilyHealthProps) => {
       upcoming: "ಮುಂಬರುವ",
       normal: "ಸಾಮಾನ್ಯ",
       attention: "ಗಮನ ಅಗತ್ಯ",
-      critical: "ಗಂಭೀರ"
+      critical: "ಗಂಭೀರ",
+      name: "ಹೆಸರು",
+      age: "ವಯಸ್ಸು",
+      relation: "ಸಂಬಂಧ",
+      conditions: "ಆರೋಗ್ಯ ಸ್ಥಿತಿಗಳು",
+      save: "ಸದಸ್ಯರನ್ನು ಉಳಿಸಿ",
+      cancel: "ರದ್ದುಮಾಡಿ",
+      memberAdded: "✅ ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ಸೇರಿಸಲಾಗಿದೆ!",
+      memberAddedDesc: "ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ",
+      memberRemoved: "ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ತೆಗೆದುಹಾಕಲಾಗಿದೆ",
+      noMembers: "ಇನ್ನೂ ಯಾವುದೇ ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ಸೇರಿಸಲಾಗಿಲ್ಲ",
+      addFirstMember: "ಅವರ ಆರೋಗ್ಯವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಲು ನಿಮ್ಮ ಮೊದಲ ಕುಟುಂಬದ ಸದಸ್ಯರನ್ನು ಸೇರಿಸಿ"
     }
   };
 
   const currentText = text[language];
 
-  const familyMembers = [
-    {
-      id: 1,
-      name: language === "en" ? "Shreyas (You)" : "ಶ್ರೇಯಸ್ (ನೀವು)",
-      age: 19,
-      relation: language === "en" ? "Self" : "ನೀವು",
-      avatar: "👨‍💼",
-      healthStatus: "normal",
-      lastCheckup: "2024-01-15",
-      medicines: 2,
-      upcomingAppointments: 1,
-      conditions: language === "en" ? ["Healthy"] : ["ಆರೋಗ್ಯವಾಗಿದೆ"]
-    },
-    {
-      id: 2,
-      name: language === "en" ? "Rajesh (Father)" : "ರಾಜೇಶ್ (ತಂದೆ)",
-      age: 52,
-      relation: language === "en" ? "Father" : "ತಂದೆ",
-      avatar: "👨",
-      healthStatus: "attention",
-      lastCheckup: "2024-01-10",
-      medicines: 3,
-      upcomingAppointments: 0,
-      conditions: language === "en" ? ["Diabetes", "High BP"] : ["ಮಧುಮೇಹ", "ಅಧಿಕ ರಕ್ತದೊತ್ತಡ"]
-    },
-    {
-      id: 3,
-      name: language === "en" ? "Lakshmi (Mother)" : "ಲಕ್ಷ್ಮೀ (ತಾಯಿ)",
-      age: 47,
-      relation: language === "en" ? "Mother" : "ತಾಯಿ",
-      avatar: "👩",
-      healthStatus: "normal",
-      lastCheckup: "2024-01-12",
-      medicines: 1,
-      upcomingAppointments: 1,
-      conditions: language === "en" ? ["Thyroid (controlled)"] : ["ಥೈರಾಯ್ಡ್ (ನಿಯಂತ್ರಣದಲ್ಲಿ)"]
-    },
-    {
-      id: 4,
-      name: language === "en" ? "Grandmother" : "ಅಜ್ಜಿ",
-      age: 75,
-      relation: language === "en" ? "Grandmother" : "ಅಜ್ಜಿ",
-      avatar: "👵",
-      healthStatus: "attention",
-      lastCheckup: "2024-01-08",
-      medicines: 4,
-      upcomingAppointments: 2,
-      conditions: language === "en" ? ["Arthritis", "Heart condition"] : ["ಸಂಧಿವಾತ", "ಹೃದಯ ಸಮಸ್ಯೆ"]
-    }
-  ];
+  const avatars = ["👨", "👩", "👴", "👵", "👦", "👧", "🧑", "👶"];
 
-  const healthAlerts = [
-    {
-      id: 1,
-      type: "medicine",
-      message: language === "en" 
-        ? "Father's diabetes medicine due in 30 minutes" 
-        : "ತಂದೆಯ ಮಧುಮೇಹ ಔಷಧ ೩೦ ನಿಮಿಷದಲ್ಲಿ ಬರಬೇಕು",
-      urgency: "high",
-      member: language === "en" ? "Father" : "ತಂದೆ"
-    },
-    {
-      id: 2,
-      type: "checkup",
-      message: language === "en" 
-        ? "Grandmother's heart checkup tomorrow" 
-        : "ಅಜ್ಜಿಯ ಹೃದಯ ಪರೀಕ್ಷೆ ನಾಳೆ",
-      urgency: "medium",
-      member: language === "en" ? "Grandmother" : "ಅಜ್ಜಿ"
-    },
-    {
-      id: 3,
-      type: "seasonal",
-      message: language === "en" 
-        ? "Dengue alert in Hassan - keep premises clean" 
-        : "ಹಾಸನ್‌ನಲ್ಲಿ ಡೆಂಗ್ಯೂ ಎಚ್ಚರಿಕೆ - ಸುತ್ತಲಿನ ಪ್ರದೇಶವನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ",
-      urgency: "medium",
-      member: language === "en" ? "All family" : "ಎಲ್ಲಾ ಕುಟುಂಬ"
+  const handleAddMember = () => {
+    if (!newMember.name || !newMember.age || !newMember.relation) {
+      toast({
+        title: "Error",
+        description: "Please fill all required fields",
+        variant: "destructive"
+      });
+      return;
     }
-  ];
+
+    const member: FamilyMember = {
+      id: Date.now(),
+      name: newMember.name,
+      age: parseInt(newMember.age),
+      relation: newMember.relation,
+      avatar: avatars[Math.floor(Math.random() * avatars.length)],
+      healthStatus: "normal",
+      lastCheckup: new Date().toISOString().split('T')[0],
+      medicines: 0,
+      upcomingAppointments: 0,
+      conditions: newMember.conditions ? newMember.conditions.split(',').map(c => c.trim()) : [language === "en" ? "Healthy" : "ಆರೋಗ್ಯವಾಗಿದೆ"]
+    };
+
+    const updatedMembers = [...familyMembers, member];
+    setFamilyMembers(updatedMembers);
+    
+    // Save to localStorage (excluding the user profile)
+    if (user) {
+      const membersToStore = updatedMembers.filter(m => m.id !== 0);
+      localStorage.setItem(`family_members_${user.id}`, JSON.stringify(membersToStore));
+    }
+
+    setNewMember({ name: "", age: "", relation: "", conditions: "" });
+    setShowAddForm(false);
+    
+    toast({
+      title: currentText.memberAdded,
+      description: currentText.memberAddedDesc
+    });
+  };
+
+  const handleRemoveMember = (memberId: number) => {
+    if (memberId === 0) return; // Can't remove self
+    
+    const updatedMembers = familyMembers.filter(m => m.id !== memberId);
+    setFamilyMembers(updatedMembers);
+    
+    // Save to localStorage (excluding the user profile)
+    if (user) {
+      const membersToStore = updatedMembers.filter(m => m.id !== 0);
+      localStorage.setItem(`family_members_${user.id}`, JSON.stringify(membersToStore));
+    }
+    
+    toast({
+      title: currentText.memberRemoved,
+      description: ""
+    });
+  };
 
   const handleViewHealth = (member: any) => {
     toast({
@@ -153,15 +202,6 @@ const FamilyHealth = ({ language }: FamilyHealthProps) => {
     }
   };
 
-  const getUrgencyColor = (urgency: string) => {
-    switch(urgency) {
-      case "high": return "border-l-red-500 bg-red-50";
-      case "medium": return "border-l-yellow-500 bg-yellow-50";
-      case "low": return "border-l-green-500 bg-green-50";
-      default: return "border-l-gray-500 bg-gray-50";
-    }
-  };
-
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -175,7 +215,12 @@ const FamilyHealth = ({ language }: FamilyHealthProps) => {
               </CardTitle>
               <p className="text-sm text-blue-600">{currentText.subtitle}</p>
             </div>
-            <Button size="sm" variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="border-blue-300 text-blue-700 hover:bg-blue-50"
+              onClick={() => setShowAddForm(true)}
+            >
               <Plus className="h-4 w-4 mr-1" />
               {currentText.addMember}
             </Button>
@@ -183,28 +228,69 @@ const FamilyHealth = ({ language }: FamilyHealthProps) => {
         </CardHeader>
       </Card>
 
-      {/* Health Alerts */}
-      <Card className="border-orange-200">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-md text-orange-800 flex items-center gap-2">
-            <Thermometer className="h-4 w-4" />
-            {currentText.alerts}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="space-y-2">
-            {healthAlerts.map((alert) => (
-              <div 
-                key={alert.id} 
-                className={`p-3 border-l-4 rounded-r ${getUrgencyColor(alert.urgency)}`}
-              >
-                <p className="text-sm font-medium text-gray-800">{alert.message}</p>
-                <p className="text-xs text-gray-600 mt-1">{alert.member}</p>
+      {/* Add Member Form */}
+      {showAddForm && (
+        <Card className="border-green-200">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-md text-green-800">
+              {currentText.addMember}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium">{currentText.name}</label>
+                <Input
+                  value={newMember.name}
+                  onChange={(e) => setNewMember({...newMember, name: e.target.value})}
+                  placeholder={language === "en" ? "Enter name" : "ಹೆಸರು ನಮೂದಿಸಿ"}
+                />
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <div>
+                <label className="text-sm font-medium">{currentText.age}</label>
+                <Input
+                  type="number"
+                  value={newMember.age}
+                  onChange={(e) => setNewMember({...newMember, age: e.target.value})}
+                  placeholder={language === "en" ? "Enter age" : "ವಯಸ್ಸು ನಮೂದಿಸಿ"}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium">{currentText.relation}</label>
+              <Input
+                value={newMember.relation}
+                onChange={(e) => setNewMember({...newMember, relation: e.target.value})}
+                placeholder={language === "en" ? "e.g., Father, Mother, Brother" : "ಉದಾ., ತಂದೆ, ತಾಯಿ, ಸಹೋದರ"}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">{currentText.conditions}</label>
+              <Input
+                value={newMember.conditions}
+                onChange={(e) => setNewMember({...newMember, conditions: e.target.value})}
+                placeholder={language === "en" ? "e.g., Diabetes, Hypertension (optional)" : "ಉದಾ., ಮಧುಮೇಹ, ಅಧಿಕ ರಕ್ತದೊತ್ತಡ (ಐಚ್ಛಿಕ)"}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={handleAddMember}
+                className="flex-1 bg-green-600 hover:bg-green-700"
+              >
+                <Save className="h-4 w-4 mr-1" />
+                {currentText.save}
+              </Button>
+              <Button
+                onClick={() => setShowAddForm(false)}
+                variant="outline"
+                className="flex-1"
+              >
+                {currentText.cancel}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Family Members */}
       <div>
@@ -212,87 +298,122 @@ const FamilyHealth = ({ language }: FamilyHealthProps) => {
           {language === "en" ? "Family Members" : "ಕುಟುಂಬದ ಸದಸ್ಯರು"}
         </h3>
         
-        <div className="space-y-3">
-          {familyMembers.map((member) => (
-            <Card key={member.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="text-2xl">{member.avatar}</div>
+        {familyMembers.length === 1 ? (
+          <Card className="border-dashed border-gray-300">
+            <CardContent className="p-6 text-center">
+              <Users className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+              <h4 className="font-medium text-gray-600 mb-2">{currentText.noMembers}</h4>
+              <p className="text-sm text-gray-500 mb-4">{currentText.addFirstMember}</p>
+              <Button 
+                onClick={() => setShowAddForm(true)}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                {currentText.addMember}
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="space-y-3">
+            {familyMembers.map((member) => (
+              <Card key={member.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="text-2xl">{member.avatar}</div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-medium text-gray-800">{member.name}</h4>
+                          {member.id !== 0 && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                              onClick={() => handleRemoveMember(member.id)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600">{member.age} {language === "en" ? "years" : "ವರ್ಷ"} • {member.relation}</p>
+                      </div>
+                    </div>
+                    <Badge className={getStatusColor(member.healthStatus)}>
+                      {getStatusText(member.healthStatus)}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 mb-3 text-center">
                     <div>
-                      <h4 className="font-medium text-gray-800">{member.name}</h4>
-                      <p className="text-sm text-gray-600">{member.age} {language === "en" ? "years" : "ವರ್ಷ"} • {member.relation}</p>
+                      <div className="text-lg font-bold text-green-600">{member.medicines}</div>
+                      <div className="text-xs text-gray-500">{currentText.medicines}</div>
+                    </div>
+                    <div>
+                      <div className="text-lg font-bold text-blue-600">{member.upcomingAppointments}</div>
+                      <div className="text-xs text-gray-500">{currentText.upcoming}</div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-gray-600">{member.lastCheckup}</div>
+                      <div className="text-xs text-gray-500">{currentText.lastCheckup}</div>
                     </div>
                   </div>
-                  <Badge className={getStatusColor(member.healthStatus)}>
-                    {getStatusText(member.healthStatus)}
-                  </Badge>
-                </div>
 
-                <div className="grid grid-cols-3 gap-4 mb-3 text-center">
-                  <div>
-                    <div className="text-lg font-bold text-green-600">{member.medicines}</div>
-                    <div className="text-xs text-gray-500">{currentText.medicines}</div>
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-1">
+                      {member.conditions.map((condition, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {condition}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-lg font-bold text-blue-600">{member.upcomingAppointments}</div>
-                    <div className="text-xs text-gray-500">{currentText.upcoming}</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-gray-600">{member.lastCheckup}</div>
-                    <div className="text-xs text-gray-500">{currentText.lastCheckup}</div>
-                  </div>
-                </div>
 
-                <div className="mb-3">
-                  <div className="flex flex-wrap gap-1">
-                    {member.conditions.map((condition, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        {condition}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                <Button 
-                  size="sm" 
-                  className="w-full bg-blue-600 hover:bg-blue-700"
-                  onClick={() => handleViewHealth(member)}
-                >
-                  <User className="h-4 w-4 mr-1" />
-                  {currentText.viewHealth}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <Button 
+                    size="sm" 
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    onClick={() => handleViewHealth(member)}
+                  >
+                    <User className="h-4 w-4 mr-1" />
+                    {currentText.viewHealth}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Quick Stats */}
-      <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
-        <CardContent className="p-4">
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div>
-              <div className="text-2xl font-bold text-green-600">4</div>
-              <div className="text-xs text-green-700">
-                {language === "en" ? "Family Members" : "ಕುಟುಂಬದ ಸದಸ್ಯರು"}
+      {familyMembers.length > 1 && (
+        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+          <CardContent className="p-4">
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-green-600">{familyMembers.length}</div>
+                <div className="text-xs text-green-700">
+                  {language === "en" ? "Family Members" : "ಕುಟುಂಬದ ಸದಸ್ಯರು"}
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {familyMembers.reduce((sum, member) => sum + member.medicines, 0)}
+                </div>
+                <div className="text-xs text-blue-700">
+                  {language === "en" ? "Total Medicines" : "ಒಟ್ಟು ಔಷಧಗಳು"}
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {familyMembers.reduce((sum, member) => sum + member.upcomingAppointments, 0)}
+                </div>
+                <div className="text-xs text-purple-700">
+                  {language === "en" ? "Upcoming Checkups" : "ಮುಂಬರುವ ಪರೀಕ್ಷೆಗಳು"}
+                </div>
               </div>
             </div>
-            <div>
-              <div className="text-2xl font-bold text-blue-600">10</div>
-              <div className="text-xs text-blue-700">
-                {language === "en" ? "Total Medicines" : "ಒಟ್ಟು ಔಷಧಗಳು"}
-              </div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-purple-600">4</div>
-              <div className="text-xs text-purple-700">
-                {language === "en" ? "Upcoming Checkups" : "ಮುಂಬರುವ ಪರೀಕ್ಷೆಗಳು"}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
