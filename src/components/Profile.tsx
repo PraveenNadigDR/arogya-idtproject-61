@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,7 @@ const Profile = ({ language }: ProfileProps) => {
     name: "",
     age: 0,
     phone: "",
-    location: "Holenarasipura, Hassan",
+    location: "",
     bloodGroup: "B+",
     emergencyContact: "+91 9876543211",
     allergies: "None",
@@ -146,7 +145,8 @@ const Profile = ({ language }: ProfileProps) => {
       phoneLabel: "Your Phone Number",
       saveInfo: "Save Information",
       updateLocation: "Update from GPS",
-      gettingLocation: "Getting location..."
+      gettingLocation: "Getting location...",
+      noLocation: "No location set"
     },
     kn: {
       title: "ನನ್ನ ಪ್ರೊಫೈಲ್",
@@ -171,7 +171,8 @@ const Profile = ({ language }: ProfileProps) => {
       phoneLabel: "ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆ",
       saveInfo: "ಮಾಹಿತಿಯನ್ನು ಉಳಿಸಿ",
       updateLocation: "GPS ನಿಂದ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ",
-      gettingLocation: "ಸ್ಥಳವನ್ನು ಪಡೆಯುತ್ತಿದೆ..."
+      gettingLocation: "ಸ್ಥಳವನ್ನು ಪಡೆಯುತ್ತಿದೆ...",
+      noLocation: "ಯಾವುದೇ ಸ್ಥಳ ಸೆಟ್ ಆಗಿಲ್ಲ"
     }
   };
 
@@ -345,11 +346,12 @@ const Profile = ({ language }: ProfileProps) => {
               <Input
                 value={profile.location}
                 onChange={(e) => setProfile({...profile, location: e.target.value})}
+                placeholder={language === "en" ? "Enter location or use GPS" : "ಸ್ಥಳವನ್ನು ನಮೂದಿಸಿ ಅಥವಾ GPS ಬಳಸಿ"}
               />
             ) : (
               <p className="text-sm text-gray-700 mt-1 flex items-center gap-1">
                 <MapPin className="h-3 w-3" />
-                {profile.location}
+                {profile.location || currentText.noLocation}
               </p>
             )}
           </div>
