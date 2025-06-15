@@ -14,7 +14,7 @@ import VideoCallDialog from "@/components/VideoCallDialog";
 import LanguageSelector from "@/components/LanguageSelector";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageCircle, Activity, Stethoscope, AlertTriangle, User } from "lucide-react";
+import { MessageCircle, Activity, Stethoscope, AlertTriangle } from "lucide-react";
 
 const Index = () => {
   const [language, setLanguage] = useState("en");
@@ -46,7 +46,7 @@ const Index = () => {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="dashboard" className="flex items-center gap-1">
               <Activity className="h-4 w-4" />
               <span className="hidden sm:inline">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
@@ -62,10 +62,6 @@ const Index = () => {
             <TabsTrigger value="emergency" className="flex items-center gap-1">
               <AlertTriangle className="h-4 w-4" />
               <span className="hidden sm:inline">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
-            </TabsTrigger>
-            <TabsTrigger value="profile" className="flex items-center gap-1">
-              <User className="h-4 w-4" />
-              <span className="hidden sm:inline">{language === "en" ? "Profile" : "ಪ್ರೊಫೈಲ್"}</span>
             </TabsTrigger>
           </TabsList>
 
