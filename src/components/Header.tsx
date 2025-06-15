@@ -24,6 +24,7 @@ const Header = ({ onNavigateToProfile }: HeaderProps) => {
                 <Heart className="h-6 w-6 text-white animate-pulse" />
               </div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full animate-ping"></div>
+              <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-r from-red-400 to-pink-400 rounded-full animate-pulse"></div>
             </div>
             <div className="flex flex-col">
               <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-emerald-700 dark:from-slate-200 dark:via-blue-300 dark:to-emerald-300 bg-clip-text text-transparent transition-all duration-300">
