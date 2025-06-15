@@ -19,9 +19,14 @@ import { MessageCircle, Users, Pill, Activity, User, BookOpen, Stethoscope, Aler
 
 const Index = () => {
   const [language, setLanguage] = useState("en");
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   const handleLanguageChange = (lang: string) => {
     setLanguage(lang);
+  };
+
+  const navigateToTab = (tabValue: string) => {
+    setActiveTab(tabValue);
   };
 
   return (
@@ -42,7 +47,7 @@ const Index = () => {
         </div>
 
         {/* Main Content Tabs */}
-        <Tabs defaultValue="dashboard" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-7 lg:grid-cols-10">
             <TabsTrigger value="dashboard" className="flex items-center gap-1">
               <Activity className="h-4 w-4" />
@@ -114,10 +119,7 @@ const Index = () => {
                     </div>
                   </div>
                   <Button 
-                    onClick={() => {
-                      const tabsTrigger = document.querySelector('[value="doctors"]') as HTMLElement;
-                      tabsTrigger?.click();
-                    }}
+                    onClick={() => navigateToTab("doctors")}
                     className="w-full bg-blue-600 hover:bg-blue-700"
                   >
                     <Calendar className="h-4 w-4 mr-2" />
@@ -151,10 +153,7 @@ const Index = () => {
                     </div>
                   </div>
                   <Button 
-                    onClick={() => {
-                      const tabsTrigger = document.querySelector('[value="emergency"]') as HTMLElement;
-                      tabsTrigger?.click();
-                    }}
+                    onClick={() => navigateToTab("emergency")}
                     className="w-full bg-red-600 hover:bg-red-700"
                   >
                     <Ambulance className="h-4 w-4 mr-2" />
@@ -194,10 +193,7 @@ const Index = () => {
                     </p>
                     <div className="flex gap-2">
                       <Button 
-                        onClick={() => {
-                          const tabsTrigger = document.querySelector('[value="ai-assistant"]') as HTMLElement;
-                          tabsTrigger?.click();
-                        }}
+                        onClick={() => navigateToTab("ai-assistant")}
                         className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition-colors"
                       >
                         {language === "en" ? "Start Chat" : "ಚಾಟ್ ಪ್ರಾರಂಭಿಸಿ"}
