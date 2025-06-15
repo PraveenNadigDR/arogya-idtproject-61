@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { User as UserIcon, Heart, Bell, Settings } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
+import { User as UserIcon, Heart, Moon, Sun } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface HeaderProps {
@@ -10,6 +11,12 @@ interface HeaderProps {
 
 const Header = ({ onNavigateToProfile }: HeaderProps) => {
   const { user } = useAuth();
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
+  };
 
   return (
     <header className="bg-white/90 backdrop-blur-xl shadow-lg border-b border-white/20 sticky top-0 z-50">
@@ -48,22 +55,16 @@ const Header = ({ onNavigateToProfile }: HeaderProps) => {
             
             {/* Action Buttons */}
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-100 to-blue-100 hover:from-slate-200 hover:to-blue-200 border border-slate-200/50 shadow-sm transition-all duration-300 hover:scale-105"
-              >
-                <Bell className="h-5 w-5 text-slate-600" />
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-red-500 to-orange-500 rounded-full animate-pulse"></div>
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-100 to-purple-100 hover:from-slate-200 hover:to-purple-200 border border-slate-200/50 shadow-sm transition-all duration-300 hover:scale-105"
-              >
-                <Settings className="h-5 w-5 text-slate-600" />
-              </Button>
+              {/* Dark Mode Toggle */}
+              <div className="flex items-center gap-3 bg-gradient-to-r from-slate-100 to-purple-100 rounded-2xl px-4 py-3 border border-slate-200/50 shadow-sm">
+                <Sun className="h-4 w-4 text-slate-600" />
+                <Switch
+                  checked={isDarkMode}
+                  onCheckedChange={toggleDarkMode}
+                  className="data-[state=checked]:bg-purple-600"
+                />
+                <Moon className="h-4 w-4 text-slate-600" />
+              </div>
               
               <Button
                 variant="outline"
