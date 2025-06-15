@@ -44,13 +44,15 @@ const Profile = ({ language }: ProfileProps) => {
         name: user.user_metadata?.full_name || user.email?.split('@')[0] || "User"
       }));
       
-      // Check if we need to show the info form (age and phone not set)
+      // Check if we have stored profile data
       const storedProfile = localStorage.getItem(`profile_${user.id}`);
       if (storedProfile) {
         const parsed = JSON.parse(storedProfile);
         setProfile(prev => ({ ...prev, ...parsed }));
-      } else if (!profile.age || !profile.phone) {
-        setShowInfoForm(true);
+        setShowInfoForm(false); // Don't show form if we have stored data
+      } else {
+        // Only show info form if we don't have age AND phone
+        setShowInfoForm(!profile.age || !profile.phone);
       }
     }
   }, [user]);
@@ -147,7 +149,8 @@ const Profile = ({ language }: ProfileProps) => {
       saveInfo: "Save Information",
       updateLocation: "Update from GPS",
       gettingLocation: "Getting location...",
-      noLocation: "No location set"
+      noLocation: "No location set",
+      skipSetup: "Skip for now"
     },
     kn: {
       title: "ನನ್ನ ಪ್ರೊಫೈಲ್",
@@ -173,7 +176,8 @@ const Profile = ({ language }: ProfileProps) => {
       saveInfo: "ಮಾಹಿತಿಯನ್ನು ಉಳಿಸಿ",
       updateLocation: "GPS ನಿಂದ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ",
       gettingLocation: "ಸ್ಥಳವನ್ನು ಪಡೆಯುತ್ತಿದೆ...",
-      noLocation: "ಯಾವುದೇ ಸ್ಥಳ ಸೆಟ್ ಆಗಿಲ್ಲ"
+      noLocation: "ಯಾವುದೇ ಸ್ಥಳ ಸೆಟ್ ಆಗಿಲ್ಲ",
+      skipSetup: "ಸದ್ಯಕ್ಕೆ ಬಿಟ್ಟುಬಿಡಿ"
     }
   };
 
@@ -201,6 +205,10 @@ const Profile = ({ language }: ProfileProps) => {
         description: currentText.changesSaved
       });
     }
+  };
+
+  const handleSkipSetup = () => {
+    setShowInfoForm(false);
   };
 
   const handleCancel = () => {
@@ -240,14 +248,23 @@ const Profile = ({ language }: ProfileProps) => {
                 placeholder={language === "en" ? "Enter your phone number" : "ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ"}
               />
             </div>
-            <Button
-              onClick={handleInfoSave}
-              className="w-full bg-green-600 hover:bg-green-700"
-              disabled={!profile.age || !profile.phone}
-            >
-              <Save className="h-4 w-4 mr-1" />
-              {currentText.saveInfo}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={handleInfoSave}
+                className="flex-1 bg-green-600 hover:bg-green-700"
+                disabled={!profile.age || !profile.phone}
+              >
+                <Save className="h-4 w-4 mr-1" />
+                {currentText.saveInfo}
+              </Button>
+              <Button
+                onClick={handleSkipSetup}
+                variant="outline"
+                className="flex-1"
+              >
+                {currentText.skipSetup}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -312,7 +329,9 @@ const Profile = ({ language }: ProfileProps) => {
                   onChange={(e) => setProfile({...profile, age: parseInt(e.target.value)})}
                 />
               ) : (
-                <p className="text-sm text-gray-700 mt-1">{profile.age} {language === "en" ? "years" : "ವರ್ಷಗಳು"}</p>
+                <p className="text-sm text-gray-700 mt-1">
+                  {profile.age ? `${profile.age} ${language === "en" ? "years" : "ವರ್ಷಗಳು"}` : (language === "en" ? "Not set" : "ಸೆಟ್ ಆಗಿಲ್ಲ")}
+                </p>
               )}
             </div>
           </div>
@@ -325,7 +344,7 @@ const Profile = ({ language }: ProfileProps) => {
                 onChange={(e) => setProfile({...profile, phone: e.target.value})}
               />
             ) : (
-              <p className="text-sm text-gray-700 mt-1">{profile.phone}</p>
+              <p className="text-sm text-gray-700 mt-1">{profile.phone || (language === "en" ? "Not set" : "ಸೆಟ್ ಆಗಿಲ್ಲ")}</p>
             )}
           </div>
 
@@ -463,8 +482,8 @@ const Profile = ({ language }: ProfileProps) => {
             </h4>
             <div className="bg-white p-3 rounded border-2 border-dashed border-green-300">
               <p className="text-lg font-bold">{profile.name}</p>
-              <p className="text-sm text-gray-600">{profile.bloodGroup} • {profile.age} {language === "en" ? "years" : "ವರ್ಷಗಳು"}</p>
-              <p className="text-xs text-gray-500 mt-1">{profile.location}</p>
+              <p className="text-sm text-gray-600">{profile.bloodGroup} • {profile.age ? `${profile.age} ${language === "en" ? "years" : "ವರ್ಷಗಳು"}` : (language === "en" ? "Age not set" : "ವಯಸ್ಸು ಸೆಟ್ ಆಗಿಲ್ಲ")}</p>
+              <p className="text-xs text-gray-500 mt-1">{profile.location || (language === "en" ? "Location not set" : "ಸ್ಥಳ ಸೆಟ್ ಆಗಿಲ್ಲ")}</p>
             </div>
             <p className="text-xs text-green-600 mt-2">
               {language === "en" ? "Show this to medical professionals" : "ಇದನ್ನು ವೈದ್ಯಕೀಯ ವೃತ್ತಿಪರರಿಗೆ ತೋರಿಸಿ"}
