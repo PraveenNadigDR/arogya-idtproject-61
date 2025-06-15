@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { User, Phone, MapPin, Calendar, Heart, Edit, Save } from "lucide-react";
+import { User, Phone, MapPin, Calendar, Heart, Edit, Save, Navigation } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -12,10 +12,18 @@ interface ProfileProps {
   language: string;
 }
 
+interface LocationData {
+  latitude: number;
+  longitude: number;
+  address?: string;
+}
+
 const Profile = ({ language }: ProfileProps) => {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [showInfoForm, setShowInfoForm] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState<LocationData | null>(null);
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [profile, setProfile] = useState({
     name: "",
     age: 0,
@@ -47,6 +55,73 @@ const Profile = ({ language }: ProfileProps) => {
     }
   }, [user]);
 
+  const getAddressFromCoordinates = async (lat: number, lng: number): Promise<string> => {
+    try {
+      // Try Nominatim first as it's free and reliable
+      const nominatimResponse = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=${language === 'kn' ? 'kn' : 'en'}`
+      );
+      
+      if (nominatimResponse.ok) {
+        const data = await nominatimResponse.json();
+        return data.display_name || "Address not found";
+      }
+      
+      throw new Error('Geocoding failed');
+    } catch (error) {
+      console.log('Geocoding error:', error);
+      return "Address not found";
+    }
+  };
+
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast({
+        title: "Error",
+        description: "Geolocation is not supported by this browser",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGettingLocation(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const locationData: LocationData = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+        
+        // Get address
+        const address = await getAddressFromCoordinates(locationData.latitude, locationData.longitude);
+        locationData.address = address;
+        
+        setCurrentLocation(locationData);
+        setProfile(prev => ({ ...prev, location: address }));
+        setIsGettingLocation(false);
+        
+        toast({
+          title: "Location Updated",
+          description: "Your location has been updated from GPS"
+        });
+      },
+      (error) => {
+        setIsGettingLocation(false);
+        toast({
+          title: "Location Error",
+          description: "Unable to get your location",
+          variant: "destructive"
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
+  };
+
   const text = {
     en: {
       title: "My Profile",
@@ -69,7 +144,9 @@ const Profile = ({ language }: ProfileProps) => {
       setupMessage: "Please provide your age and phone number to complete your profile",
       ageLabel: "Your Age",
       phoneLabel: "Your Phone Number",
-      saveInfo: "Save Information"
+      saveInfo: "Save Information",
+      updateLocation: "Update from GPS",
+      gettingLocation: "Getting location..."
     },
     kn: {
       title: "ನನ್ನ ಪ್ರೊಫೈಲ್",
@@ -92,7 +169,9 @@ const Profile = ({ language }: ProfileProps) => {
       setupMessage: "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಯಸ್ಸು ಮತ್ತು ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನೀಡಿ",
       ageLabel: "ನಿಮ್ಮ ವಯಸ್ಸು",
       phoneLabel: "ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆ",
-      saveInfo: "ಮಾಹಿತಿಯನ್ನು ಉಳಿಸಿ"
+      saveInfo: "ಮಾಹಿತಿಯನ್ನು ಉಳಿಸಿ",
+      updateLocation: "GPS ನಿಂದ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ",
+      gettingLocation: "ಸ್ಥಳವನ್ನು ಪಡೆಯುತ್ತಿದೆ..."
     }
   };
 
@@ -249,7 +328,19 @@ const Profile = ({ language }: ProfileProps) => {
           </div>
 
           <div>
-            <label className="text-sm font-medium">{currentText.location}</label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium">{currentText.location}</label>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={getCurrentLocation}
+                disabled={isGettingLocation}
+                className="text-xs"
+              >
+                <Navigation className="h-3 w-3 mr-1" />
+                {isGettingLocation ? currentText.gettingLocation : currentText.updateLocation}
+              </Button>
+            </div>
             {isEditing ? (
               <Input
                 value={profile.location}
