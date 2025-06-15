@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import Profile from "@/components/Profile";
 import QuickHealthCheck from "@/components/QuickHealthCheck";
 import ArogyaDiary from "@/components/ArogyaDiary";
-import LocationTracker from "@/components/LocationTracker";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -33,7 +32,7 @@ const Index = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="profile">
               {language === "en" ? "My Profile" : "ನನ್ನ ಪ್ರೊಫೈಲ್"}
             </TabsTrigger>
@@ -42,9 +41,6 @@ const Index = () => {
             </TabsTrigger>
             <TabsTrigger value="diary">
               {language === "en" ? "Arogya Diary" : "ಆರೋಗ್ಯ ಡೈರಿ"}
-            </TabsTrigger>
-            <TabsTrigger value="location">
-              {language === "en" ? "GPS Tracker" : "GPS ಟ್ರ್ಯಾಕರ್"}
             </TabsTrigger>
           </TabsList>
           <TabsContent value="profile">
@@ -55,9 +51,6 @@ const Index = () => {
           </TabsContent>
           <TabsContent value="diary">
             <ArogyaDiary language={language} />
-          </TabsContent>
-          <TabsContent value="location">
-            <LocationTracker language={language} />
           </TabsContent>
         </Tabs>
 
