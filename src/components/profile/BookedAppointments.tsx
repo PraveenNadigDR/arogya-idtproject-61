@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, MapPin, User, Phone } from "lucide-react";
 
@@ -15,32 +16,27 @@ interface Appointment {
   location: string;
   type: 'in-person' | 'video';
   status: 'confirmed' | 'pending' | 'completed';
+  patientName: string;
+  phone: string;
+  symptoms?: string;
 }
 
 const BookedAppointments = ({ language }: BookedAppointmentsProps) => {
-  // Mock data - in a real app, this would come from your backend/localStorage
-  const appointments: Appointment[] = [
-    {
-      id: "1",
-      doctorName: "Dr. Rajesh Kumar",
-      specialty: "Cardiologist",
-      date: "2024-06-20",
-      time: "10:00 AM",
-      location: "Apollo Hospital, Bangalore",
-      type: "in-person",
-      status: "confirmed"
-    },
-    {
-      id: "2",
-      doctorName: "Dr. Priya Sharma",
-      specialty: "Dermatologist",
-      date: "2024-06-25",
-      time: "2:30 PM",
-      location: "Video Consultation",
-      type: "video",
-      status: "pending"
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+
+  useEffect(() => {
+    // Load appointments from localStorage
+    const storedAppointments = localStorage.getItem('bookedAppointments');
+    if (storedAppointments) {
+      try {
+        const parsed = JSON.parse(storedAppointments);
+        setAppointments(Array.isArray(parsed) ? parsed : []);
+      } catch (error) {
+        console.error('Error parsing appointments:', error);
+        setAppointments([]);
+      }
     }
-  ];
+  }, []);
 
   const text = {
     en: {
@@ -54,7 +50,9 @@ const BookedAppointments = ({ language }: BookedAppointmentsProps) => {
       video: "Video Call",
       date: "Date",
       time: "Time",
-      location: "Location"
+      location: "Location",
+      patient: "Patient",
+      contact: "Contact"
     },
     kn: {
       title: "ಬುಕ್ ಮಾಡಿದ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗಳು",
@@ -67,7 +65,9 @@ const BookedAppointments = ({ language }: BookedAppointmentsProps) => {
       video: "ವಿಡಿಯೋ ಕಾಲ್",
       date: "ದಿನಾಂಕ",
       time: "ಸಮಯ",
-      location: "ಸ್ಥಳ"
+      location: "ಸ್ಥಳ",
+      patient: "ರೋಗಿ",
+      contact: "ಸಂಪರ್ಕ"
     }
   };
 
@@ -139,7 +139,7 @@ const BookedAppointments = ({ language }: BookedAppointmentsProps) => {
                   </span>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <div className="flex items-center gap-2 text-green-700">
                     <Calendar className="h-4 w-4" />
                     <div>
@@ -161,6 +161,24 @@ const BookedAppointments = ({ language }: BookedAppointmentsProps) => {
                     <div>
                       <p className="text-xs text-green-600">{currentText.location}</p>
                       <p className="font-medium text-sm">{appointment.location}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 pt-4 border-t border-green-200/50">
+                  <div className="flex items-center gap-2 text-green-700">
+                    <User className="h-4 w-4" />
+                    <div>
+                      <p className="text-xs text-green-600">{currentText.patient}</p>
+                      <p className="font-medium">{appointment.patientName}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-green-700">
+                    <Phone className="h-4 w-4" />
+                    <div>
+                      <p className="text-xs text-green-600">{currentText.contact}</p>
+                      <p className="font-medium">{appointment.phone}</p>
                     </div>
                   </div>
                 </div>

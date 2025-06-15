@@ -35,7 +35,9 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
       appointmentBooked: "Appointment Booked!",
       bookingConfirmed: "Your appointment has been confirmed",
       consultationFee: "Consultation Fee",
-      estimatedTime: "Estimated Duration"
+      estimatedTime: "Estimated Duration",
+      missingInfo: "Missing Information",
+      fillAllFields: "Please fill all required fields"
     },
     kn: {
       title: "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ",
@@ -49,7 +51,9 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
       appointmentBooked: "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಆಗಿದೆ!",
       bookingConfirmed: "ನಿಮ್ಮ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ",
       consultationFee: "ಸಮಾಲೋಚನೆ ಶುಲ್ಕ",
-      estimatedTime: "ಅಂದಾಜು ಅವಧಿ"
+      estimatedTime: "ಅಂದಾಜು ಅವಧಿ",
+      missingInfo: "ಮಾಹಿತಿ ಕೊರತೆ",
+      fillAllFields: "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಅಗತ್ಯ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ"
     }
   };
 
@@ -63,16 +67,49 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
   const handleBooking = () => {
     if (!selectedDate || !selectedTime || !patientName || !phone) {
       toast({
-        title: language === "en" ? "Missing Information" : "ಮಾಹಿತಿ ಕೊರತೆ",
-        description: language === "en" ? "Please fill all required fields" : "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಅಗತ್ಯ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ"
+        title: currentText.missingInfo,
+        description: currentText.fillAllFields,
+        variant: "destructive"
       });
       return;
     }
+
+    // Create appointment object
+    const appointment = {
+      id: Date.now().toString(), // Simple ID generation
+      doctorName: doctor.name,
+      specialty: doctor.specialty,
+      date: selectedDate,
+      time: selectedTime,
+      location: doctor.hospital || doctor.location,
+      type: 'in-person' as const,
+      status: 'confirmed' as const,
+      patientName,
+      phone,
+      symptoms
+    };
+
+    // Save to localStorage
+    const existingAppointments = localStorage.getItem('bookedAppointments');
+    let appointments = [];
+    
+    if (existingAppointments) {
+      try {
+        appointments = JSON.parse(existingAppointments);
+      } catch (error) {
+        console.error('Error parsing existing appointments:', error);
+        appointments = [];
+      }
+    }
+
+    appointments.push(appointment);
+    localStorage.setItem('bookedAppointments', JSON.stringify(appointments));
 
     toast({
       title: currentText.appointmentBooked,
       description: `${currentText.bookingConfirmed} - ${selectedDate} ${selectedTime}`
     });
+    
     onClose();
   };
 
@@ -101,7 +138,7 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
             <div className="text-right">
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 text-yellow-500" />
-                <span className="text-sm font-medium">4.8</span>
+                <span className="text-sm font-medium">{doctor.rating || "4.8"}</span>
               </div>
             </div>
           </div>
@@ -109,7 +146,7 @@ const AppointmentBooking = ({ doctor, language, onClose }: AppointmentBookingPro
           <div className="grid grid-cols-2 gap-3 mt-3">
             <div className="text-center bg-green-50 rounded-lg p-2">
               <p className="text-xs text-green-600 font-medium">{currentText.consultationFee}</p>
-              <p className="text-sm font-semibold text-green-700">₹200</p>
+              <p className="text-sm font-semibold text-green-700">₹{doctor.fee || "200"}</p>
             </div>
             <div className="text-center bg-blue-50 rounded-lg p-2">
               <p className="text-xs text-blue-600 font-medium">{currentText.estimatedTime}</p>
