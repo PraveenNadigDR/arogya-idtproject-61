@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Calendar, Clock, MapPin, User } from "lucide-react";
+import { Calendar, Clock, MapPin, User, Heart, Stethoscope } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { appointmentService } from "@/services/appointmentService";
 import { useToast } from "@/hooks/use-toast";
@@ -125,92 +125,110 @@ const QuickAppointmentBooker = ({ language, onAppointmentBooked }: QuickAppointm
   };
 
   return (
-    <Card className="bg-gradient-to-br from-green-50/90 via-emerald-50/90 to-teal-50/90 border-0 shadow-2xl ring-1 ring-green-200/40 hover:shadow-3xl transition-all duration-700 backdrop-blur-sm organic-border leaf-texture">
-      <CardHeader className="pb-6">
-        <CardTitle className="text-2xl text-green-800 flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 organic-border flex items-center justify-center shadow-xl shadow-green-500/30">
-            <Calendar className="h-6 w-6 text-white drop-shadow-sm" />
+    <Card className="nature-glass border-0 nature-shadow-glow nature-hover-lift organic-border-alt leaf-texture">
+      <CardHeader className="pb-5">
+        <CardTitle className="text-2xl text-green-800 dark:text-green-200 flex items-center gap-3">
+          <div className="w-11 h-11 nature-gradient-primary organic-border flex items-center justify-center nature-shadow">
+            <Calendar className="h-5 w-5 text-white drop-shadow-sm gentle-sway" />
           </div>
           {currentText.title}
         </CardTitle>
       </CardHeader>
       
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="doctorName" className="text-green-700 font-semibold">{currentText.doctorName}</Label>
+              <Label htmlFor="doctorName" className="text-green-700 dark:text-green-300 font-semibold flex items-center gap-2">
+                <Stethoscope className="h-3 w-3" />
+                {currentText.doctorName}
+              </Label>
               <Input
                 id="doctorName"
                 value={formData.doctorName}
                 onChange={(e) => setFormData(prev => ({ ...prev, doctorName: e.target.value }))}
-                className="organic-border border-green-200 focus:border-green-400"
+                className="organic-border border-green-200 dark:border-green-700 focus:border-green-400 dark:focus:border-green-500 nature-glass"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="specialty" className="text-green-700 font-semibold">{currentText.specialty}</Label>
+              <Label htmlFor="specialty" className="text-green-700 dark:text-green-300 font-semibold flex items-center gap-2">
+                <Heart className="h-3 w-3" />
+                {currentText.specialty}
+              </Label>
               <Input
                 id="specialty"
                 value={formData.specialty}
                 onChange={(e) => setFormData(prev => ({ ...prev, specialty: e.target.value }))}
-                className="organic-border border-green-200 focus:border-green-400"
+                className="organic-border border-green-200 dark:border-green-700 focus:border-green-400 dark:focus:border-green-500 nature-glass"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="date" className="text-green-700 font-semibold">{currentText.date}</Label>
+              <Label htmlFor="date" className="text-green-700 dark:text-green-300 font-semibold flex items-center gap-2">
+                <Calendar className="h-3 w-3" />
+                {currentText.date}
+              </Label>
               <Input
                 id="date"
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                className="organic-border border-green-200 focus:border-green-400"
+                className="organic-border border-green-200 dark:border-green-700 focus:border-green-400 dark:focus:border-green-500 nature-glass"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="time" className="text-green-700 font-semibold">{currentText.time}</Label>
+              <Label htmlFor="time" className="text-green-700 dark:text-green-300 font-semibold flex items-center gap-2">
+                <Clock className="h-3 w-3" />
+                {currentText.time}
+              </Label>
               <Input
                 id="time"
                 type="time"
                 value={formData.time}
                 onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-                className="organic-border border-green-200 focus:border-green-400"
+                className="organic-border border-green-200 dark:border-green-700 focus:border-green-400 dark:focus:border-green-500 nature-glass"
                 required
               />
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="location" className="text-green-700 font-semibold">{currentText.location}</Label>
+              <Label htmlFor="location" className="text-green-700 dark:text-green-300 font-semibold flex items-center gap-2">
+                <MapPin className="h-3 w-3" />
+                {currentText.location}
+              </Label>
               <Input
                 id="location"
                 value={formData.location}
                 onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                className="organic-border border-green-200 focus:border-green-400"
+                className="organic-border border-green-200 dark:border-green-700 focus:border-green-400 dark:focus:border-green-500 nature-glass"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="patientName" className="text-green-700 font-semibold">{currentText.patientName}</Label>
+              <Label htmlFor="patientName" className="text-green-700 dark:text-green-300 font-semibold flex items-center gap-2">
+                <User className="h-3 w-3" />
+                {currentText.patientName}
+              </Label>
               <Input
                 id="patientName"
                 value={formData.patientName}
                 onChange={(e) => setFormData(prev => ({ ...prev, patientName: e.target.value }))}
-                className="organic-border border-green-200 focus:border-green-400"
+                className="organic-border border-green-200 dark:border-green-700 focus:border-green-400 dark:focus:border-green-500 nature-glass"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-green-700 font-semibold">{currentText.phone}</Label>
+              <Label htmlFor="phone" className="text-green-700 dark:text-green-300 font-semibold">{currentText.phone}</Label>
               <Input
                 id="phone"
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                className="organic-border border-green-200 focus:border-green-400"
+                className="organic-border border-green-200 dark:border-green-700 focus:border-green-400 dark:focus:border-green-500 nature-glass"
                 required
               />
             </div>
@@ -219,7 +237,7 @@ const QuickAppointmentBooker = ({ language, onAppointmentBooked }: QuickAppointm
           <Button
             type="submit"
             disabled={isBooking}
-            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 organic-border shadow-lg hover:shadow-xl transition-all duration-500"
+            className="w-full nature-gradient-primary hover:nature-gradient-forest text-white font-semibold py-3 organic-border-alt nature-shadow hover:shadow-xl transition-all duration-500 hover:scale-105"
           >
             {isBooking ? currentText.booking : currentText.bookNow}
           </Button>
