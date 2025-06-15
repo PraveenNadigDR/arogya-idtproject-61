@@ -1,4 +1,3 @@
-
 import Header from "@/components/Header";
 import QuickHealthCheck from "@/components/QuickHealthCheck";
 import HealthTips from "@/components/HealthTips";
@@ -104,45 +103,52 @@ const Index = () => {
           <DashboardHeader language={language} />
         </div>
 
-        {/* Enhanced Main Content Tabs with better accessibility */}
+        {/* Enhanced Main Content Tabs with improved design */}
         <div className="mb-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="flex justify-center mb-12">
-              <TabsList className="grid grid-cols-4 bg-white/90 backdrop-blur-xl border-0 shadow-2xl rounded-3xl p-3 ring-1 ring-black/5 hover:shadow-3xl transition-all duration-500 focus-within:ring-2 focus-within:ring-blue-500">
+              <TabsList className="grid grid-cols-4 bg-white/20 dark:bg-gray-900/20 backdrop-blur-3xl border-0 shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-[28px] p-2 ring-1 ring-white/10 dark:ring-gray-700/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] transition-all duration-700">
                 <TabsTrigger 
                   value="dashboard" 
-                  className="flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-emerald-500/25 transition-all duration-500 rounded-2xl px-8 py-4 font-semibold hover:bg-gray-50 group hover:scale-105 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-400 data-[state=active]:via-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-[0_8px_20px_rgba(16,185,129,0.4)] transition-all duration-500 rounded-[20px] px-6 py-4 font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-gray-800/40 hover:text-slate-800 dark:hover:text-white hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
                   aria-label={language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}
                 >
-                  <Activity className={`h-5 w-5 transition-transform group-hover:scale-110 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
-                  <span className="hidden sm:inline text-sm">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/10 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <Activity className={`h-5 w-5 transition-all duration-500 group-hover:scale-110 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
+                  <span className="hidden sm:inline text-sm font-bold relative z-10">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="doctors" 
-                  className="flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-blue-500/25 transition-all duration-500 rounded-2xl px-8 py-4 font-semibold hover:bg-gray-50 group hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-400 data-[state=active]:via-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-[0_8px_20px_rgba(59,130,246,0.4)] transition-all duration-500 rounded-[20px] px-6 py-4 font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-gray-800/40 hover:text-slate-800 dark:hover:text-white hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
                   aria-label={language === "en" ? "Doctors" : "ವೈದ್ಯರು"}
                 >
-                  <Stethoscope className={`h-5 w-5 transition-transform group-hover:scale-110 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
-                  <span className="hidden sm:inline text-sm">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <Stethoscope className={`h-5 w-5 transition-all duration-500 group-hover:scale-110 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
+                  <span className="hidden sm:inline text-sm font-bold relative z-10">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="ai-assistant" 
-                  className="flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-purple-500/25 transition-all duration-500 rounded-2xl px-8 py-4 font-semibold hover:bg-gray-50 group relative hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-400 data-[state=active]:via-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-[0_8px_20px_rgba(147,51,234,0.4)] transition-all duration-500 rounded-[20px] px-6 py-4 font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-gray-800/40 hover:text-slate-800 dark:hover:text-white hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
                   aria-label={language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}
                 >
-                  <div className="relative">
-                    <MessageCircle className={`h-5 w-5 transition-transform group-hover:scale-110 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
-                    <Sparkles className={`h-3 w-3 absolute -top-1 -right-1 text-purple-500 group-data-[state=active]:text-yellow-300 ${!prefersReducedMotion ? 'animate-pulse' : ''}`} />
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative z-10">
+                    <MessageCircle className={`h-5 w-5 transition-all duration-500 group-hover:scale-110 group-data-[state=active]:drop-shadow-lg ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
+                    <Sparkles className={`h-3 w-3 absolute -top-1 -right-1 text-purple-400 group-data-[state=active]:text-yellow-300 transition-colors duration-500 ${!prefersReducedMotion ? 'animate-pulse' : ''}`} />
                   </div>
-                  <span className="hidden sm:inline text-sm">{language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}</span>
+                  <span className="hidden sm:inline text-sm font-bold relative z-10">{language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}</span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="emergency" 
-                  className="flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:shadow-red-500/25 transition-all duration-500 rounded-2xl px-8 py-4 font-semibold hover:bg-gray-50 group hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-400 data-[state=active]:via-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_8px_20px_rgba(239,68,68,0.4)] transition-all duration-500 rounded-[20px] px-6 py-4 font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-gray-800/40 hover:text-slate-800 dark:hover:text-white hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
                   aria-label={language === "en" ? "Emergency" : "ತುರ್ತು"}
                 >
-                  <AlertTriangle className={`h-5 w-5 transition-transform group-hover:scale-110 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
-                  <span className="hidden sm:inline text-sm">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <AlertTriangle className={`h-5 w-5 transition-all duration-500 group-hover:scale-110 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
+                  <span className="hidden sm:inline text-sm font-bold relative z-10">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
                 </TabsTrigger>
               </TabsList>
             </div>
