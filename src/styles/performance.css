@@ -1,0 +1,116 @@
+
+/* === PERFORMANCE OPTIMIZATIONS === */
+
+/* Performance optimizations for smooth animations */
+@media (min-width: 768px) {
+  .animate-float,
+  .animate-float-delayed,
+  .animate-drift,
+  .animate-wave {
+    will-change: transform;
+  }
+  
+  .animate-glow,
+  .animate-pulse-ring {
+    will-change: box-shadow;
+  }
+  
+  .animate-pulse-slow,
+  .animate-sparkle {
+    will-change: opacity;
+  }
+}
+
+/* Mobile performance optimizations */
+@media (max-width: 768px) {
+  .animate-float,
+  .animate-float-delayed {
+    animation-duration: 6s;
+  }
+  
+  .shadow-3xl {
+    box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Reduce complex animations on mobile */
+  .animate-morph-bubble,
+  .animate-liquid-float {
+    animation-duration: 4s;
+  }
+}
+
+/* Respect user's reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .motion-reduce {
+    .animate-float,
+    .animate-float-delayed,
+    .animate-bounce-slow,
+    .animate-pulse-slow,
+    .animate-glow,
+    .animate-fade-in,
+    .animate-fade-in-up,
+    .animate-slide-down,
+    .animate-scale-in,
+    .animate-sparkle,
+    .animate-drift,
+    .animate-wave,
+    .animate-heartbeat,
+    .animate-text-glow,
+    .animate-breathe {
+      animation: none !important;
+    }
+  }
+}
+
+/* Touch-friendly mobile interactions */
+@media (hover: none) and (pointer: coarse) {
+  .hover-lift:active,
+  .hover-glow:active,
+  .hover-scale:active {
+    @apply scale-95;
+  }
+}
+
+/* Dark mode improvements */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .glass,
+  .glass-dark {
+    @apply bg-white border-black;
+  }
+  
+  .text-gradient,
+  .text-gradient-warm,
+  .text-gradient-cool {
+    @apply text-black bg-none;
+    -webkit-text-fill-color: unset;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
