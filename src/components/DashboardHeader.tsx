@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/contexts/AuthContext";
 import { Sparkles, Heart, Star, Zap, Activity, Crown, Shield, Gem } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -162,7 +161,7 @@ const DashboardHeader = ({ language }: DashboardHeaderProps) => {
           {language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}
         </div>
         
-        {/* ENHANCED BLINKING BALL SECTION - Now with multiple effects */}
+        {/* FIXED BLINKING BALL SECTION - Simplified and focused animations */}
         <div className={`flex items-center justify-center gap-10 mb-16 ${!prefersReducedMotion ? 'animate-fade-in-up' : ''}`} style={{animationDelay: '0.3s'}} aria-hidden="true">
           {/* Left decorative line with animated gradient */}
           <div className="relative">
@@ -172,35 +171,30 @@ const DashboardHeader = ({ language }: DashboardHeaderProps) => {
             )}
           </div>
           
-          {/* MAIN BLINKING BALL - Enhanced with multiple layers */}
-          <div className="relative">
-            {/* Outer pulsing ring */}
+          {/* MAIN BLINKING BALL - Fixed with proper blinking animation */}
+          <div className="relative flex items-center justify-center">
+            {/* Outer pulsing ring - only ping animation */}
             {!prefersReducedMotion && (
-              <div className="absolute inset-0 w-16 h-16 bg-gradient-to-br from-blue-400/40 to-purple-400/40 rounded-full animate-ping"></div>
+              <div className="absolute w-20 h-20 bg-gradient-to-br from-blue-400/30 to-purple-400/30 rounded-full animate-ping"></div>
             )}
             
-            {/* Middle glowing ring */}
-            {!prefersReducedMotion && (
-              <div className="absolute inset-1 w-14 h-14 bg-gradient-to-br from-blue-300/30 to-purple-300/30 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-            )}
-            
-            {/* Main ball with enhanced blinking */}
-            <div className={`relative w-16 h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-emerald-500 rounded-full shadow-2xl shadow-blue-500/50 ${!prefersReducedMotion ? 'animate-ping animate-pulse' : ''}`}>
-              {/* Inner highlight */}
-              <div className={`absolute inset-3 w-10 h-10 bg-gradient-to-br from-white/40 to-transparent rounded-full ${!prefersReducedMotion ? 'animate-pulse' : ''}`} style={{animationDelay: '1s'}}></div>
+            {/* Main blinking ball - primary pulse animation */}
+            <div className={`relative w-16 h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-emerald-500 rounded-full shadow-2xl shadow-blue-500/50 flex items-center justify-center ${!prefersReducedMotion ? 'animate-pulse' : ''}`}>
+              {/* Inner highlight for 3D effect */}
+              <div className="absolute inset-3 w-10 h-10 bg-gradient-to-br from-white/60 to-transparent rounded-full"></div>
               
-              {/* Core light */}
-              <div className={`absolute inset-5 w-6 h-6 bg-white/60 rounded-full blur-sm ${!prefersReducedMotion ? 'animate-pulse' : ''}`} style={{animationDelay: '1.5s'}}></div>
+              {/* Core blinking light */}
+              <div className={`absolute w-6 h-6 bg-white rounded-full ${!prefersReducedMotion ? 'animate-pulse-slow' : ''}`}></div>
             </div>
             
             {/* Orbiting micro particles */}
             {!prefersReducedMotion && (
               <>
                 <div className="absolute inset-0 animate-spin-slow">
-                  <div className="w-2 h-2 bg-yellow-400 rounded-full absolute -top-2 left-1/2 transform -translate-x-1/2 animate-pulse shadow-lg shadow-yellow-400/50"></div>
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full absolute -top-3 left-1/2 transform -translate-x-1/2 animate-pulse shadow-lg shadow-yellow-400/50"></div>
                 </div>
                 <div className="absolute inset-0 animate-spin-slow" style={{animationDirection: 'reverse', animationDuration: '12s'}}>
-                  <div className="w-1.5 h-1.5 bg-pink-400 rounded-full absolute -bottom-2 left-1/2 transform -translate-x-1/2 animate-bounce shadow-lg shadow-pink-400/50"></div>
+                  <div className="w-1.5 h-1.5 bg-pink-400 rounded-full absolute -bottom-3 left-1/2 transform -translate-x-1/2 animate-bounce shadow-lg shadow-pink-400/50"></div>
                 </div>
               </>
             )}
