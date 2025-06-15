@@ -20,8 +20,8 @@ const DoctorOnWheelsAlert = ({ language }: DoctorOnWheelsAlertProps) => {
             </h4>
             <p className="text-sm text-purple-600">
               {language === "en" 
-                ? "Mobile clinic arriving tomorrow at 10 AM near Holenarasipura Market" 
-                : "ಮೊಬೈಲ್ ಕ್ಲಿನಿಕ್ ನಾಳೆ ಬೆಳಿಗ್ಗೆ 10 ಗಂಟೆಗೆ ಹೊಳೆನರಸೀಪುರ ಮಾರುಕಟ್ಟೆ ಬಳಿ ಬರುತ್ತಿದೆ"
+                ? "Mobile clinic arriving tomorrow at 10 AM" 
+                : "ಮೊಬೈಲ್ ಕ್ಲಿನಿಕ್ ನಾಳೆ ಬೆಳಿಗ್ಗೆ 10 ಗಂಟೆಗೆ ಬರುತ್ತಿದೆ"
               }
             </p>
           </div>
