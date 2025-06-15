@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,7 +30,7 @@ const Profile = ({ language }: ProfileProps) => {
     phone: "",
     location: "",
     bloodGroup: "B+",
-    emergencyContact: "+91 9876543211",
+    emergencyContact: "",
     allergies: "None",
     chronicConditions: "Diabetes"
   });
@@ -424,9 +425,10 @@ const Profile = ({ language }: ProfileProps) => {
               <Input
                 value={profile.emergencyContact}
                 onChange={(e) => setProfile({...profile, emergencyContact: e.target.value})}
+                placeholder={language === "en" ? "Enter emergency contact number" : "ತುರ್ತು ಸಂಪರ್ಕ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ"}
               />
             ) : (
-              <p className="text-sm text-gray-700 mt-1">{profile.emergencyContact}</p>
+              <p className="text-sm text-gray-700 mt-1">{profile.emergencyContact || (language === "en" ? "No emergency contact set" : "ತುರ್ತು ಸಂಪರ್ಕ ಸೆಟ್ ಆಗಿಲ್ಲ")}</p>
             )}
           </div>
         </CardContent>
