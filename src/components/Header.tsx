@@ -17,59 +17,65 @@ const Header = ({ onNavigateToProfile }: HeaderProps) => {
     <header className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl shadow-lg border-b border-white/20 dark:border-gray-800/20 sticky top-0 z-50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo Section */}
+          {/* Enhanced Logo Section with more animations */}
           <div className="flex items-center gap-4">
             <div className="relative group">
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/25 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                <Heart className="h-6 w-6 text-white animate-pulse" />
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/25 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:shadow-2xl group-hover:shadow-purple-500/30 animate-float">
+                <Heart className="h-6 w-6 text-white animate-pulse group-hover:animate-bounce" />
               </div>
+              {/* Enhanced animated dots with staggered animations */}
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full animate-ping"></div>
               <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-r from-red-400 to-pink-400 rounded-full animate-pulse"></div>
+              <div className="absolute -top-2 -right-2 w-2 h-2 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-full animate-bounce delay-300"></div>
+              
+              {/* Rotating ring effect */}
+              <div className="absolute inset-0 w-12 h-12 border-2 border-gradient-to-r from-transparent via-purple-400/30 to-transparent rounded-2xl animate-spin-slow"></div>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-emerald-700 dark:from-slate-200 dark:via-blue-300 dark:to-emerald-300 bg-clip-text text-transparent transition-all duration-300">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-emerald-700 dark:from-slate-200 dark:via-blue-300 dark:to-emerald-300 bg-clip-text text-transparent transition-all duration-300 animate-gradient">
                 Arogya
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide uppercase transition-colors duration-300">
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide uppercase transition-colors duration-300 animate-fade-in-up">
                 Health Platform
               </p>
             </div>
           </div>
 
-          {/* User Section */}
+          {/* Enhanced User Section with improved animations */}
           <div className="flex items-center gap-4">
-            {/* User Info */}
-            <div className="hidden md:flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300 bg-gradient-to-r from-slate-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl px-6 py-3 border border-slate-200/50 dark:border-gray-600/50 shadow-sm transition-all duration-300">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+            {/* Enhanced User Info with hover effects */}
+            <div className="hidden md:flex items-center gap-3 text-sm text-slate-600 dark:text-slate-300 bg-gradient-to-r from-slate-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-2xl px-6 py-3 border border-slate-200/50 dark:border-gray-600/50 shadow-sm transition-all duration-500 hover:shadow-lg hover:scale-105 hover:shadow-blue-500/20 animate-slide-in-right">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center animate-float-delayed">
                 <UserIcon className="h-4 w-4 text-white" />
               </div>
               <div className="flex flex-col">
                 <span className="font-medium text-slate-700 dark:text-slate-200 transition-colors duration-300">{user?.email?.split('@')[0]}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 transition-colors duration-300">Active now</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 transition-colors duration-300 animate-pulse-slow">Active now</span>
               </div>
             </div>
             
-            {/* Action Buttons */}
+            {/* Enhanced Action Buttons with improved hover effects */}
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
                 size="sm"
-                className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-100 to-blue-100 dark:from-gray-700 dark:to-gray-600 hover:from-slate-200 hover:to-blue-200 dark:hover:from-gray-600 dark:hover:to-gray-500 border border-slate-200/50 dark:border-gray-600/50 shadow-sm transition-all duration-300 hover:scale-105"
+                className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-100 to-blue-100 dark:from-gray-700 dark:to-gray-600 hover:from-slate-200 hover:to-blue-200 dark:hover:from-gray-600 dark:hover:to-gray-500 border border-slate-200/50 dark:border-gray-600/50 shadow-sm transition-all duration-500 hover:scale-110 hover:rotate-3 hover:shadow-lg hover:shadow-blue-500/25 animate-bounce-slow"
               >
-                <Bell className="h-5 w-5 text-slate-600 dark:text-slate-300" />
+                <Bell className="h-5 w-5 text-slate-600 dark:text-slate-300 transition-transform duration-300 hover:animate-wiggle" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-red-500 to-orange-500 rounded-full animate-pulse"></div>
+                <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-gradient-to-r from-yellow-400 to-red-400 rounded-full animate-ping delay-500"></div>
               </Button>
               
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-100 to-purple-100 dark:from-gray-700 dark:to-gray-600 hover:from-slate-200 hover:to-purple-200 dark:hover:from-gray-600 dark:hover:to-gray-500 border border-slate-200/50 dark:border-gray-600/50 shadow-sm transition-all duration-300 hover:scale-105"
+                className="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-100 to-purple-100 dark:from-gray-700 dark:to-gray-600 hover:from-slate-200 hover:to-purple-200 dark:hover:from-gray-600 dark:hover:to-gray-500 border border-slate-200/50 dark:border-gray-600/50 shadow-sm transition-all duration-500 hover:scale-110 hover:rotate-6 hover:shadow-lg hover:shadow-purple-500/25 animate-float"
               >
                 {theme === 'light' ? (
-                  <Moon className="h-5 w-5 text-slate-600 dark:text-slate-300" />
+                  <Moon className="h-5 w-5 text-slate-600 dark:text-slate-300 transition-transform duration-500 hover:rotate-12" />
                 ) : (
-                  <Sun className="h-5 w-5 text-slate-600 dark:text-slate-300" />
+                  <Sun className="h-5 w-5 text-slate-600 dark:text-slate-300 transition-transform duration-500 hover:rotate-45 hover:scale-125" />
                 )}
               </Button>
               
@@ -77,9 +83,9 @@ const Header = ({ onNavigateToProfile }: HeaderProps) => {
                 variant="outline"
                 size="sm"
                 onClick={onNavigateToProfile}
-                className="border-2 border-emerald-200 dark:border-emerald-600 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-emerald-500/25 rounded-2xl px-6 py-3 font-medium bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20"
+                className="border-2 border-emerald-200 dark:border-emerald-600 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-all duration-500 hover:scale-110 hover:shadow-lg hover:shadow-emerald-500/25 rounded-2xl px-6 py-3 font-medium bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 animate-scale-in hover:animate-pulse-ring"
               >
-                <UserIcon className="h-4 w-4 mr-2" />
+                <UserIcon className="h-4 w-4 mr-2 transition-transform duration-300 hover:rotate-12" />
                 <span className="hidden sm:inline">Profile</span>
               </Button>
             </div>
