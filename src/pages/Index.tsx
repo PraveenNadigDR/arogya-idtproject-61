@@ -7,10 +7,11 @@ import MedicineReminder from "@/components/MedicineReminder";
 import MedicineTracker from "@/components/MedicineTracker";
 import FamilyHealth from "@/components/FamilyHealth";
 import AIAssistant from "@/components/AIAssistant";
+import DoctorFinder from "@/components/DoctorFinder";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageCircle, Users, Pill, Activity, User, BookOpen } from "lucide-react";
+import { MessageCircle, Users, Pill, Activity, User, BookOpen, Stethoscope } from "lucide-react";
 
 const Index = () => {
   const [language, setLanguage] = useState("en");
@@ -38,10 +39,14 @@ const Index = () => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="dashboard" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="dashboard" className="flex items-center gap-1">
               <Activity className="h-4 w-4" />
               {language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}
+            </TabsTrigger>
+            <TabsTrigger value="doctors" className="flex items-center gap-1">
+              <Stethoscope className="h-4 w-4" />
+              {language === "en" ? "Doctors" : "ವೈದ್ಯರು"}
             </TabsTrigger>
             <TabsTrigger value="ai-assistant" className="flex items-center gap-1">
               <MessageCircle className="h-4 w-4" />
@@ -77,6 +82,10 @@ const Index = () => {
                 <MedicineReminder language={language} />
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="doctors" className="mt-6">
+            <DoctorFinder language={language} />
           </TabsContent>
 
           <TabsContent value="ai-assistant" className="mt-6">
