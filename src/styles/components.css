@@ -1,0 +1,154 @@
+
+@layer utilities {
+  /* Glass morphism effects with better browser support */
+  .glass {
+    @apply bg-white/25 backdrop-blur-xl border border-white/30 shadow-2xl;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  .glass-dark {
+    @apply bg-black/25 backdrop-blur-xl border border-white/20 shadow-2xl;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  /* Enhanced shadows with better depth */
+  .shadow-soft {
+    box-shadow: 
+      0 10px 30px -10px rgba(0, 0, 0, 0.15), 
+      0 15px 25px -10px rgba(0, 0, 0, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .shadow-colored {
+    box-shadow: 
+      0 15px 50px -15px rgba(59, 130, 246, 0.4),
+      0 0 0 1px rgba(59, 130, 246, 0.1);
+  }
+
+  .shadow-3xl {
+    box-shadow: 
+      0 50px 100px -15px rgba(0, 0, 0, 0.3), 
+      0 0 0 1px rgba(255, 255, 255, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .shadow-glow {
+    box-shadow: 
+      0 0 25px rgba(59, 130, 246, 0.4),
+      0 0 50px rgba(59, 130, 246, 0.25),
+      0 0 100px rgba(59, 130, 246, 0.15);
+  }
+
+  /* Modern gradient text with better fallbacks */
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 bg-clip-text text-transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-warm {
+    @apply bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 bg-clip-text text-transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-cool {
+    @apply bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 bg-clip-text text-transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Interactive hover effects with better performance */
+  .hover-lift {
+    @apply transition-all duration-700;
+    will-change: transform, box-shadow;
+  }
+
+  .hover-lift:hover {
+    @apply scale-105 shadow-3xl;
+  }
+
+  .hover-glow {
+    @apply transition-all duration-700;
+    will-change: box-shadow;
+  }
+
+  .hover-glow:hover {
+    @apply shadow-3xl shadow-blue-500/30;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-300 ease-out;
+    will-change: transform;
+  }
+
+  .hover-scale:hover {
+    @apply scale-105;
+  }
+
+  /* Modern button styles with enhanced interactions */
+  .btn-modern {
+    @apply relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-emerald-600 text-white px-12 py-6 rounded-2xl font-bold transition-all duration-700 shadow-xl;
+    will-change: transform, box-shadow;
+  }
+
+  .btn-modern::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-blue-400/30 to-purple-400/30 opacity-0 transition-opacity duration-700;
+  }
+
+  .btn-modern:hover {
+    @apply scale-105 shadow-3xl;
+  }
+
+  .btn-modern:hover::before {
+    @apply opacity-100;
+  }
+
+  .btn-modern:active {
+    @apply scale-95;
+  }
+
+  /* Card enhancement utilities with better depth */
+  .card-enhanced {
+    @apply backdrop-blur-xl bg-white/80 border-0 shadow-2xl transition-all duration-700 ring-1 ring-black/5;
+    will-change: transform, box-shadow;
+  }
+
+  .card-enhanced:hover {
+    @apply shadow-3xl scale-[1.02];
+  }
+
+  .card-gradient {
+    @apply bg-gradient-to-br from-white/90 via-blue-50/50 to-purple-50/50;
+  }
+
+  /* Enhanced loading states */
+  .loading-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2.5s infinite;
+  }
+
+  /* Progress indicators */
+  .progress-ring {
+    @apply relative;
+  }
+
+  .progress-ring::before {
+    content: '';
+    @apply absolute inset-0 rounded-full;
+    background: conic-gradient(from 0deg, transparent 0%, var(--progress-color, #3b82f6) var(--progress, 0%), transparent var(--progress, 0%));
+  }
+
+  /* Enhanced focus states for accessibility */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-opacity-75;
+  }
+
+  .focus-ring-inset {
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset focus:ring-opacity-75;
+  }
+}
