@@ -1,20 +1,21 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { User, Phone, MapPin, Calendar, Heart, Edit, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ProfileProps {
   language: string;
 }
 
 const Profile = ({ language }: ProfileProps) => {
+  const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState({
-    name: "Shreyas",
+    name: "",
     age: 35,
     phone: "+91 9876543210",
     location: "Holenarasipura, Hassan",
@@ -24,6 +25,16 @@ const Profile = ({ language }: ProfileProps) => {
     chronicConditions: "Diabetes"
   });
   const { toast } = useToast();
+
+  // Update profile name when user data is available
+  useEffect(() => {
+    if (user) {
+      setProfile(prev => ({
+        ...prev,
+        name: user.user_metadata?.full_name || user.email?.split('@')[0] || "User"
+      }));
+    }
+  }, [user]);
 
   const text = {
     en: {
