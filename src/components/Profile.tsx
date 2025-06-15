@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,10 +15,11 @@ interface ProfileProps {
 const Profile = ({ language }: ProfileProps) => {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const [showInfoForm, setShowInfoForm] = useState(false);
   const [profile, setProfile] = useState({
     name: "",
-    age: 35,
-    phone: "+91 9876543210",
+    age: 0,
+    phone: "",
     location: "Holenarasipura, Hassan",
     bloodGroup: "B+",
     emergencyContact: "+91 9876543211",
@@ -33,6 +35,15 @@ const Profile = ({ language }: ProfileProps) => {
         ...prev,
         name: user.user_metadata?.full_name || user.email?.split('@')[0] || "User"
       }));
+      
+      // Check if we need to show the info form (age and phone not set)
+      const storedProfile = localStorage.getItem(`profile_${user.id}`);
+      if (storedProfile) {
+        const parsed = JSON.parse(storedProfile);
+        setProfile(prev => ({ ...prev, ...parsed }));
+      } else if (!profile.age || !profile.phone) {
+        setShowInfoForm(true);
+      }
     }
   }, [user]);
 
@@ -53,7 +64,12 @@ const Profile = ({ language }: ProfileProps) => {
       allergies: "Allergies",
       chronicConditions: "Chronic Conditions",
       profileUpdated: "✅ Profile Updated!",
-      changesSaved: "Your changes have been saved"
+      changesSaved: "Your changes have been saved",
+      setupProfile: "Complete Your Profile",
+      setupMessage: "Please provide your age and phone number to complete your profile",
+      ageLabel: "Your Age",
+      phoneLabel: "Your Phone Number",
+      saveInfo: "Save Information"
     },
     kn: {
       title: "ನನ್ನ ಪ್ರೊಫೈಲ್",
@@ -71,7 +87,12 @@ const Profile = ({ language }: ProfileProps) => {
       allergies: "ಅಲರ್ಜಿಗಳು",
       chronicConditions: "ದೀರ್ಘಕಾಲಿಕ ಸ್ಥಿತಿಗಳು",
       profileUpdated: "✅ ಪ್ರೊಫೈಲ್ ಅಪ್‌ಡೇಟ್ ಆಗಿದೆ!",
-      changesSaved: "ನಿಮ್ಮ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಲಾಗಿದೆ"
+      changesSaved: "ನಿಮ್ಮ ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಲಾಗಿದೆ",
+      setupProfile: "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಿ",
+      setupMessage: "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಪೂರ್ಣಗೊಳಿಸಲು ದಯವಿಟ್ಟು ನಿಮ್ಮ ವಯಸ್ಸು ಮತ್ತು ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನೀಡಿ",
+      ageLabel: "ನಿಮ್ಮ ವಯಸ್ಸು",
+      phoneLabel: "ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆ",
+      saveInfo: "ಮಾಹಿತಿಯನ್ನು ಉಳಿಸಿ"
     }
   };
 
@@ -79,15 +100,78 @@ const Profile = ({ language }: ProfileProps) => {
 
   const handleSave = () => {
     setIsEditing(false);
+    if (user) {
+      localStorage.setItem(`profile_${user.id}`, JSON.stringify(profile));
+    }
     toast({
       title: currentText.profileUpdated,
       description: currentText.changesSaved
     });
   };
 
+  const handleInfoSave = () => {
+    if (profile.age && profile.phone) {
+      setShowInfoForm(false);
+      if (user) {
+        localStorage.setItem(`profile_${user.id}`, JSON.stringify(profile));
+      }
+      toast({
+        title: currentText.profileUpdated,
+        description: currentText.changesSaved
+      });
+    }
+  };
+
   const handleCancel = () => {
     setIsEditing(false);
   };
+
+  // Show info collection form if needed
+  if (showInfoForm) {
+    return (
+      <div className="space-y-4">
+        <Card className="bg-gradient-to-r from-blue-50 to-green-50 border-blue-200">
+          <CardHeader>
+            <CardTitle className="text-lg text-blue-800 flex items-center gap-2">
+              <User className="h-5 w-5" />
+              {currentText.setupProfile}
+            </CardTitle>
+            <p className="text-sm text-blue-600">
+              {currentText.setupMessage}
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="text-sm font-medium block mb-1">{currentText.ageLabel}</label>
+              <Input
+                type="number"
+                value={profile.age || ''}
+                onChange={(e) => setProfile({...profile, age: parseInt(e.target.value) || 0})}
+                placeholder={language === "en" ? "Enter your age" : "ನಿಮ್ಮ ವಯಸ್ಸನ್ನು ನಮೂದಿಸಿ"}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-1">{currentText.phoneLabel}</label>
+              <Input
+                type="tel"
+                value={profile.phone}
+                onChange={(e) => setProfile({...profile, phone: e.target.value})}
+                placeholder={language === "en" ? "Enter your phone number" : "ನಿಮ್ಮ ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ"}
+              />
+            </div>
+            <Button
+              onClick={handleInfoSave}
+              className="w-full bg-green-600 hover:bg-green-700"
+              disabled={!profile.age || !profile.phone}
+            >
+              <Save className="h-4 w-4 mr-1" />
+              {currentText.saveInfo}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
