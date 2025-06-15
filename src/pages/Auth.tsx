@@ -11,6 +11,21 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
+// Cleanup function to remove all auth-related storage
+const cleanupAuthState = () => {
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      localStorage.removeItem(key);
+    }
+  });
+  
+  Object.keys(sessionStorage || {}).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      sessionStorage.removeItem(key);
+    }
+  });
+};
+
 const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,6 +47,17 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Clean up any existing auth state
+      cleanupAuthState();
+      
+      // Attempt global sign out first
+      try {
+        await supabase.auth.signOut({ scope: 'global' });
+      } catch (err) {
+        // Continue even if this fails
+        console.log('Global signout failed, continuing...');
+      }
+
       const redirectUrl = `${window.location.origin}/`;
       
       const { error } = await supabase.auth.signUp({
@@ -52,6 +78,7 @@ const Auth = () => {
         description: "Please check your email to confirm your account.",
       });
     } catch (error: any) {
+      console.error('Sign up error:', error);
       toast({
         title: "Error creating account",
         description: error.message,
@@ -67,6 +94,17 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Clean up any existing auth state
+      cleanupAuthState();
+      
+      // Attempt global sign out first
+      try {
+        await supabase.auth.signOut({ scope: 'global' });
+      } catch (err) {
+        // Continue even if this fails
+        console.log('Global signout failed, continuing...');
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -79,9 +117,12 @@ const Auth = () => {
           title: "Welcome back!",
           description: "You have been logged in successfully.",
         });
-        navigate('/');
+        
+        // Force page reload for clean state
+        window.location.href = '/';
       }
     } catch (error: any) {
+      console.error('Sign in error:', error);
       toast({
         title: "Error signing in",
         description: error.message,
