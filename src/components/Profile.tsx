@@ -11,6 +11,7 @@ import PersonalInfoCard from "@/components/profile/PersonalInfoCard";
 import MedicalInfoCard from "@/components/profile/MedicalInfoCard";
 import EmergencyContactCard from "@/components/profile/EmergencyContactCard";
 import HealthIDCard from "@/components/profile/HealthIDCard";
+import BookedAppointments from "@/components/profile/BookedAppointments";
 
 interface ProfileProps {
   language: string;
@@ -253,6 +254,8 @@ const Profile = ({ language }: ProfileProps) => {
       />
 
       <MedicineReminder language={language} />
+
+      <BookedAppointments language={language} />
 
       <PersonalInfoCard
         language={language}
