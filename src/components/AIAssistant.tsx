@@ -29,8 +29,8 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       id: 1,
       type: "assistant",
       content: language === "en" 
-        ? "Hello Shreyas! I'm your health assistant. You can ask me about symptoms, medicines, book appointments, or start a video call with a doctor. How can I help you today?"
-        : "ನಮಸ್ತೆ ಶ್ರೇಯಸ್! ನಾನು ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಹಾಯಕ. ನೀವು ಲಕ್ಷಣಗಳು, ಔಷಧಗಳು, ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡುವ ಬಗ್ಗೆ ಕೇಳಬಹುದು ಅಥವಾ ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್ ಪ್ರಾರಂಭಿಸಬಹುದು. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?",
+        ? "Hello! I'm your health assistant. You can ask me about symptoms, medicines, book appointments, or start a video call with a doctor. How can I help you today?"
+        : "ನಮಸ್ತೆ! ನಾನು ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಹಾಯಕ. ನೀವು ಲಕ್ಷಣಗಳು, ಔಷಧಗಳು, ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡುವ ಬಗ್ಗೆ ಕೇಳಬಹುದು ಅಥವಾ ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್ ಪ್ರಾರಂಭಿಸಬಹುದು. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?",
       timestamp: "10:30 AM"
     }
   ]);
@@ -91,8 +91,8 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     }
 
     const systemPrompt = language === "en" 
-      ? "You are a helpful health assistant for Shreyas, a 19-year-old from Holenarasipura village near Hassan, Karnataka. Provide practical health advice, help with symptoms, medicine information, and doctor appointments. Keep responses concise and helpful. Focus on local healthcare options in Hassan district."
-      : "ನೀವು ಹಾಸನ್ ಜಿಲ್ಲೆಯ ಹೊಳೆನರಸೀಪುರ ಗ್ರಾಮದ 19 ವರ್ಷದ ಶ್ರೇಯಸ್‌ಗೆ ಸಹಾಯಕಾರಿ ಆರೋಗ್ಯ ಸಹಾಯಕರು. ಪ್ರಾಯೋಗಿಕ ಆರೋಗ್ಯ ಸಲಹೆ, ಲಕ್ಷಣಗಳೊಂದಿಗೆ ಸಹಾಯ, ಔಷಧ ಮಾಹಿತಿ ಮತ್ತು ವೈದ್ಯರ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗಳನ್ನು ಒದಗಿಸಿ. ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಸಂಕ್ಷಿಪ್ತ ಮತ್ತು ಸಹಾಯಕವಾಗಿ ಇರಿಸಿ.";
+      ? "You are a helpful health assistant. Provide practical health advice, help with symptoms, medicine information, and doctor appointments. Keep responses concise and helpful. Focus on local healthcare options."
+      : "ನೀವು ಸಹಾಯಕಾರಿ ಆರೋಗ್ಯ ಸಹಾಯಕರು. ಪ್ರಾಯೋಗಿಕ ಆರೋಗ್ಯ ಸಲಹೆ, ಲಕ್ಷಣಗಳೊಂದಿಗೆ ಸಹಾಯ, ಔಷಧ ಮಾಹಿತಿ ಮತ್ತು ವೈದ್ಯರ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗಳನ್ನು ಒದಗಿಸಿ. ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಸಂಕ್ಷಿಪ್ತ ಮತ್ತು ಸಹಾಯಕವಾಗಿ ಇರಿಸಿ.";
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
