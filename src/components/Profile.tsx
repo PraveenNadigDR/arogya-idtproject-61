@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { User, Phone, MapPin, Calendar, Heart, Edit, Save, Navigation, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import MedicineReminder from "@/components/MedicineReminder";
 
 interface ProfileProps {
   language: string;
@@ -129,7 +129,7 @@ const Profile = ({ language }: ProfileProps) => {
       await signOut();
       toast({
         title: language === "en" ? "Signed out successfully" : "ಯಶಸ್ವಿಯಾಗಿ ಸೈನ್ ಔಟ್ ಆಗಿದೆ",
-        description: language === "en" ? "You have been logged out of your account." : "ನಿಮ್ಮ ಖಾತೆಯಿಂದ ಲಾಗ್ ಔಟ್ ಆಗಿದ್ದೀರಿ.",
+        description: language === "en" ? "You have been logged out of your account." : "ನಿಮ್ಮ ಖಾತೆಯಿಂದ ಲಾಗ್ ಔಟ್ ಆಗಿದ್ddೀರಿ.",
       });
     } catch (error) {
       toast({
@@ -329,6 +329,9 @@ const Profile = ({ language }: ProfileProps) => {
           </div>
         </CardHeader>
       </Card>
+
+      {/* Medicine Reminder */}
+      <MedicineReminder language={language} />
 
       {/* Personal Information */}
       <Card>
