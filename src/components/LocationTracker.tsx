@@ -18,12 +18,14 @@ interface LocationData {
   speed?: number;
   heading?: number;
   timestamp: number;
+  address?: string;
 }
 
 const LocationTracker = ({ language }: LocationTrackerProps) => {
   const [location, setLocation] = useState<LocationData | null>(null);
   const [isTracking, setIsTracking] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingAddress, setIsLoadingAddress] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [watchId, setWatchId] = useState<number | null>(null);
   const { toast } = useToast();
@@ -41,6 +43,7 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
       altitude: "Altitude",
       speed: "Speed",
       heading: "Heading",
+      address: "Address",
       lastUpdated: "Last Updated",
       locationEnabled: "Location Tracking Active",
       locationDisabled: "Location Tracking Disabled",
@@ -56,7 +59,9 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
       meters: "meters",
       kmh: "km/h",
       degrees: "°",
-      notAvailable: "N/A"
+      notAvailable: "N/A",
+      loadingAddress: "Loading address...",
+      addressNotFound: "Address not found"
     },
     kn: {
       title: "GPS ಸ್ಥಳ ಟ್ರ್ಯಾಕರ್",
@@ -70,6 +75,7 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
       altitude: "ಎತ್ತರ",
       speed: "ವೇಗ",
       heading: "ದಿಕ್ಕು",
+      address: "ವಿಳಾಸ",
       lastUpdated: "ಕೊನೆಯ ಬಾರಿ ನವೀಕರಿಸಲಾಗಿದೆ",
       locationEnabled: "ಸ್ಥಳ ಟ್ರ್ಯಾಕಿಂಗ್ ಸಕ್ರಿಯ",
       locationDisabled: "ಸ್ಥಳ ಟ್ರ್ಯಾಕಿಂಗ್ ನಿಷ್ಕ್ರಿಯ",
@@ -85,7 +91,9 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
       meters: "ಮೀಟರ್",
       kmh: "ಕಿ.ಮೀ/ಗಂ",
       degrees: "°",
-      notAvailable: "ಲಭ್ಯವಿಲ್ಲ"
+      notAvailable: "ಲಭ್ಯವಿಲ್ಲ",
+      loadingAddress: "ವಿಳಾಸವನ್ನು ಲೋಡ್ ಮಾಡುತ್ತಿದೆ...",
+      addressNotFound: "ವಿಳಾಸ ಸಿಗಲಿಲ್ಲ"
     }
   };
 
@@ -118,6 +126,62 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
     }
   };
 
+  const getAddressFromCoordinates = async (lat: number, lng: number): Promise<string> => {
+    try {
+      setIsLoadingAddress(true);
+      const response = await fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=YOUR_API_KEY&language=${language === 'kn' ? 'kn' : 'en'}&pretty=1`
+      );
+      
+      if (!response.ok) {
+        // Fallback to Nominatim if OpenCage fails
+        const nominatimResponse = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=${language === 'kn' ? 'kn' : 'en'}`
+        );
+        
+        if (nominatimResponse.ok) {
+          const data = await nominatimResponse.json();
+          return data.display_name || currentText.addressNotFound;
+        }
+        
+        throw new Error('Geocoding failed');
+      }
+      
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        return data.results[0].formatted;
+      } else {
+        throw new Error('No address found');
+      }
+    } catch (error) {
+      console.log('Geocoding error:', error);
+      // Try Nominatim as fallback
+      try {
+        const nominatimResponse = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=${language === 'kn' ? 'kn' : 'en'}`
+        );
+        
+        if (nominatimResponse.ok) {
+          const data = await nominatimResponse.json();
+          return data.display_name || currentText.addressNotFound;
+        }
+      } catch (fallbackError) {
+        console.log('Fallback geocoding error:', fallbackError);
+      }
+      
+      return currentText.addressNotFound;
+    } finally {
+      setIsLoadingAddress(false);
+    }
+  };
+
+  const updateLocationWithAddress = async (locationData: LocationData) => {
+    const address = await getAddressFromCoordinates(locationData.latitude, locationData.longitude);
+    const updatedLocation = { ...locationData, address };
+    setLocation(updatedLocation);
+    return updatedLocation;
+  };
+
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
       setError("Geolocation is not supported by this browser");
@@ -128,7 +192,7 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
     setError(null);
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const locationData: LocationData = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -141,6 +205,9 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
         
         setLocation(locationData);
         setIsLoading(false);
+        
+        // Get address in background
+        updateLocationWithAddress(locationData);
         
         toast({
           title: "Location Updated",
@@ -174,7 +241,7 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
     setIsTracking(true);
 
     const id = navigator.geolocation.watchPosition(
-      (position) => {
+      async (position) => {
         const locationData: LocationData = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -187,6 +254,9 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
         
         setLocation(locationData);
         console.log("Location updated:", locationData);
+        
+        // Get address in background
+        updateLocationWithAddress(locationData);
       },
       (error) => {
         setError(getErrorMessage(error));
@@ -320,6 +390,23 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Address */}
+            {location.address && (
+              <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                <div className="text-sm text-purple-600 font-medium mb-2">{currentText.address}</div>
+                <div className="text-base text-purple-800 break-words">
+                  {isLoadingAddress ? (
+                    <div className="flex items-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      {currentText.loadingAddress}
+                    </div>
+                  ) : (
+                    location.address
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Coordinates */}
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-blue-50 rounded-lg p-3">
