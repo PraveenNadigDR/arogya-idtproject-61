@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { User, Phone, MapPin, Calendar, Heart, Edit, Save, Navigation } from "lucide-react";
+import { User, Phone, MapPin, Calendar, Heart, Edit, Save, Navigation, LogOut } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -19,7 +19,7 @@ interface LocationData {
 }
 
 const Profile = ({ language }: ProfileProps) => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [showInfoForm, setShowInfoForm] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<LocationData | null>(null);
@@ -124,6 +124,22 @@ const Profile = ({ language }: ProfileProps) => {
     );
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: language === "en" ? "Signed out successfully" : "ಯಶಸ್ವಿಯಾಗಿ ಸೈನ್ ಔಟ್ ಆಗಿದೆ",
+        description: language === "en" ? "You have been logged out of your account." : "ನಿಮ್ಮ ಖಾತೆಯಿಂದ ಲಾಗ್ ಔಟ್ ಆಗಿದ್ದೀರಿ.",
+      });
+    } catch (error) {
+      toast({
+        title: language === "en" ? "Error signing out" : "ಸೈನ್ ಔಟ್ ಮಾಡುವಲ್ಲಿ ದೋಷ",
+        description: language === "en" ? "Please try again." : "ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const text = {
     en: {
       title: "My Profile",
@@ -150,7 +166,9 @@ const Profile = ({ language }: ProfileProps) => {
       updateLocation: "Update from GPS",
       gettingLocation: "Getting location...",
       noLocation: "No location set",
-      skipSetup: "Skip for now"
+      skipSetup: "Skip for now",
+      signOut: "Sign Out",
+      signOutConfirm: "Are you sure you want to sign out?"
     },
     kn: {
       title: "ನನ್ನ ಪ್ರೊಫೈಲ್",
@@ -177,7 +195,9 @@ const Profile = ({ language }: ProfileProps) => {
       updateLocation: "GPS ನಿಂದ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ",
       gettingLocation: "ಸ್ಥಳವನ್ನು ಪಡೆಯುತ್ತಿದೆ...",
       noLocation: "ಯಾವುದೇ ಸ್ಥಳ ಸೆಟ್ ಆಗಿಲ್ಲ",
-      skipSetup: "ಸದ್ಯಕ್ಕೆ ಬಿಟ್ಟುಬಿಡಿ"
+      skipSetup: "ಸದ್ಯಕ್ಕೆ ಬಿಟ್ಟುಬಿಡಿ",
+      signOut: "ಸೈನ್ ಔಟ್",
+      signOutConfirm: "ನೀವು ಸೈನ್ ಔಟ್ ಮಾಡಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?"
     }
   };
 
@@ -286,15 +306,26 @@ const Profile = ({ language }: ProfileProps) => {
                 {language === "en" ? "Manage your health profile" : "ನಿಮ್ಮ ಆರೋಗ್ಯ ಪ್ರೊಫೈಲ್ ನಿರ್ವಹಿಸಿ"}
               </p>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsEditing(!isEditing)}
-              className="border-blue-300 text-blue-700 hover:bg-blue-50"
-            >
-              <Edit className="h-4 w-4 mr-1" />
-              {currentText.edit}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setIsEditing(!isEditing)}
+                className="border-blue-300 text-blue-700 hover:bg-blue-50"
+              >
+                <Edit className="h-4 w-4 mr-1" />
+                {currentText.edit}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSignOut}
+                className="border-red-300 text-red-700 hover:bg-red-50"
+              >
+                <LogOut className="h-4 w-4 mr-1" />
+                {currentText.signOut}
+              </Button>
+            </div>
           </div>
         </CardHeader>
       </Card>
