@@ -31,52 +31,56 @@ export const useProfileLocation = (language: string) => {
     }
   };
 
-  const getCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      toast({
-        title: "Error",
-        description: "Geolocation is not supported by this browser",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsGettingLocation(true);
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const locationData: LocationData = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        };
-        
-        const address = await getAddressFromCoordinates(locationData.latitude, locationData.longitude);
-        locationData.address = address;
-        
-        setCurrentLocation(locationData);
-        setIsGettingLocation(false);
-        
+  const getCurrentLocation = (): Promise<string | null> => {
+    return new Promise((resolve) => {
+      if (!navigator.geolocation) {
         toast({
-          title: "Location Updated",
-          description: "Your location has been updated from GPS"
-        });
-
-        return address;
-      },
-      (error) => {
-        setIsGettingLocation(false);
-        toast({
-          title: "Location Error",
-          description: "Unable to get your location",
+          title: "Error",
+          description: "Geolocation is not supported by this browser",
           variant: "destructive"
         });
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 60000
+        resolve(null);
+        return;
       }
-    );
+
+      setIsGettingLocation(true);
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const locationData: LocationData = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+          
+          const address = await getAddressFromCoordinates(locationData.latitude, locationData.longitude);
+          locationData.address = address;
+          
+          setCurrentLocation(locationData);
+          setIsGettingLocation(false);
+          
+          toast({
+            title: "Location Updated",
+            description: "Your location has been updated from GPS"
+          });
+
+          resolve(address);
+        },
+        (error) => {
+          setIsGettingLocation(false);
+          toast({
+            title: "Location Error",
+            description: "Unable to get your location",
+            variant: "destructive"
+          });
+          resolve(null);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 60000
+        }
+      );
+    });
   };
 
   return {
