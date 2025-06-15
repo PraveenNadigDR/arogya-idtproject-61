@@ -5,12 +5,15 @@ import HealthTips from "@/components/HealthTips";
 import AIAssistant from "@/components/AIAssistant";
 import DoctorFinder from "@/components/DoctorFinder";
 import EmergencyServices from "@/components/EmergencyServices";
+import Profile from "@/components/Profile";
+import FamilyHealth from "@/components/FamilyHealth";
+import ArogyaDiary from "@/components/ArogyaDiary";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { MessageCircle, Pill, Activity, Stethoscope, AlertTriangle, Calendar, Ambulance, Phone, Video } from "lucide-react";
+import { MessageCircle, Activity, Stethoscope, AlertTriangle, Video, Calendar, Ambulance, Phone, User } from "lucide-react";
 
 const Index = () => {
   const [language, setLanguage] = useState("en");
@@ -48,7 +51,7 @@ const Index = () => {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="dashboard" className="flex items-center gap-1">
               <Activity className="h-4 w-4" />
               <span className="hidden sm:inline">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
@@ -64,6 +67,10 @@ const Index = () => {
             <TabsTrigger value="emergency" className="flex items-center gap-1">
               <AlertTriangle className="h-4 w-4" />
               <span className="hidden sm:inline">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="flex items-center gap-1">
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">{language === "en" ? "Profile" : "ಪ್ರೊಫೈಲ್"}</span>
             </TabsTrigger>
           </TabsList>
 
@@ -220,6 +227,19 @@ const Index = () => {
 
           <TabsContent value="emergency" className="mt-6">
             <EmergencyServices language={language} />
+          </TabsContent>
+
+          <TabsContent value="profile" className="mt-6">
+            <div className="space-y-6">
+              {/* Profile Section */}
+              <Profile language={language} />
+              
+              {/* Family Health Section */}
+              <FamilyHealth language={language} />
+              
+              {/* Arogya Diary Section */}
+              <ArogyaDiary language={language} />
+            </div>
           </TabsContent>
         </Tabs>
 
