@@ -1,4 +1,3 @@
-
 import Header from "@/components/Header";
 import QuickHealthCheck from "@/components/QuickHealthCheck";
 import HealthTips from "@/components/HealthTips";
@@ -34,9 +33,13 @@ const Index = () => {
     setShowVideoCall(true);
   };
 
+  const handleNavigateToProfile = () => {
+    setActiveTab("profile");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-emerald-50">
-      <Header />
+      <Header onNavigateToProfile={handleNavigateToProfile} />
       
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <DashboardHeader language={language} />

@@ -1,29 +1,15 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { LogOut, User as UserIcon, Heart } from 'lucide-react';
+import { User as UserIcon, Heart } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 
-const Header = () => {
-  const { user, signOut } = useAuth();
-  const { toast } = useToast();
+interface HeaderProps {
+  onNavigateToProfile?: () => void;
+}
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      toast({
-        title: "Signed out successfully",
-        description: "You have been logged out of your account.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error signing out",
-        description: "Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
+const Header = ({ onNavigateToProfile }: HeaderProps) => {
+  const { user } = useAuth();
 
   return (
     <header className="bg-white shadow-sm border-b border-green-100">
@@ -43,11 +29,11 @@ const Header = () => {
             <Button
               variant="outline"
               size="sm"
-              onClick={handleSignOut}
+              onClick={onNavigateToProfile}
               className="border-green-300 text-green-700 hover:bg-green-50"
             >
-              <LogOut className="h-4 w-4 mr-1" />
-              Sign Out
+              <UserIcon className="h-4 w-4 mr-1" />
+              Profile
             </Button>
           </div>
         </div>
