@@ -1,3 +1,4 @@
+
 import Header from "@/components/Header";
 import QuickHealthCheck from "@/components/QuickHealthCheck";
 import HealthTips from "@/components/HealthTips";
@@ -13,7 +14,9 @@ import QuickActionsCard from "@/components/QuickActionsCard";
 import VideoCallDialog from "@/components/VideoCallDialog";
 import LanguageSelector from "@/components/LanguageSelector";
 import LoadingStates from "@/components/LoadingStates";
-import ParticleBackground from "@/components/ParticleBackground";
+import EnhancedParticleBackground from "@/components/EnhancedParticleBackground";
+import AnimatedCard from "@/components/AnimatedCard";
+import FloatingElements from "@/components/FloatingElements";
 import PageTransition from "@/components/PageTransition";
 import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -80,14 +83,15 @@ const Index = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 relative overflow-hidden ${prefersReducedMotion ? 'motion-reduce' : ''}`}>
-      <ParticleBackground />
+    <div className={`min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 dark:from-gray-900 dark:via-gray-800/40 dark:to-gray-900/60 relative overflow-hidden ${prefersReducedMotion ? 'motion-reduce' : ''}`}>
+      <EnhancedParticleBackground />
+      <FloatingElements />
       
       {/* Enhanced animated background elements with better accessibility */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className={`absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-400/15 to-purple-400/15 rounded-full blur-3xl ${!prefersReducedMotion ? 'animate-float' : ''}`}></div>
-        <div className={`absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-green-400/15 to-emerald-400/15 rounded-full blur-3xl ${!prefersReducedMotion ? 'animate-float-delayed' : ''}`}></div>
-        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-indigo-400/8 to-cyan-400/8 rounded-full blur-2xl ${!prefersReducedMotion ? 'animate-pulse-slow' : ''}`}></div>
+        <div className={`absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl ${!prefersReducedMotion ? 'animate-float' : ''}`}></div>
+        <div className={`absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-green-400/20 to-emerald-400/20 rounded-full blur-3xl ${!prefersReducedMotion ? 'animate-float-delayed' : ''}`}></div>
+        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-indigo-400/10 to-cyan-400/10 rounded-full blur-2xl ${!prefersReducedMotion ? 'animate-pulse-slow' : ''}`}></div>
         
         {/* Enhanced geometric patterns with better positioning */}
         <div className={`absolute top-20 left-20 w-4 h-4 bg-blue-400/40 rounded-full shadow-lg shadow-blue-400/20 ${!prefersReducedMotion ? 'animate-bounce-slow' : ''}`}></div>
@@ -107,47 +111,47 @@ const Index = () => {
         <div className="mb-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <div className="flex justify-center mb-12">
-              <TabsList className="grid grid-cols-4 bg-white/20 dark:bg-gray-900/20 backdrop-blur-3xl border-0 shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-[28px] p-2 ring-1 ring-white/10 dark:ring-gray-700/50 hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] transition-all duration-700">
+              <TabsList className="grid grid-cols-4 bg-white/30 dark:bg-gray-900/30 backdrop-blur-3xl border-0 shadow-[0_12px_40px_rgba(0,0,0,0.15)] rounded-[32px] p-3 ring-1 ring-white/20 dark:ring-gray-700/50 hover:shadow-[0_16px_50px_rgba(0,0,0,0.2)] transition-all duration-700">
                 <TabsTrigger 
                   value="dashboard" 
-                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-400 data-[state=active]:via-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-[0_8px_20px_rgba(16,185,129,0.4)] transition-all duration-500 rounded-[20px] px-6 py-4 font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-gray-800/40 hover:text-slate-800 dark:hover:text-white hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
+                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-400 data-[state=active]:via-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-[0_12px_25px_rgba(16,185,129,0.5)] transition-all duration-700 rounded-[24px] px-8 py-5 font-bold text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-slate-800 dark:hover:text-white hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
                   aria-label={language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/10 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Activity className={`h-5 w-5 transition-all duration-500 group-hover:scale-110 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
+                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-emerald-500/20 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <Activity className={`h-5 w-5 transition-all duration-700 group-hover:scale-125 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
                   <span className="hidden sm:inline text-sm font-bold relative z-10">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
                 </TabsTrigger>
                 
                 <TabsTrigger 
                   value="doctors" 
-                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-400 data-[state=active]:via-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-[0_8px_20px_rgba(59,130,246,0.4)] transition-all duration-500 rounded-[20px] px-6 py-4 font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-gray-800/40 hover:text-slate-800 dark:hover:text-white hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
+                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-400 data-[state=active]:via-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-[0_12px_25px_rgba(59,130,246,0.5)] transition-all duration-700 rounded-[24px] px-8 py-5 font-bold text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-slate-800 dark:hover:text-white hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
                   aria-label={language === "en" ? "Doctors" : "ವೈದ್ಯರು"}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <Stethoscope className={`h-5 w-5 transition-all duration-500 group-hover:scale-110 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/20 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <Stethoscope className={`h-5 w-5 transition-all duration-700 group-hover:scale-125 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
                   <span className="hidden sm:inline text-sm font-bold relative z-10">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
                 </TabsTrigger>
                 
                 <TabsTrigger 
                   value="ai-assistant" 
-                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-400 data-[state=active]:via-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-[0_8px_20px_rgba(147,51,234,0.4)] transition-all duration-500 rounded-[20px] px-6 py-4 font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-gray-800/40 hover:text-slate-800 dark:hover:text-white hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
+                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-400 data-[state=active]:via-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-[0_12px_25px_rgba(147,51,234,0.5)] transition-all duration-700 rounded-[24px] px-8 py-5 font-bold text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-slate-800 dark:hover:text-white hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
                   aria-label={language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/20 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                   <div className="relative z-10">
-                    <MessageCircle className={`h-5 w-5 transition-all duration-500 group-hover:scale-110 group-data-[state=active]:drop-shadow-lg ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
-                    <Sparkles className={`h-3 w-3 absolute -top-1 -right-1 text-purple-400 group-data-[state=active]:text-yellow-300 transition-colors duration-500 ${!prefersReducedMotion ? 'animate-pulse' : ''}`} />
+                    <MessageCircle className={`h-5 w-5 transition-all duration-700 group-hover:scale-125 group-data-[state=active]:drop-shadow-lg ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
+                    <Sparkles className={`h-3 w-3 absolute -top-1 -right-1 text-purple-400 group-data-[state=active]:text-yellow-300 transition-colors duration-700 ${!prefersReducedMotion ? 'animate-pulse' : ''}`} />
                   </div>
                   <span className="hidden sm:inline text-sm font-bold relative z-10">{language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}</span>
                 </TabsTrigger>
                 
                 <TabsTrigger 
                   value="emergency" 
-                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-400 data-[state=active]:via-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_8px_20px_rgba(239,68,68,0.4)] transition-all duration-500 rounded-[20px] px-6 py-4 font-semibold text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-gray-800/40 hover:text-slate-800 dark:hover:text-white hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
+                  className="group relative flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-400 data-[state=active]:via-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_12px_25px_rgba(239,68,68,0.5)] transition-all duration-700 rounded-[24px] px-8 py-5 font-bold text-slate-600 dark:text-slate-300 hover:bg-white/50 dark:hover:bg-gray-800/50 hover:text-slate-800 dark:hover:text-white hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-white/20 overflow-hidden"
                   aria-label={language === "en" ? "Emergency" : "ತುರ್ತು"}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/10 to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <AlertTriangle className={`h-5 w-5 transition-all duration-500 group-hover:scale-110 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 via-red-500/20 to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                  <AlertTriangle className={`h-5 w-5 transition-all duration-700 group-hover:scale-125 group-data-[state=active]:drop-shadow-lg relative z-10 ${!prefersReducedMotion ? 'group-data-[state=active]:animate-pulse' : ''}`} />
                   <span className="hidden sm:inline text-sm font-bold relative z-10">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
                 </TabsTrigger>
               </TabsList>
@@ -166,24 +170,24 @@ const Index = () => {
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    {/* Left Column with staggered animations */}
+                    {/* Left Column with enhanced animated cards */}
                     <div className="space-y-10">
-                      <div className={`transform transition-all duration-700 hover:shadow-3xl hover:shadow-blue-500/10 ${!prefersReducedMotion ? 'hover:scale-[1.02] animate-fade-in-up' : ''}`} style={{animationDelay: '0.2s'}}>
+                      <AnimatedCard delay={200} glowColor="blue">
                         <QuickHealthCheck language={language} />
-                      </div>
+                      </AnimatedCard>
                     </div>
                     
-                    {/* Right Column with staggered animations */}
+                    {/* Right Column with enhanced animated cards */}
                     <div className="space-y-10">
-                      <div className={`transform transition-all duration-700 hover:shadow-3xl hover:shadow-purple-500/10 ${!prefersReducedMotion ? 'hover:scale-[1.02] animate-fade-in-up' : ''}`} style={{animationDelay: '0.3s'}}>
+                      <AnimatedCard delay={300} glowColor="purple">
                         <HealthTips language={language} />
-                      </div>
-                      <div className={`transform transition-all duration-700 hover:shadow-3xl hover:shadow-indigo-500/10 ${!prefersReducedMotion ? 'hover:scale-[1.02] animate-fade-in-up' : ''}`} style={{animationDelay: '0.4s'}}>
+                      </AnimatedCard>
+                      <AnimatedCard delay={400} glowColor="green">
                         <QuickActionsCard 
                           language={language}
                           onNavigateToTab={navigateToTab}
                         />
-                      </div>
+                      </AnimatedCard>
                     </div>
                   </div>
                 </div>
@@ -192,35 +196,41 @@ const Index = () => {
 
             <PageTransition isVisible={activeTab === "doctors"}>
               <TabsContent value="doctors" className={`mt-0 ${!prefersReducedMotion ? 'animate-fade-in-up' : ''}`}>
-                <DoctorFinder language={language} />
+                <AnimatedCard delay={100} glowColor="blue">
+                  <DoctorFinder language={language} />
+                </AnimatedCard>
               </TabsContent>
             </PageTransition>
 
             <PageTransition isVisible={activeTab === "ai-assistant"}>
               <TabsContent value="ai-assistant" className={`mt-0 ${!prefersReducedMotion ? 'animate-fade-in-up' : ''}`}>
-                <AIAssistant language={language} />
+                <AnimatedCard delay={100} glowColor="purple">
+                  <AIAssistant language={language} />
+                </AnimatedCard>
               </TabsContent>
             </PageTransition>
 
             <PageTransition isVisible={activeTab === "emergency"}>
               <TabsContent value="emergency" className={`mt-0 ${!prefersReducedMotion ? 'animate-fade-in-up' : ''}`}>
-                <EmergencyServices language={language} />
+                <AnimatedCard delay={100} glowColor="orange">
+                  <EmergencyServices language={language} />
+                </AnimatedCard>
               </TabsContent>
             </PageTransition>
 
             <PageTransition isVisible={activeTab === "profile"}>
               <TabsContent value="profile" className="mt-0">
                 <div className={`space-y-10 ${!prefersReducedMotion ? 'animate-fade-in-up' : ''}`}>
-                  <div style={{animationDelay: '0.1s'}} className={!prefersReducedMotion ? "animate-fade-in-up" : ""}>
+                  <AnimatedCard delay={100} glowColor="green">
                     <Profile language={language} />
-                  </div>
+                  </AnimatedCard>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    <div className={`transform transition-all duration-700 hover:shadow-3xl hover:shadow-green-500/10 ${!prefersReducedMotion ? 'hover:scale-[1.02] animate-fade-in-up' : ''}`} style={{animationDelay: '0.2s'}}>
+                    <AnimatedCard delay={200} glowColor="green">
                       <FamilyHealth language={language} />
-                    </div>
-                    <div className={`transform transition-all duration-700 hover:shadow-3xl hover:shadow-blue-500/10 ${!prefersReducedMotion ? 'hover:scale-[1.02] animate-fade-in-up' : ''}`} style={{animationDelay: '0.3s'}}>
+                    </AnimatedCard>
+                    <AnimatedCard delay={300} glowColor="blue">
                       <ArogyaDiary language={language} />
-                    </div>
+                    </AnimatedCard>
                   </div>
                 </div>
               </TabsContent>
