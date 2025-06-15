@@ -11,8 +11,6 @@ import PersonalInfoCard from "@/components/profile/PersonalInfoCard";
 import MedicalInfoCard from "@/components/profile/MedicalInfoCard";
 import EmergencyContactCard from "@/components/profile/EmergencyContactCard";
 import HealthIDCard from "@/components/profile/HealthIDCard";
-import BookedAppointmentsCard from "@/components/profile/BookedAppointmentsCard";
-import { appointmentService } from "@/services/appointmentService";
 
 interface ProfileProps {
   language: string;
@@ -30,7 +28,6 @@ const Profile = ({ language }: ProfileProps) => {
   const [showInfoForm, setShowInfoForm] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<LocationData | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
-  const [hasAppointments, setHasAppointments] = useState(false);
   const [profile, setProfile] = useState({
     name: "",
     age: 0,
@@ -42,14 +39,6 @@ const Profile = ({ language }: ProfileProps) => {
     chronicConditions: "Diabetes"
   });
   const { toast } = useToast();
-
-  // Check if user has appointments
-  useEffect(() => {
-    if (user) {
-      const appointments = appointmentService.getAppointments(user.id);
-      setHasAppointments(appointments.length > 0);
-    }
-  }, [user]);
 
   // Update profile name when user data is available
   useEffect(() => {
@@ -255,7 +244,7 @@ const Profile = ({ language }: ProfileProps) => {
   }
 
   return (
-    <div className="space-y-4 leaf-texture">
+    <div className="space-y-4">
       <ProfileHeader
         language={language}
         isEditing={isEditing}
@@ -264,9 +253,6 @@ const Profile = ({ language }: ProfileProps) => {
       />
 
       <MedicineReminder language={language} />
-
-      {/* Show booked appointments if any exist */}
-      {hasAppointments && <BookedAppointmentsCard language={language} />}
 
       <PersonalInfoCard
         language={language}
@@ -300,13 +286,13 @@ const Profile = ({ language }: ProfileProps) => {
           <Button
             onClick={handleCancel}
             variant="outline"
-            className="flex-1 organic-border border-green-200 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900"
+            className="flex-1"
           >
             {currentText.cancel}
           </Button>
           <Button
             onClick={handleSave}
-            className="flex-1 bg-green-600 hover:bg-green-700 organic-border"
+            className="flex-1 bg-green-600 hover:bg-green-700"
           >
             <Save className="h-4 w-4 mr-1" />
             {currentText.save}

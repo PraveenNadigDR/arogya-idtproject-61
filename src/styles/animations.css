@@ -1,8 +1,0 @@
-
-/* Enhanced keyframe animations with more variety and performance optimizations */
-
-/* Import all animation-related stylesheets */
-@import './keyframes.css';
-@import './utilities.css';
-@import './performance.css';
-@import './nature-theme.css';
