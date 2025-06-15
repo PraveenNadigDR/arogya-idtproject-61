@@ -1,3 +1,4 @@
+
 import Header from "@/components/Header";
 import Profile from "@/components/Profile";
 import QuickHealthCheck from "@/components/QuickHealthCheck";
@@ -15,11 +16,13 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Users, Pill, Activity, User, BookOpen, Stethoscope, AlertTriangle, TrendingUp, Cloud, Calendar, Ambulance, Phone } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { MessageCircle, Users, Pill, Activity, User, BookOpen, Stethoscope, AlertTriangle, TrendingUp, Cloud, Calendar, Ambulance, Phone, Video } from "lucide-react";
 
 const Index = () => {
   const [language, setLanguage] = useState("en");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [showVideoCall, setShowVideoCall] = useState(false);
 
   const handleLanguageChange = (lang: string) => {
     setLanguage(lang);
@@ -27,6 +30,10 @@ const Index = () => {
 
   const navigateToTab = (tabValue: string) => {
     setActiveTab(tabValue);
+  };
+
+  const handleVideoCall = () => {
+    setShowVideoCall(true);
   };
 
   return (
@@ -92,8 +99,8 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value="dashboard" className="mt-6">
-            {/* Main Features - Doctor Booking & Emergency */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Main Features - Doctor Booking, Video Call & Emergency */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               {/* Doctor Appointment Booking */}
               <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 hover:shadow-lg transition-shadow">
                 <CardHeader className="pb-3">
@@ -124,6 +131,40 @@ const Index = () => {
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     {language === "en" ? "Book Appointment" : "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ"}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Video Call with Doctor */}
+              <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-purple-800 flex items-center gap-2">
+                    <Video className="h-5 w-5" />
+                    {language === "en" ? "Video Call with Doctor" : "ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-purple-600 mb-4">
+                    {language === "en" 
+                      ? "Start instant video consultation with available doctors" 
+                      : "ಲಭ್ಯವಿರುವ ವೈದ್ಯರೊಂದಿಗೆ ತಕ್ಷಣ ವೀಡಿಯೊ ಸಮಾಲೋಚನೆ ಪ್ರಾರಂಭಿಸಿ"}
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center gap-2 text-xs text-purple-600">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span>{language === "en" ? "Dr. Ramesh - Available now" : "ಡಾ. ರಮೇಶ್ - ಈಗ ಲಭ್ಯ"}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-purple-600">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <span>{language === "en" ? "Secure & encrypted calls" : "ಸುರಕ್ಷಿತ ಮತ್ತು ಗುಪ್ತ ಕರೆಗಳು"}</span>
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={handleVideoCall}
+                    className="w-full bg-purple-600 hover:bg-purple-700"
+                  >
+                    <Video className="h-4 w-4 mr-2" />
+                    {language === "en" ? "Start Video Call" : "ವೀಡಿಯೊ ಕಾಲ್ ಪ್ರಾರಂಭಿಸಿ"}
                   </Button>
                 </CardContent>
               </Card>
@@ -241,6 +282,35 @@ const Index = () => {
             <WeatherWidget language={language} />
           </TabsContent>
         </Tabs>
+
+        {/* Video Call Dialog */}
+        <Dialog open={showVideoCall} onOpenChange={setShowVideoCall}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>
+                {language === "en" ? "Video Call with Doctor" : "ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್"}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="bg-gray-900 rounded-lg h-48 flex items-center justify-center">
+                <div className="text-center text-white">
+                  <Video className="h-12 w-12 mx-auto mb-2" />
+                  <p className="text-sm">
+                    {language === "en" ? "Call in Progress..." : "ಕಾಲ್ ಪ್ರಗತಿಯಲ್ಲಿದೆ..."}
+                  </p>
+                  <p className="text-xs opacity-75 mt-1">
+                    {language === "en" ? "Dr. Ramesh - Hassan PHC" : "ಡಾ. ರಮೇಶ್ - ಹಾಸನ್ PHC"}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2 justify-center">
+                <Button variant="destructive" onClick={() => setShowVideoCall(false)}>
+                  {language === "en" ? "End Call" : "ಕಾಲ್ ಕೊನೆಗೊಳಿಸಿ"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Language Selection */}
         <div className="mt-8 text-center">

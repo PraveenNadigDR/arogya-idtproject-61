@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Mic, Send, MessageCircle, Stethoscope, Calendar, Pill, Settings, Video } from "lucide-react";
+import { Mic, Send, MessageCircle, Stethoscope, Calendar, Pill, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -24,7 +24,6 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiKey, setApiKey] = useState("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");
   const [showSettings, setShowSettings] = useState(false);
-  const [showVideoCall, setShowVideoCall] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -36,8 +35,8 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       id: 1,
       type: "assistant",
       content: language === "en" 
-        ? `Hello${userName ? ` ${userName}` : ''}! I'm your health assistant. You can ask me about symptoms, medicines, book appointments, or start a video call with a doctor. How can I help you today?`
-        : `ನಮಸ್ತೆ${userName ? ` ${userName}` : ''}! ನಾನು ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಹಾಯಕ. ನೀವು ಲಕ್ಷಣಗಳು, ಔಷಧಗಳು, ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡುವ ಬಗ್ಗೆ ಕೇಳಬಹುದು ಅಥವಾ ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್ ಪ್ರಾರಂಭಿಸಬಹುದು. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?`,
+        ? `Hello${userName ? ` ${userName}` : ''}! I'm your health assistant. You can ask me about symptoms, medicines, book appointments, or get health advice. How can I help you today?`
+        : `ನಮಸ್ತೆ${userName ? ` ${userName}` : ''}! ನಾನು ನಿಮ್ಮ ಆರೋಗ್ಯ ಸಹಾಯಕ. ನೀವು ಲಕ್ಷಣಗಳು, ಔಷಧಗಳು, ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡುವ ಬಗ್ಗೆ ಕೇಳಬಹುದು ಅಥವಾ ಆರೋಗ್ಯ ಸಲಹೆ ಪಡೆಯಬಹುದು. ಇಂದು ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?`,
       timestamp: "10:30 AM"
     }
   ]);
@@ -51,10 +50,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       send: "Send",
       listening: "Listening...",
       you: "You",
-      assistant: "Assistant",
-      videoCall: "Video Call with Doctor",
-      startVideoCall: "Start Video Call",
-      callInProgress: "Call in Progress..."
+      assistant: "Assistant"
     },
     kn: {
       title: "ಆರೋಗ್ಯ ಸಹಾಯಕ",
@@ -64,10 +60,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       send: "ಕಳುಹಿಸಿ",
       listening: "ಕೇಳುತ್ತಿದೆ...",
       you: "ನೀವು",
-      assistant: "ಸಹಾಯಕ",
-      videoCall: "ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್",
-      startVideoCall: "ವೀಡಿಯೊ ಕಾಲ್ ಪ್ರಾರಂಭಿಸಿ",
-      callInProgress: "ಕಾಲ್ ಪ್ರಗತಿಯಲ್ಲಿದೆ..."
+      assistant: "ಸಹಾಯಕ"
     }
   };
 
@@ -215,16 +208,6 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     handleSendMessage(question);
   };
 
-  const handleVideoCall = () => {
-    setShowVideoCall(true);
-    toast({
-      title: language === "en" ? "📹 Connecting to Doctor" : "📹 ವೈದ್ಯರೊಂದಿಗೆ ಸಂಪರ್ಕಿಸಲಾಗುತ್ತಿದೆ",
-      description: language === "en" 
-        ? "Dr. Ramesh will join shortly" 
-        : "ಡಾ. ರಮೇಶ್ ಶೀಘ್ರದಲ್ಲೇ ಸೇರುತ್ತಾರೆ"
-    });
-  };
-
   return (
     <div className="w-full max-w-4xl mx-auto h-[calc(100vh-120px)] flex flex-col">
       {/* Settings - Only shown when toggled */}
@@ -285,43 +268,6 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
             </Button>
           ))}
         </div>
-      </div>
-
-      {/* Video Call Button */}
-      <div className="mb-4">
-        <Dialog open={showVideoCall} onOpenChange={setShowVideoCall}>
-          <DialogTrigger asChild>
-            <Button
-              onClick={handleVideoCall}
-              disabled={isLoading}
-              className="w-full bg-red-600 hover:bg-red-700 text-white"
-            >
-              <Video className="h-4 w-4 mr-2" />
-              {currentText.videoCall}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-md">
-            <DialogHeader>
-              <DialogTitle>{currentText.videoCall}</DialogTitle>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="bg-gray-900 rounded-lg h-48 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <Video className="h-12 w-12 mx-auto mb-2" />
-                  <p className="text-sm">{currentText.callInProgress}</p>
-                  <p className="text-xs opacity-75 mt-1">
-                    {language === "en" ? "Dr. Ramesh - Hassan PHC" : "ಡಾ. ರಮೇಶ್ - ಹಾಸನ್ PHC"}
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-2 justify-center">
-                <Button variant="destructive" onClick={() => setShowVideoCall(false)}>
-                  {language === "en" ? "End Call" : "ಕಾಲ್ ಕೊನೆಗೊಳಿಸಿ"}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
 
       {/* Messages */}
