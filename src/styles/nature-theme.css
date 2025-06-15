@@ -1,0 +1,86 @@
+
+/* Nature-inspired theme for health and wellness */
+
+:root {
+  /* Nature-inspired color palette */
+  --forest-green: #2d5a27;
+  --sage-green: #87a96b;
+  --moss-green: #4a5c3a;
+  --leaf-green: #6b8e4e;
+  --sky-blue: #87ceeb;
+  --earth-brown: #8b7355;
+  --sunset-orange: #ff8c42;
+  --flower-pink: #ffb3d9;
+  --sunlight-yellow: #ffd700;
+  --pearl-white: #f8f8ff;
+  --stone-gray: #a8a8a8;
+}
+
+/* Nature-inspired gradients */
+.nature-gradient-primary {
+  background: linear-gradient(135deg, var(--forest-green) 0%, var(--sage-green) 50%, var(--leaf-green) 100%);
+}
+
+.nature-gradient-secondary {
+  background: linear-gradient(135deg, var(--sky-blue) 0%, var(--sage-green) 100%);
+}
+
+.nature-gradient-sunset {
+  background: linear-gradient(135deg, var(--sunset-orange) 0%, var(--sunlight-yellow) 100%);
+}
+
+/* Organic shapes and borders */
+.organic-border {
+  border-radius: 20px 5px 20px 5px;
+}
+
+.leaf-shape {
+  border-radius: 50% 0 50% 0;
+}
+
+.petal-shape {
+  border-radius: 100% 0% 100% 0%;
+}
+
+/* Nature-inspired animations */
+@keyframes gentle-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes leaf-fall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+  50% { transform: translateY(0px) rotate(180deg); opacity: 1; }
+  100% { transform: translateY(10px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes flower-bloom {
+  0% { transform: scale(0.8) rotate(-5deg); opacity: 0.7; }
+  50% { transform: scale(1.1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(1) rotate(5deg); opacity: 0.9; }
+}
+
+.gentle-sway {
+  animation: gentle-sway 4s ease-in-out infinite;
+}
+
+.leaf-fall {
+  animation: leaf-fall 3s ease-in-out infinite;
+}
+
+.flower-bloom {
+  animation: flower-bloom 2s ease-in-out infinite;
+}
+
+/* Organic textures */
+.leaf-texture {
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(139, 169, 107, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(107, 142, 78, 0.1) 0%, transparent 50%);
+}
+
+.wood-texture {
+  background-image: 
+    linear-gradient(90deg, rgba(139, 115, 85, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(139, 115, 85, 0.05) 0%, transparent 50%);
+}
