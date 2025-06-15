@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Search, MapPin, Phone, Star, Clock, Users, Calendar } from "lucide-react";
+import { Search, MapPin, Phone, Star, Clock, Users, Calendar, Navigation, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AppointmentBooking from "@/components/AppointmentBooking";
 
@@ -12,17 +12,28 @@ interface DoctorFinderProps {
   language: string;
 }
 
+interface LocationData {
+  latitude: number;
+  longitude: number;
+  accuracy: number;
+  address?: string;
+}
+
 const DoctorFinder = ({ language }: DoctorFinderProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedSpecialty, setSelectedSpecialty] = useState("all");
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
+  const [location, setLocation] = useState<LocationData | null>(null);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [locationError, setLocationError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const text = {
     en: {
       title: "Find Doctor",
-      subtitle: "Near Hassan & Holenarasipura",
+      subtitle: "Near Your Location",
+      defaultSubtitle: "Near Hassan & Holenarasipura",
       searchPlaceholder: "Search doctors, specialties...",
       bookAppointment: "Book Appointment",
       callNow: "Call Now",
@@ -31,11 +42,15 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
       busy: "Busy",
       offline: "Offline",
       distance: "km away",
-      fee: "Consultation Fee"
+      fee: "Consultation Fee",
+      getLocation: "Get My Location",
+      locationLoading: "Getting location...",
+      locationError: "Location unavailable"
     },
     kn: {
       title: "ವೈದ್ಯರನ್ನು ಹುಡುಕಿ",
-      subtitle: "ಹಾಸನ್ ಮತ್ತು ಹೊಳೆನರಸೀಪುರ ಸಮೀಪದಲ್ಲಿ",
+      subtitle: "ನಿಮ್ಮ ಸ್ಥಳದ ಸಮೀಪದಲ್ಲಿ",
+      defaultSubtitle: "ಹಾಸನ್ ಮತ್ತು ಹೊಳೆನರಸೀಪುರ ಸಮೀಪದಲ್ಲಿ",
       searchPlaceholder: "ವೈದ್ಯರು, ವಿಶೇಷತೆಗಳನ್ನು ಹುಡುಕಿ...",
       bookAppointment: "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ",
       callNow: "ಈಗ ಕರೆ ಮಾಡಿ",
@@ -44,11 +59,82 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
       busy: "ಬ್ಯುಸಿ",
       offline: "ಆಫ್‌ಲೈನ್",
       distance: "ಕಿ.ಮೀ ದೂರದಲ್ಲಿ",
-      fee: "ಸಮಾಲೋಚನೆ ಶುಲ್ಕ"
+      fee: "ಸಮಾಲೋಚನೆ ಶುಲ್ಕ",
+      getLocation: "ನನ್ನ ಸ್ಥಳ ಪಡೆಯಿರಿ",
+      locationLoading: "ಸ್ಥಳವನ್ನು ಪಡೆಯುತ್ತಿದೆ...",
+      locationError: "ಸ್ಥಳ ಲಭ್ಯವಿಲ್ಲ"
     }
   };
 
   const currentText = text[language];
+
+  const getAddressFromCoordinates = async (lat: number, lng: number): Promise<string> => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=${language === 'kn' ? 'kn' : 'en'}`
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        const address = data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        return address.split(',').slice(0, 3).join(', '); // Get first 3 parts for brevity
+      }
+    } catch (error) {
+      console.log('Geocoding error:', error);
+    }
+    
+    return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+  };
+
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError("Geolocation not supported");
+      return;
+    }
+
+    setIsLoadingLocation(true);
+    setLocationError(null);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const locationData: LocationData = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy
+        };
+        
+        const address = await getAddressFromCoordinates(locationData.latitude, locationData.longitude);
+        locationData.address = address;
+        
+        setLocation(locationData);
+        setIsLoadingLocation(false);
+        
+        toast({
+          title: "Location Updated",
+          description: `Found your location: ${address}`
+        });
+      },
+      (error) => {
+        setLocationError("Location access denied");
+        setIsLoadingLocation(false);
+        toast({
+          title: currentText.locationError,
+          description: "Please enable location access",
+          variant: "destructive"
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
+  };
+
+  useEffect(() => {
+    // Automatically try to get location on component mount
+    getCurrentLocation();
+  }, []);
 
   const specialties = [
     { id: "all", name: language === "en" ? "All" : "ಎಲ್ಲಾ" },
@@ -236,6 +322,19 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
     return matchesSearch && matchesSpecialty;
   });
 
+  const getLocationDisplay = () => {
+    if (isLoadingLocation) {
+      return currentText.locationLoading;
+    }
+    if (locationError) {
+      return currentText.locationError;
+    }
+    if (location?.address) {
+      return location.address;
+    }
+    return currentText.defaultSubtitle;
+  };
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -245,10 +344,35 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
             <Search className="h-5 w-5" />
             {currentText.title}
           </CardTitle>
-          <p className="text-sm text-blue-600">{currentText.subtitle}</p>
-          <p className="text-xs text-blue-500">
-            {language === "en" ? `${filteredDoctors.length} doctors found` : `${filteredDoctors.length} ವೈದ್ಯರು ಸಿಕ್ಕಿದ್ದಾರೆ`}
-          </p>
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 text-sm text-blue-600">
+                {isLoadingLocation ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <MapPin className="h-4 w-4" />
+                )}
+                <span>{getLocationDisplay()}</span>
+              </div>
+              <p className="text-xs text-blue-500 mt-1">
+                {language === "en" ? `${filteredDoctors.length} doctors found` : `${filteredDoctors.length} ವೈದ್ಯರು ಸಿಕ್ಕಿದ್ddಾರೆ`}
+              </p>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={getCurrentLocation}
+              disabled={isLoadingLocation}
+              className="border-blue-300 text-blue-700 hover:bg-blue-50"
+            >
+              {isLoadingLocation ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-1" />
+              ) : (
+                <Navigation className="h-4 w-4 mr-1" />
+              )}
+              {currentText.getLocation}
+            </Button>
+          </div>
         </CardHeader>
       </Card>
 
