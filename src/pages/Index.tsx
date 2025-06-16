@@ -54,68 +54,72 @@ const Index = () => {
       
       <Header onNavigateToProfile={handleNavigateToProfile} />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl relative z-10">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-7xl relative z-10">
         <div className="animate-slide-down">
           <DashboardHeader language={language} />
         </div>
 
-        {/* Enhanced Main Content Tabs */}
-        <div className="mb-8">
+        {/* Enhanced Main Content Tabs - Mobile Responsive */}
+        <div className="mb-4 sm:mb-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex justify-center mb-8">
-              <TabsList className="grid grid-cols-4 bg-white/80 backdrop-blur-xl border-0 shadow-2xl rounded-2xl p-2 ring-1 ring-black/5">
+            <div className="flex justify-center mb-4 sm:mb-8">
+              <TabsList className="grid grid-cols-2 sm:grid-cols-4 bg-white/80 backdrop-blur-xl border-0 shadow-2xl rounded-2xl p-1 sm:p-2 ring-1 ring-black/5 w-full max-w-2xl">
                 <TabsTrigger 
                   value="dashboard" 
-                  className="flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-6 py-3 font-medium hover:bg-gray-50 group"
+                  className="flex items-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-2 sm:px-6 py-2 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm"
                 >
-                  <Activity className="h-5 w-5 group-data-[state=active]:animate-pulse" />
-                  <span className="hidden sm:inline text-sm">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
+                  <Activity className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
+                  <span className="hidden sm:inline">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
+                  <span className="sm:hidden">{language === "en" ? "Home" : "ಮನೆ"}</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="doctors" 
-                  className="flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-6 py-3 font-medium hover:bg-gray-50 group"
+                  className="flex items-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-2 sm:px-6 py-2 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm"
                 >
-                  <Stethoscope className="h-5 w-5 group-data-[state=active]:animate-pulse" />
-                  <span className="hidden sm:inline text-sm">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
+                  <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
+                  <span className="hidden sm:inline">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
+                  <span className="sm:hidden">{language === "en" ? "Docs" : "ವೈದ್ಯ"}</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="ai-assistant" 
-                  className="flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-6 py-3 font-medium hover:bg-gray-50 group relative"
+                  className="flex items-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-2 sm:px-6 py-2 sm:py-3 font-medium hover:bg-gray-50 group relative text-xs sm:text-sm"
                 >
                   <div className="relative">
-                    <MessageCircle className="h-5 w-5 group-data-[state=active]:animate-pulse" />
-                    <Sparkles className="h-3 w-3 absolute -top-1 -right-1 text-purple-500 group-data-[state=active]:text-yellow-300 animate-pulse" />
+                    <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
+                    <Sparkles className="h-2 w-2 sm:h-3 sm:w-3 absolute -top-1 -right-1 text-purple-500 group-data-[state=active]:text-yellow-300 animate-pulse" />
                   </div>
-                  <span className="hidden sm:inline text-sm">{language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}</span>
+                  <span className="hidden sm:inline">{language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}</span>
+                  <span className="sm:hidden">{language === "en" ? "AI" : "AI"}</span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="emergency" 
-                  className="flex items-center gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-6 py-3 font-medium hover:bg-gray-50 group"
+                  className="flex items-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-2 sm:px-6 py-2 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm"
                 >
-                  <AlertTriangle className="h-5 w-5 group-data-[state=active]:animate-pulse" />
-                  <span className="hidden sm:inline text-sm">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
+                  <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
+                  <span className="hidden sm:inline">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
+                  <span className="sm:hidden">{language === "en" ? "SOS" : "ತುರ್ತು"}</span>
                 </TabsTrigger>
               </TabsList>
             </div>
 
             <TabsContent value="dashboard" className="mt-0">
-              <div className="animate-fade-in-up space-y-8">
+              <div className="animate-fade-in-up space-y-4 sm:space-y-8">
                 <MainFeatureCards 
                   language={language} 
                   onNavigateToTab={navigateToTab}
                   onVideoCall={handleVideoCall}
                 />
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
                   {/* Left Column */}
-                  <div className="space-y-8">
+                  <div className="space-y-4 sm:space-y-8">
                     <div className="transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                       <QuickHealthCheck language={language} />
                     </div>
                   </div>
                   
                   {/* Right Column */}
-                  <div className="space-y-8">
+                  <div className="space-y-4 sm:space-y-8">
                     <div className="transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                       <HealthTips language={language} />
                     </div>
@@ -143,9 +147,9 @@ const Index = () => {
             </TabsContent>
 
             <TabsContent value="profile" className="mt-0 animate-fade-in-up">
-              <div className="space-y-8">
+              <div className="space-y-4 sm:space-y-8">
                 <Profile language={language} />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
                   <div className="transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                     <FamilyHealth language={language} />
                   </div>
