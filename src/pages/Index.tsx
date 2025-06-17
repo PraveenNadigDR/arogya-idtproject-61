@@ -1,3 +1,4 @@
+
 import Header from "@/components/Header";
 import QuickHealthCheck from "@/components/QuickHealthCheck";
 import HealthTips from "@/components/HealthTips";
@@ -61,47 +62,62 @@ const Index = () => {
         {/* Enhanced Main Content Tabs - Improved Mobile Design */}
         <div className="mb-4 sm:mb-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex justify-center mb-6 sm:mb-8 px-2">
-              <TabsList className="grid grid-cols-2 sm:grid-cols-4 bg-white/90 backdrop-blur-xl border-0 shadow-xl rounded-3xl p-1.5 sm:p-2 ring-1 ring-black/5 w-full max-w-md sm:max-w-2xl gap-1 sm:gap-0">
+            <div className="flex justify-center mb-6 sm:mb-8 px-1 sm:px-2">
+              <TabsList className="grid grid-cols-2 sm:grid-cols-4 bg-white/95 backdrop-blur-2xl border-0 shadow-2xl rounded-2xl sm:rounded-3xl p-1 sm:p-1.5 ring-1 ring-black/5 w-full max-w-sm sm:max-w-2xl gap-0.5 sm:gap-1 relative overflow-hidden">
+                {/* Enhanced background gradient for active state */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 via-purple-50/50 to-emerald-50/50 rounded-2xl sm:rounded-3xl"></div>
+                
                 <TabsTrigger 
                   value="dashboard" 
-                  className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-2xl px-2 sm:px-6 py-3 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm min-h-[60px] sm:min-h-[48px]"
+                  className="relative z-10 flex flex-col items-center justify-center gap-1 sm:gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-xl transition-all duration-700 ease-out rounded-xl sm:rounded-2xl px-1.5 sm:px-4 py-2.5 sm:py-3 font-semibold hover:bg-gray-50/80 group text-[10px] sm:text-sm min-h-[56px] sm:min-h-[52px] data-[state=active]:scale-105 hover:scale-102 transform data-[state=active]:shadow-emerald-500/30"
                 >
-                  <Activity className="h-5 w-5 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse flex-shrink-0" />
-                  <span className="text-center leading-tight">
+                  <div className="relative">
+                    <Activity className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full opacity-0 group-data-[state=active]:opacity-100 animate-ping transition-opacity duration-300"></div>
+                  </div>
+                  <span className="text-center leading-tight font-bold tracking-wide">
                     <span className="block sm:hidden">{language === "en" ? "Home" : "ಮನೆ"}</span>
                     <span className="hidden sm:inline">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
                   </span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="doctors" 
-                  className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-2xl px-2 sm:px-6 py-3 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm min-h-[60px] sm:min-h-[48px]"
+                  className="relative z-10 flex flex-col items-center justify-center gap-1 sm:gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-xl transition-all duration-700 ease-out rounded-xl sm:rounded-2xl px-1.5 sm:px-4 py-2.5 sm:py-3 font-semibold hover:bg-gray-50/80 group text-[10px] sm:text-sm min-h-[56px] sm:min-h-[52px] data-[state=active]:scale-105 hover:scale-102 transform data-[state=active]:shadow-blue-500/30"
                 >
-                  <Stethoscope className="h-5 w-5 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse flex-shrink-0" />
-                  <span className="text-center leading-tight">
-                    <span className="block sm:hidden">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
-                    <span className="hidden sm:inline">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
+                  <div className="relative">
+                    <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full opacity-0 group-data-[state=active]:opacity-100 animate-ping transition-opacity duration-300"></div>
+                  </div>
+                  <span className="text-center leading-tight font-bold tracking-wide">
+                    {language === "en" ? "Doctors" : "ವೈದ್ಯರು"}
                   </span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="ai-assistant" 
-                  className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-2xl px-2 sm:px-6 py-3 sm:py-3 font-medium hover:bg-gray-50 group relative text-xs sm:text-sm min-h-[60px] sm:min-h-[48px]"
+                  className="relative z-10 flex flex-col items-center justify-center gap-1 sm:gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-xl transition-all duration-700 ease-out rounded-xl sm:rounded-2xl px-1.5 sm:px-4 py-2.5 sm:py-3 font-semibold hover:bg-gray-50/80 group text-[10px] sm:text-sm min-h-[56px] sm:min-h-[52px] data-[state=active]:scale-105 hover:scale-102 transform data-[state=active]:shadow-purple-500/30"
                 >
-                  <div className="relative flex-shrink-0">
-                    <MessageCircle className="h-5 w-5 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
-                    <Sparkles className="h-2.5 w-2.5 sm:h-3 sm:w-3 absolute -top-1 -right-1 text-purple-500 group-data-[state=active]:text-yellow-300 animate-pulse" />
+                  <div className="relative">
+                    <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse transition-transform duration-300 group-hover:scale-110" />
+                    <Sparkles className="h-2 w-2 sm:h-2.5 sm:w-2.5 absolute -top-0.5 -right-0.5 text-purple-500 group-data-[state=active]:text-yellow-300 animate-pulse transition-colors duration-300" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-purple-400 rounded-full opacity-0 group-data-[state=active]:opacity-100 animate-ping transition-opacity duration-300"></div>
                   </div>
-                  <span className="text-center leading-tight">
+                  <span className="text-center leading-tight font-bold tracking-wide">
                     <span className="block sm:hidden">{language === "en" ? "AI Chat" : "AI ಚಾಟ್"}</span>
                     <span className="hidden sm:inline">{language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}</span>
                   </span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="emergency" 
-                  className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-2xl px-2 sm:px-6 py-3 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm min-h-[60px] sm:min-h-[48px]"
+                  className="relative z-10 flex flex-col items-center justify-center gap-1 sm:gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-xl transition-all duration-700 ease-out rounded-xl sm:rounded-2xl px-1.5 sm:px-4 py-2.5 sm:py-3 font-semibold hover:bg-gray-50/80 group text-[10px] sm:text-sm min-h-[56px] sm:min-h-[52px] data-[state=active]:scale-105 hover:scale-102 transform data-[state=active]:shadow-red-500/30"
                 >
-                  <AlertTriangle className="h-5 w-5 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse flex-shrink-0" />
-                  <span className="text-center leading-tight">
+                  <div className="relative">
+                    <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse transition-transform duration-300 group-hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-400 rounded-full opacity-0 group-data-[state=active]:opacity-100 animate-ping transition-opacity duration-300"></div>
+                  </div>
+                  <span className="text-center leading-tight font-bold tracking-wide">
                     <span className="block sm:hidden">{language === "en" ? "SOS" : "ತುರ್ತು"}</span>
                     <span className="hidden sm:inline">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
                   </span>
