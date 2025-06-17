@@ -1,4 +1,3 @@
-
 import Header from "@/components/Header";
 import QuickHealthCheck from "@/components/QuickHealthCheck";
 import HealthTips from "@/components/HealthTips";
@@ -59,45 +58,53 @@ const Index = () => {
           <DashboardHeader language={language} />
         </div>
 
-        {/* Enhanced Main Content Tabs - Mobile Responsive */}
+        {/* Enhanced Main Content Tabs - Improved Mobile Design */}
         <div className="mb-4 sm:mb-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex justify-center mb-4 sm:mb-8">
-              <TabsList className="grid grid-cols-2 sm:grid-cols-4 bg-white/80 backdrop-blur-xl border-0 shadow-2xl rounded-2xl p-1 sm:p-2 ring-1 ring-black/5 w-full max-w-2xl">
+            <div className="flex justify-center mb-6 sm:mb-8 px-2">
+              <TabsList className="grid grid-cols-2 sm:grid-cols-4 bg-white/90 backdrop-blur-xl border-0 shadow-xl rounded-3xl p-1.5 sm:p-2 ring-1 ring-black/5 w-full max-w-md sm:max-w-2xl gap-1 sm:gap-0">
                 <TabsTrigger 
                   value="dashboard" 
-                  className="flex items-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-2 sm:px-6 py-2 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm"
+                  className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-green-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-2xl px-2 sm:px-6 py-3 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm min-h-[60px] sm:min-h-[48px]"
                 >
-                  <Activity className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
-                  <span className="hidden sm:inline">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
-                  <span className="sm:hidden">{language === "en" ? "Home" : "ಮನೆ"}</span>
+                  <Activity className="h-5 w-5 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse flex-shrink-0" />
+                  <span className="text-center leading-tight">
+                    <span className="block sm:hidden">{language === "en" ? "Home" : "ಮನೆ"}</span>
+                    <span className="hidden sm:inline">{language === "en" ? "Dashboard" : "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್"}</span>
+                  </span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="doctors" 
-                  className="flex items-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-2 sm:px-6 py-2 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm"
+                  className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-2xl px-2 sm:px-6 py-3 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm min-h-[60px] sm:min-h-[48px]"
                 >
-                  <Stethoscope className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
-                  <span className="hidden sm:inline">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
-                  <span className="sm:hidden">{language === "en" ? "Docs" : "ವೈದ್ಯ"}</span>
+                  <Stethoscope className="h-5 w-5 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse flex-shrink-0" />
+                  <span className="text-center leading-tight">
+                    <span className="block sm:hidden">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
+                    <span className="hidden sm:inline">{language === "en" ? "Doctors" : "ವೈದ್ಯರು"}</span>
+                  </span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="ai-assistant" 
-                  className="flex items-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-2 sm:px-6 py-2 sm:py-3 font-medium hover:bg-gray-50 group relative text-xs sm:text-sm"
+                  className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-2xl px-2 sm:px-6 py-3 sm:py-3 font-medium hover:bg-gray-50 group relative text-xs sm:text-sm min-h-[60px] sm:min-h-[48px]"
                 >
-                  <div className="relative">
-                    <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
-                    <Sparkles className="h-2 w-2 sm:h-3 sm:w-3 absolute -top-1 -right-1 text-purple-500 group-data-[state=active]:text-yellow-300 animate-pulse" />
+                  <div className="relative flex-shrink-0">
+                    <MessageCircle className="h-5 w-5 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
+                    <Sparkles className="h-2.5 w-2.5 sm:h-3 sm:w-3 absolute -top-1 -right-1 text-purple-500 group-data-[state=active]:text-yellow-300 animate-pulse" />
                   </div>
-                  <span className="hidden sm:inline">{language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}</span>
-                  <span className="sm:hidden">{language === "en" ? "AI" : "AI"}</span>
+                  <span className="text-center leading-tight">
+                    <span className="block sm:hidden">{language === "en" ? "AI Chat" : "AI ಚಾಟ್"}</span>
+                    <span className="hidden sm:inline">{language === "en" ? "AI Assistant" : "AI ಸಹಾಯಕ"}</span>
+                  </span>
                 </TabsTrigger>
                 <TabsTrigger 
                   value="emergency" 
-                  className="flex items-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-xl px-2 sm:px-6 py-2 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm"
+                  className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-500 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-lg transition-all duration-500 rounded-2xl px-2 sm:px-6 py-3 sm:py-3 font-medium hover:bg-gray-50 group text-xs sm:text-sm min-h-[60px] sm:min-h-[48px]"
                 >
-                  <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse" />
-                  <span className="hidden sm:inline">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
-                  <span className="sm:hidden">{language === "en" ? "SOS" : "ತುರ್ತು"}</span>
+                  <AlertTriangle className="h-5 w-5 sm:h-5 sm:w-5 group-data-[state=active]:animate-pulse flex-shrink-0" />
+                  <span className="text-center leading-tight">
+                    <span className="block sm:hidden">{language === "en" ? "SOS" : "ತುರ್ತು"}</span>
+                    <span className="hidden sm:inline">{language === "en" ? "Emergency" : "ತುರ್ತು"}</span>
+                  </span>
                 </TabsTrigger>
               </TabsList>
             </div>
