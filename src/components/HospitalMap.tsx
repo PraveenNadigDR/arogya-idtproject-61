@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
@@ -224,8 +223,8 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
   };
 
   // Default location (Bangalore)
-  const defaultCenter: L.LatLngExpression = [12.9716, 77.5946];
-  const mapCenter: L.LatLngExpression = userLocation ? [userLocation.lat, userLocation.lng] : defaultCenter;
+  const defaultCenter: [number, number] = [12.9716, 77.5946];
+  const mapCenter: [number, number] = userLocation ? [userLocation.lat, userLocation.lng] : defaultCenter;
 
   const openDirections = (lat: number, lng: number, name: string) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${name}`;
@@ -295,7 +294,7 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
             {hospitals.map((hospital) => (
               <Marker
                 key={hospital.id}
-                position={[hospital.lat, hospital.lng] as L.LatLngExpression}
+                position={[hospital.lat, hospital.lng]}
                 icon={hospitalIcon}
               >
                 <Popup>
