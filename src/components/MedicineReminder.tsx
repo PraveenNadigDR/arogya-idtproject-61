@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pill, Clock, CheckCircle, Plus, Bell } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useNotifications } from "@/hooks/useNotifications";
 
 interface MedicineReminderProps {
   language: string;
@@ -16,7 +16,7 @@ const MedicineReminder = ({ language }: MedicineReminderProps) => {
       id: 1,
       name: "Paracetamol",
       dosage: "500mg",
-      time: "08:00 AM",
+      time: "08:00",
       taken: false,
       frequency: "Twice daily"
     },
@@ -24,7 +24,7 @@ const MedicineReminder = ({ language }: MedicineReminderProps) => {
       id: 2,
       name: "Vitamin D",
       dosage: "1000 IU",
-      time: "12:00 PM",
+      time: "12:00",
       taken: true,
       frequency: "Once daily"
     },
@@ -32,13 +32,14 @@ const MedicineReminder = ({ language }: MedicineReminderProps) => {
       id: 3,
       name: "Iron Tablets",
       dosage: "65mg",
-      time: "08:00 PM",
+      time: "20:00",
       taken: false,
       frequency: "Once daily"
     }
   ]);
 
   const { toast } = useToast();
+  const { requestNotificationPermission } = useNotifications(language);
 
   const text = {
     en: {
@@ -48,7 +49,8 @@ const MedicineReminder = ({ language }: MedicineReminderProps) => {
       pending: "Pending",
       addMedicine: "Add Medicine",
       medicineTaken: "Medicine Taken!",
-      medicineMarked: "Marked as taken for today"
+      medicineMarked: "Marked as taken for today",
+      enableNotifications: "Enable Notifications"
     },
     kn: {
       title: "ಔಷಧ ಜ್ಞಾಪನೆ",
@@ -57,21 +59,32 @@ const MedicineReminder = ({ language }: MedicineReminderProps) => {
       pending: "ಬಾಕಿ",
       addMedicine: "ಔಷಧ ಸೇರಿಸಿ",
       medicineTaken: "ಔಷಧ ತೆಗೆದುಕೊಂಡಿದೆ!",
-      medicineMarked: "ಇಂದಿಗೆ ತೆಗೆದುಕೊಂಡಂತೆ ಗುರುತಿಸಲಾಗಿದೆ"
+      medicineMarked: "ಇಂದಿಗೆ ತೆಗೆದುಕೊಂಡಂತೆ ಗುರುತಿಸಲಾಗಿದೆ",
+      enableNotifications: "ಅಧಿಸೂಚನೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ"
     }
   };
 
   const currentText = text[language];
 
   const handleTakeMedicine = (id: number) => {
-    setMedicines(medicines.map(med => 
+    const updatedMedicines = medicines.map(med => 
       med.id === id ? { ...med, taken: true } : med
-    ));
+    );
+    setMedicines(updatedMedicines);
+    
+    // Save to localStorage for notifications
+    localStorage.setItem('medicines', JSON.stringify(updatedMedicines));
     
     toast({
       title: currentText.medicineTaken,
       description: currentText.medicineMarked
     });
+  };
+
+  const handleEnableNotifications = async () => {
+    await requestNotificationPermission();
+    // Save medicines to localStorage for notifications
+    localStorage.setItem('medicines', JSON.stringify(medicines));
   };
 
   return (
@@ -82,7 +95,15 @@ const MedicineReminder = ({ language }: MedicineReminderProps) => {
             <Pill className="h-5 w-5" />
             {currentText.title}
           </div>
-          <Bell className="h-4 w-4 text-purple-600" />
+          <Button
+            onClick={handleEnableNotifications}
+            size="sm"
+            variant="outline"
+            className="border-purple-300 text-purple-700 hover:bg-purple-50"
+          >
+            <Bell className="h-4 w-4 mr-1" />
+            {currentText.enableNotifications}
+          </Button>
         </CardTitle>
       </CardHeader>
       

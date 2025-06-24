@@ -1,4 +1,3 @@
-
 import { useToast } from "@/hooks/use-toast";
 import MedicineReminder from "@/components/MedicineReminder";
 import ProfileHeader from "@/components/profile/ProfileHeader";
@@ -10,7 +9,9 @@ import HealthIDCard from "@/components/profile/HealthIDCard";
 import BookedAppointments from "@/components/profile/BookedAppointments";
 import ProfileFormActions from "@/components/profile/ProfileFormActions";
 import ProfileEditManager from "@/components/profile/ProfileEditManager";
+import NotificationManager from "@/components/NotificationManager";
 import { useProfileState } from "@/hooks/useProfileState";
+import { useNotifications } from "@/hooks/useNotifications";
 
 interface ProfileProps {
   language: string;
@@ -19,6 +20,9 @@ interface ProfileProps {
 const Profile = ({ language }: ProfileProps) => {
   const { profile, setProfile, showInfoForm, setShowInfoForm, saveProfile } = useProfileState();
   const { toast } = useToast();
+  
+  // Initialize notifications
+  useNotifications(language);
 
   const text = {
     en: {
@@ -123,12 +127,15 @@ const Profile = ({ language }: ProfileProps) => {
     >
       {({ isEditing, onEditToggle, onCancel, onGetLocation, isGettingLocation }) => (
         <div className="space-y-4">
-          <ProfileHeader
-            language={language}
-            isEditing={isEditing}
-            onEditToggle={onEditToggle}
-            text={currentText}
-          />
+          <div className="flex items-center justify-between">
+            <ProfileHeader
+              language={language}
+              isEditing={isEditing}
+              onEditToggle={onEditToggle}
+              text={currentText}
+            />
+            <NotificationManager language={language} />
+          </div>
 
           <MedicineReminder language={language} />
 
