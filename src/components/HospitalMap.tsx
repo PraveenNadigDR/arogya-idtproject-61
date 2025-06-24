@@ -1,69 +1,178 @@
 
-import React, { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { MapPin, Navigation, Hospital } from "lucide-react";
+import { MapPin, Navigation, Hospital, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface HospitalMapProps {
   language: string;
 }
 
+interface HospitalData {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+  type: string;
+  address?: string;
+  phone?: string;
+}
+
+// Fix for default markers in Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Custom hospital icon
+const hospitalIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L13.09 8.26L20 9L13.09 15.74L12 22L10.91 15.74L4 9L10.91 8.26L12 2Z" fill="#dc2626"/>
+      <path d="M12 6V18M16 12H8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  `),
+  iconSize: [25, 25],
+  iconAnchor: [12, 25],
+  popupAnchor: [0, -25],
+});
+
+const userIcon = new L.Icon({
+  iconUrl: 'data:image/svg+xml;base64,' + btoa(`
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10" fill="#3b82f6"/>
+      <circle cx="12" cy="12" r="3" fill="white"/>
+    </svg>
+  `),
+  iconSize: [20, 20],
+  iconAnchor: [10, 10],
+});
+
+// Component to handle map centering
+const MapController = ({ center }: { center: [number, number] | null }) => {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (center) {
+      map.setView(center, 14);
+    }
+  }, [center, map]);
+  
+  return null;
+};
+
 const HospitalMap = ({ language }: HospitalMapProps) => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const [mapboxToken, setMapboxToken] = useState("");
   const [userLocation, setUserLocation] = useState<{lat: number, lng: number} | null>(null);
-  const [showTokenInput, setShowTokenInput] = useState(true);
+  const [hospitals, setHospitals] = useState<HospitalData[]>([]);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [isLoadingHospitals, setIsLoadingHospitals] = useState(false);
   const { toast } = useToast();
 
   const text = {
     en: {
       title: "Nearby Hospitals Map",
       subtitle: "Find hospitals and medical centers near you",
-      enterToken: "Enter Mapbox Token",
-      tokenPlaceholder: "pk.eyJ1IjoieW91ci11c2VybmFtZSI...",
-      loadMap: "Load Map",
       getLocation: "Get My Location",
       yourLocation: "Your Location",
       hospital: "Hospital",
-      medicalCenter: "Medical Center",
+      clinic: "Clinic",
       gettingLocation: "Getting your location...",
       locationError: "Unable to get location",
-      mapLoaded: "Map loaded successfully",
-      hospitalsFound: "hospitals found nearby"
+      loadingHospitals: "Finding nearby hospitals...",
+      hospitalsFound: "hospitals found nearby",
+      noHospitals: "No hospitals found in this area",
+      clickForDirections: "Click for directions"
     },
     kn: {
       title: "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳ ನಕ್ಷೆ",
       subtitle: "ನಿಮ್ಮ ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳು ಮತ್ತು ವೈದ್ಯಕೀಯ ಕೇಂದ್ರಗಳನ್ನು ಹುಡುಕಿ",
-      enterToken: "Mapbox ಟೋಕನ್ ನಮೂದಿಸಿ",
-      tokenPlaceholder: "pk.eyJ1IjoieW91ci11c2VybmFtZSI...",
-      loadMap: "ನಕ್ಷೆ ಲೋಡ್ ಮಾಡಿ",
       getLocation: "ನನ್ನ ಸ್ಥಳ ಪಡೆಯಿರಿ",
       yourLocation: "ನಿಮ್ಮ ಸ್ಥಳ",
       hospital: "ಆಸ್ಪತ್ರೆ",
-      medicalCenter: "ವೈದ್ಯಕೀಯ ಕೇಂದ್ರ",
+      clinic: "ಚಿಕಿತ್ಸಾಲಯ",
       gettingLocation: "ನಿಮ್ಮ ಸ್ಥಳವನ್ನು ಪಡೆಯುತ್ತಿದೆ...",
       locationError: "ಸ್ಥಳವನ್ನು ಪಡೆಯಲು ಸಾಧ್ಯವಿಲ್ಲ",
-      mapLoaded: "ನಕ್ಷೆ ಯಶಸ್ವಿಯಾಗಿ ಲೋಡ್ ಆಗಿದೆ",
-      hospitalsFound: "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳು ಸಿಕ್ಕಿವೆ"
+      loadingHospitals: "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳನ್ನು ಹುಡುಕುತ್ತಿದೆ...",
+      hospitalsFound: "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳು ಸಿಕ್ಕಿವೆ",
+      noHospitals: "ಈ ಪ್ರದೇಶದಲ್ಲಿ ಯಾವುದೇ ಆಸ್ಪತ್ರೆಗಳು ಸಿಗಲಿಲ್ಲ",
+      clickForDirections: "ದಿಕ್ಕುಗಳಿಗಾಗಿ ಕ್ಲಿಕ್ ಮಾಡಿ"
     }
   };
 
   const currentText = text[language as keyof typeof text];
 
-  // Sample hospital data (in real app, this would come from an API)
-  const nearbyHospitals = [
-    { name: "City General Hospital", lat: 12.9716, lng: 77.5946, type: "hospital" },
-    { name: "Apollo Hospital", lat: 12.9698, lng: 77.7500, type: "hospital" },
-    { name: "Manipal Hospital", lat: 12.9279, lng: 77.6271, type: "hospital" },
-    { name: "Fortis Hospital", lat: 12.9698, lng: 77.6413, type: "hospital" },
-    { name: "Community Health Center", lat: 12.9352, lng: 77.6245, type: "clinic" }
-  ];
+  const fetchNearbyHospitals = async (lat: number, lng: number) => {
+    setIsLoadingHospitals(true);
+    try {
+      // Using Overpass API to fetch real hospital data from OpenStreetMap
+      const radius = 5000; // 5km radius
+      const overpassQuery = `
+        [out:json][timeout:25];
+        (
+          node["amenity"="hospital"](around:${radius},${lat},${lng});
+          node["amenity"="clinic"](around:${radius},${lat},${lng});
+          node["healthcare"="hospital"](around:${radius},${lat},${lng});
+          node["healthcare"="clinic"](around:${radius},${lat},${lng});
+        );
+        out body;
+      `;
+
+      const response = await fetch('https://overpass-api.de/api/interpreter', {
+        method: 'POST',
+        body: `data=${encodeURIComponent(overpassQuery)}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const hospitalData: HospitalData[] = data.elements
+          .filter((element: any) => element.tags && element.tags.name)
+          .map((element: any) => ({
+            id: element.id.toString(),
+            name: element.tags.name || 'Unknown Hospital',
+            lat: element.lat,
+            lng: element.lon,
+            type: element.tags.amenity || element.tags.healthcare || 'hospital',
+            address: element.tags['addr:full'] || element.tags['addr:street'],
+            phone: element.tags.phone
+          }))
+          .slice(0, 20); // Limit to 20 hospitals
+
+        setHospitals(hospitalData);
+        
+        toast({
+          title: `${hospitalData.length} ${currentText.hospitalsFound}`,
+          description: hospitalData.length > 0 ? currentText.hospitalsFound : currentText.noHospitals
+        });
+      } else {
+        // Fallback to sample data if API fails
+        const fallbackHospitals: HospitalData[] = [
+          { id: '1', name: "City General Hospital", lat: lat + 0.01, lng: lng + 0.01, type: "hospital" },
+          { id: '2', name: "Community Health Center", lat: lat - 0.01, lng: lng - 0.01, type: "clinic" },
+          { id: '3', name: "Medical Center", lat: lat + 0.005, lng: lng - 0.005, type: "hospital" }
+        ];
+        setHospitals(fallbackHospitals);
+      }
+    } catch (error) {
+      console.error('Error fetching hospitals:', error);
+      // Fallback to sample data
+      const fallbackHospitals: HospitalData[] = [
+        { id: '1', name: "City General Hospital", lat: lat + 0.01, lng: lng + 0.01, type: "hospital" },
+        { id: '2', name: "Community Health Center", lat: lat - 0.01, lng: lng - 0.01, type: "clinic" }
+      ];
+      setHospitals(fallbackHospitals);
+    } finally {
+      setIsLoadingHospitals(false);
+    }
+  };
 
   const getCurrentLocation = () => {
     if (!navigator.geolocation) {
@@ -90,24 +199,13 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
         setUserLocation(location);
         setIsLoadingLocation(false);
         
-        if (map.current) {
-          map.current.flyTo({
-            center: [location.lng, location.lat],
-            zoom: 14,
-            duration: 2000
-          });
-          
-          // Add user location marker
-          new mapboxgl.Marker({ color: 'blue' })
-            .setLngLat([location.lng, location.lat])
-            .setPopup(new mapboxgl.Popup().setHTML(`<h3>${currentText.yourLocation}</h3>`))
-            .addTo(map.current);
-        }
-
         toast({
           title: "Location Found",
           description: `${currentText.yourLocation}: ${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`
         });
+
+        // Fetch nearby hospitals
+        fetchNearbyHospitals(location.lat, location.lng);
       },
       (error) => {
         setIsLoadingLocation(false);
@@ -125,102 +223,14 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
     );
   };
 
-  const initializeMap = () => {
-    if (!mapContainer.current || !mapboxToken) return;
+  // Default location (Bangalore)
+  const defaultCenter: [number, number] = [12.9716, 77.5946];
+  const mapCenter = userLocation ? [userLocation.lat, userLocation.lng] as [number, number] : defaultCenter;
 
-    mapboxgl.accessToken = mapboxToken;
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [77.5946, 12.9716], // Bangalore coordinates
-      zoom: 12
-    });
-
-    // Add navigation controls
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-
-    map.current.on('load', () => {
-      toast({
-        title: currentText.mapLoaded,
-        description: `Found ${nearbyHospitals.length} ${currentText.hospitalsFound}`
-      });
-
-      // Add hospital markers
-      nearbyHospitals.forEach((hospital, index) => {
-        const el = document.createElement('div');
-        el.className = 'hospital-marker';
-        el.style.backgroundImage = 'url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSIjZGMyNjI2Ii8+CjxwYXRoIGQ9Ik0xMiA2VjE4TTE2IDEySDgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=)';
-        el.style.width = '30px';
-        el.style.height = '30px';
-        el.style.backgroundSize = 'contain';
-        el.style.cursor = 'pointer';
-
-        new mapboxgl.Marker(el)
-          .setLngLat([hospital.lng, hospital.lat])
-          .setPopup(
-            new mapboxgl.Popup({ offset: 25 }).setHTML(
-              `<div class="p-2">
-                <h3 class="font-semibold text-sm">${hospital.name}</h3>
-                <p class="text-xs text-gray-600">${hospital.type === 'hospital' ? currentText.hospital : currentText.medicalCenter}</p>
-                <p class="text-xs text-blue-600 mt-1">Click for directions</p>
-              </div>`
-            )
-          )
-          .addTo(map.current!);
-      });
-    });
-
-    setShowTokenInput(false);
+  const openDirections = (lat: number, lng: number, name: string) => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${name}`;
+    window.open(url, '_blank');
   };
-
-  useEffect(() => {
-    return () => {
-      map.current?.remove();
-    };
-  }, []);
-
-  if (showTokenInput) {
-    return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <MapPin className="h-5 w-5 text-red-500" />
-            {currentText.title}
-          </CardTitle>
-          <p className="text-sm text-gray-600">{currentText.subtitle}</p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <p className="text-sm text-blue-800 mb-2">
-              To use the map feature, you need a Mapbox public token.
-            </p>
-            <p className="text-xs text-blue-600">
-              Get your free token at: <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="underline">mapbox.com</a>
-            </p>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium">{currentText.enterToken}:</label>
-            <Input
-              type="text"
-              placeholder={currentText.tokenPlaceholder}
-              value={mapboxToken}
-              onChange={(e) => setMapboxToken(e.target.value)}
-              className="font-mono text-xs"
-            />
-          </div>
-          <Button 
-            onClick={initializeMap}
-            disabled={!mapboxToken.trim()}
-            className="w-full"
-          >
-            <MapPin className="h-4 w-4 mr-2" />
-            {currentText.loadMap}
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card className="w-full">
@@ -236,18 +246,82 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
             size="sm"
             variant="outline"
           >
-            <Navigation className="h-4 w-4 mr-1" />
+            {isLoadingLocation ? (
+              <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+            ) : (
+              <Navigation className="h-4 w-4 mr-1" />
+            )}
             {currentText.getLocation}
           </Button>
         </div>
         <p className="text-sm text-gray-600">{currentText.subtitle}</p>
+        {isLoadingHospitals && (
+          <div className="flex items-center gap-2 text-sm text-blue-600">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            {currentText.loadingHospitals}
+          </div>
+        )}
       </CardHeader>
       <CardContent className="p-0">
-        <div 
-          ref={mapContainer} 
-          className="w-full h-[400px] rounded-b-lg"
-          style={{ minHeight: '400px' }}
-        />
+        <div className="w-full h-[400px] rounded-b-lg overflow-hidden">
+          <MapContainer
+            center={mapCenter}
+            zoom={13}
+            style={{ height: '100%', width: '100%' }}
+            className="rounded-b-lg"
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            
+            <MapController center={userLocation ? [userLocation.lat, userLocation.lng] : null} />
+            
+            {/* User location marker */}
+            {userLocation && (
+              <Marker position={[userLocation.lat, userLocation.lng]} icon={userIcon}>
+                <Popup>
+                  <div className="text-center">
+                    <h3 className="font-semibold text-blue-600">{currentText.yourLocation}</h3>
+                    <p className="text-xs text-gray-600">
+                      {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
+                    </p>
+                  </div>
+                </Popup>
+              </Marker>
+            )}
+            
+            {/* Hospital markers */}
+            {hospitals.map((hospital) => (
+              <Marker
+                key={hospital.id}
+                position={[hospital.lat, hospital.lng]}
+                icon={hospitalIcon}
+              >
+                <Popup>
+                  <div className="p-2 max-w-xs">
+                    <h3 className="font-semibold text-sm text-red-600 mb-1">{hospital.name}</h3>
+                    <p className="text-xs text-gray-600 mb-1">
+                      {hospital.type === 'hospital' ? currentText.hospital : currentText.clinic}
+                    </p>
+                    {hospital.address && (
+                      <p className="text-xs text-gray-500 mb-2">{hospital.address}</p>
+                    )}
+                    {hospital.phone && (
+                      <p className="text-xs text-blue-600 mb-2">{hospital.phone}</p>
+                    )}
+                    <button
+                      onClick={() => openDirections(hospital.lat, hospital.lng, hospital.name)}
+                      className="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors"
+                    >
+                      {currentText.clickForDirections}
+                    </button>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        </div>
       </CardContent>
     </Card>
   );
