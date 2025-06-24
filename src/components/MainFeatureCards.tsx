@@ -1,118 +1,155 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Stethoscope, Video, Ambulance, Calendar, Phone, AlertTriangle } from "lucide-react";
+import { 
+  Heart, 
+  Calendar, 
+  MessageCircle, 
+  Phone, 
+  Clock, 
+  Stethoscope,
+  MapPin,
+  Hospital 
+} from "lucide-react";
+import HospitalMap from "./HospitalMap";
 
 interface MainFeatureCardsProps {
   language: string;
-  onNavigateToTab: (tabValue: string) => void;
+  onNavigateToTab: (tab: string) => void;
   onVideoCall: () => void;
 }
 
 const MainFeatureCards = ({ language, onNavigateToTab, onVideoCall }: MainFeatureCardsProps) => {
+  const text = {
+    en: {
+      quickConsult: "Quick Consult",
+      consultDesc: "Connect with doctors instantly",
+      bookAppointment: "Book Appointment",
+      appointmentDesc: "Schedule with specialists",
+      aiAssistant: "AI Health Assistant",
+      aiDesc: "Get instant health guidance",
+      videoCall: "Video Consultation",
+      videoDesc: "Face-to-face medical consultation",
+      consultNow: "Consult Now",
+      bookNow: "Book Now",
+      chatNow: "Chat Now",
+      startCall: "Start Call",
+      nearbyHospitals: "Nearby Hospitals",
+      hospitalsDesc: "Find medical centers around you"
+    },
+    kn: {
+      quickConsult: "ತ್ವರಿತ ಸಮಾಲೋಚನೆ",
+      consultDesc: "ವೈದ್ಯರೊಂದಿಗೆ ತಕ್ಷಣ ಸಂಪರ್ಕಿಸಿ",
+      bookAppointment: "ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ",
+      appointmentDesc: "ತಜ್ಞರೊಂದಿಗೆ ಸಮಯ ನಿಗದಿ ಮಾಡಿ",
+      aiAssistant: "AI ಆರೋಗ್ಯ ಸಹಾಯಕ",
+      aiDesc: "ತಕ್ಷಣದ ಆರೋಗ್ಯ ಮಾರ್ಗದರ್ಶನ ಪಡೆಯಿರಿ",
+      videoCall: "ವೀಡಿಯೋ ಸಮಾಲೋಚನೆ",
+      videoDesc: "ಮುಖಾಮುಖಿ ವೈದ್ಯಕೀಯ ಸಮಾಲೋಚನೆ",
+      consultNow: "ಈಗ ಸಮಾಲೋಚಿಸಿ",
+      bookNow: "ಈಗ ಬುಕ್ ಮಾಡಿ",
+      chatNow: "ಈಗ ಚಾಟ್ ಮಾಡಿ",
+      startCall: "ಕರೆ ಪ್ರಾರಂಭಿಸಿ",
+      nearbyHospitals: "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳು",
+      hospitalsDesc: "ನಿಮ್ಮ ಸುತ್ತಮುತ್ತಲಿನ ವೈದ್ಯಕೀಯ ಕೇಂದ್ರಗಳನ್ನು ಹುಡುಕಿ"
+    }
+  };
+
+  const currentText = text[language as keyof typeof text];
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      {/* Doctor Appointment Booking */}
-      <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 hover:shadow-lg transition-shadow">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg text-blue-800 flex items-center gap-2">
-            <Stethoscope className="h-5 w-5" />
-            {language === "en" ? "Book Doctor Appointment" : "ವೈದ್ಯರ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-blue-600 mb-4">
-            {language === "en" 
-              ? "Find doctors near Hassan & Holenarasipura and book appointments instantly" 
-              : "ಹಾಸನ್ ಮತ್ತು ಹೊಳೆನರಸೀಪುರ ಸಮೀಪದ ವೈದ್ಯರನ್ನು ಹುಡುಕಿ ಮತ್ತು ತಕ್ಷಣ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ"}
-          </p>
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-xs text-blue-600">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>{language === "en" ? "8+ doctors available now" : "8+ ವೈದ್ಯರು ಈಗ ಲಭ್ಯ"}</span>
+    <div className="space-y-6">
+      {/* Main Feature Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        {/* Quick Consult */}
+        <Card className="group hover:shadow-xl transition-all duration-500 border-0 bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 hover:scale-105 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="pb-3 relative z-10">
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+              <Stethoscope className="h-6 w-6 text-white" />
             </div>
-            <div className="flex items-center gap-2 text-xs text-blue-600">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span>{language === "en" ? "Instant confirmation" : "ತಕ್ಷಣ ದೃಢೀಕರಣ"}</span>
-            </div>
-          </div>
-          <Button 
-            onClick={() => onNavigateToTab("doctors")}
-            className="w-full bg-blue-600 hover:bg-blue-700"
-          >
-            <Calendar className="h-4 w-4 mr-2" />
-            {language === "en" ? "Book Appointment" : "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಿ"}
-          </Button>
-        </CardContent>
-      </Card>
+            <CardTitle className="text-lg font-bold text-slate-800">{currentText.quickConsult}</CardTitle>
+            <p className="text-sm text-slate-600">{currentText.consultDesc}</p>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <Button 
+              onClick={() => onNavigateToTab('doctors')}
+              className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Heart className="h-4 w-4 mr-2" />
+              {currentText.consultNow}
+            </Button>
+          </CardContent>
+        </Card>
 
-      {/* Video Call with Doctor */}
-      <Card className="bg-gradient-to-br from-purple-50 to-violet-50 border-purple-200 hover:shadow-lg transition-shadow">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg text-purple-800 flex items-center gap-2">
-            <Video className="h-5 w-5" />
-            {language === "en" ? "Video Call with Doctor" : "ವೈದ್ಯರೊಂದಿಗೆ ವೀಡಿಯೊ ಕಾಲ್"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-purple-600 mb-4">
-            {language === "en" 
-              ? "Start instant video consultation with available doctors" 
-              : "ಲಭ್ಯವಿರುವ ವೈದ್ಯರೊಂದಿಗೆ ತಕ್ಷಣ ವೀಡಿಯೊ ಸಮಾಲೋಚನೆ ಪ್ರಾರಂಭಿಸಿ"}
-          </p>
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-xs text-purple-600">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>{language === "en" ? "Dr. Ramesh - Available now" : "ಡಾ. ರಮೇಶ್ - ಈಗ ಲಭ್ಯ"}</span>
+        {/* Book Appointment */}
+        <Card className="group hover:shadow-xl transition-all duration-500 border-0 bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 hover:scale-105 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-sky-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="pb-3 relative z-10">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-sky-500 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+              <Calendar className="h-6 w-6 text-white" />
             </div>
-            <div className="flex items-center gap-2 text-xs text-purple-600">
-              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              <span>{language === "en" ? "Secure & encrypted calls" : "ಸುರಕ್ಷಿತ ಮತ್ತು ಗುಪ್ತ ಕರೆಗಳು"}</span>
-            </div>
-          </div>
-          <Button 
-            onClick={onVideoCall}
-            className="w-full bg-purple-600 hover:bg-purple-700"
-          >
-            <Video className="h-4 w-4 mr-2" />
-            {language === "en" ? "Start Video Call" : "ವೀಡಿಯೊ ಕಾಲ್ ಪ್ರಾರಂಭಿಸಿ"}
-          </Button>
-        </CardContent>
-      </Card>
+            <CardTitle className="text-lg font-bold text-slate-800">{currentText.bookAppointment}</CardTitle>
+            <p className="text-sm text-slate-600">{currentText.appointmentDesc}</p>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <Button 
+              onClick={() => onNavigateToTab('doctors')}
+              className="w-full bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600 border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Clock className="h-4 w-4 mr-2" />
+              {currentText.bookNow}
+            </Button>
+          </CardContent>
+        </Card>
 
-      {/* Emergency & Ambulance Services */}
-      <Card className="bg-gradient-to-br from-red-50 to-orange-50 border-red-200 hover:shadow-lg transition-shadow">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg text-red-800 flex items-center gap-2">
-            <Ambulance className="h-5 w-5" />
-            {language === "en" ? "Emergency & Ambulance" : "ತುರ್ತು ಮತ್ತು ಆಂಬುಲೆನ್ಸ್"}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-red-600 mb-4">
-            {language === "en" 
-              ? "24/7 emergency services and ambulance booking with live tracking" 
-              : "24/7 ತುರ್ತು ಸೇವೆಗಳು ಮತ್ತು ಲೈವ್ ಟ್ರ್ಯಾಕಿಂಗ್ ಜೊತೆ ಆಂಬುಲೆನ್ಸ್ ಬುಕಿಂಗ್"}
-          </p>
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-xs text-red-600">
-              <Phone className="w-3 h-3" />
-              <span>{language === "en" ? "Call 108 for ambulance" : "ಆಂಬುಲೆನ್ಸ್‌ಗಾಗಿ 108 ಗೆ ಕರೆ ಮಾಡಿ"}</span>
+        {/* AI Assistant */}
+        <Card className="group hover:shadow-xl transition-all duration-500 border-0 bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50 hover:scale-105 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="pb-3 relative z-10">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-500 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+              <MessageCircle className="h-6 w-6 text-white" />
             </div>
-            <div className="flex items-center gap-2 text-xs text-red-600">
-              <AlertTriangle className="w-3 h-3" />
-              <span>{language === "en" ? "Live ambulance tracking" : "ಲೈವ್ ಆಂಬುಲೆನ್ಸ್ ಟ್ರ್ಯಾಕಿಂಗ್"}</span>
+            <CardTitle className="text-lg font-bold text-slate-800">{currentText.aiAssistant}</CardTitle>
+            <p className="text-sm text-slate-600">{currentText.aiDesc}</p>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <Button 
+              onClick={() => onNavigateToTab('ai-assistant')}
+              className="w-full bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <MessageCircle className="h-4 w-4 mr-2" />
+              {currentText.chatNow}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Video Call */}
+        <Card className="group hover:shadow-xl transition-all duration-500 border-0 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 hover:scale-105 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <CardHeader className="pb-3 relative z-10">
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
+              <Phone className="h-6 w-6 text-white" />
             </div>
-          </div>
-          <Button 
-            onClick={() => onNavigateToTab("emergency")}
-            className="w-full bg-red-600 hover:bg-red-700"
-          >
-            <Ambulance className="h-4 w-4 mr-2" />
-            {language === "en" ? "Emergency Services" : "ತುರ್ತು ಸೇವೆಗಳು"}
-          </Button>
-        </CardContent>
-      </Card>
+            <CardTitle className="text-lg font-bold text-slate-800">{currentText.videoCall}</CardTitle>
+            <p className="text-sm text-slate-600">{currentText.videoDesc}</p>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <Button 
+              onClick={onVideoCall}
+              className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Phone className="h-4 w-4 mr-2" />
+              {currentText.startCall}
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Hospital Map Section */}
+      <div className="mt-8">
+        <HospitalMap language={language} />
+      </div>
     </div>
   );
 };
