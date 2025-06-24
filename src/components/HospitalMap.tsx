@@ -224,8 +224,8 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
   };
 
   // Default location (Bangalore)
-  const defaultCenter: [number, number] = [12.9716, 77.5946];
-  const mapCenter = userLocation ? [userLocation.lat, userLocation.lng] as [number, number] : defaultCenter;
+  const defaultCenter: L.LatLngExpression = [12.9716, 77.5946];
+  const mapCenter: L.LatLngExpression = userLocation ? [userLocation.lat, userLocation.lng] : defaultCenter;
 
   const openDirections = (lat: number, lng: number, name: string) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${name}`;
@@ -271,8 +271,8 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
             className="rounded-b-lg"
           >
             <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
             
             <MapController center={userLocation ? [userLocation.lat, userLocation.lng] : null} />
@@ -295,7 +295,7 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
             {hospitals.map((hospital) => (
               <Marker
                 key={hospital.id}
-                position={[hospital.lat, hospital.lng]}
+                position={[hospital.lat, hospital.lng] as L.LatLngExpression}
                 icon={hospitalIcon}
               >
                 <Popup>
