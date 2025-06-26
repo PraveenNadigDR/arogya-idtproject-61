@@ -1,6 +1,7 @@
 
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
+import type { LatLngExpression } from 'leaflet';
 
 interface MapControllerProps {
   center: [number, number] | null;
@@ -11,7 +12,8 @@ const MapController = ({ center }: MapControllerProps) => {
   
   useEffect(() => {
     if (center) {
-      map.setView(center, 14);
+      const position: LatLngExpression = center;
+      map.setView(position, 14);
     }
   }, [center, map]);
   
