@@ -1,16 +1,10 @@
 
-import React, { useEffect } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Navigation, Hospital, Loader2 } from "lucide-react";
-import { initializeLeafletIcons } from '@/utils/mapUtils';
+import { Navigation, Hospital, Loader2, MapPin, Phone } from "lucide-react";
 import { useUserLocation } from '@/hooks/useUserLocation';
 import { useHospitals } from '@/hooks/useHospitals';
-import MapController from './map/MapController';
-import UserLocationMarker from './map/UserLocationMarker';
-import HospitalMarker from './map/HospitalMarker';
 
 interface HospitalMapProps {
   language: string;
@@ -20,33 +14,28 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
   const { userLocation, isLoadingLocation, getCurrentLocation } = useUserLocation(language);
   const { hospitals, isLoadingHospitals, loadHospitals, loadingText } = useHospitals(language);
 
-  // Initialize Leaflet icons on component mount
-  useEffect(() => {
-    try {
-      initializeLeafletIcons();
-    } catch (error) {
-      console.error('Failed to initialize Leaflet icons:', error);
-    }
-  }, []);
-
   const text = {
     en: {
-      title: "Nearby Hospitals Map",
+      title: "Nearby Hospitals",
       subtitle: "Find hospitals and medical centers near you",
-      getLocation: "Get My Location"
+      getLocation: "Get My Location",
+      hospital: "Hospital",
+      clinic: "Clinic",
+      getDirections: "Get Directions",
+      call: "Call"
     },
     kn: {
-      title: "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳ ನಕ್ಷೆ",
+      title: "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳು",
       subtitle: "ನಿಮ್ಮ ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳು ಮತ್ತು ವೈದ್ಯಕೀಯ ಕೇಂದ್ರಗಳನ್ನು ಹುಡುಕಿ",
-      getLocation: "ನನ್ನ ಸ್ಥಳ ಪಡೆಯಿರಿ"
+      getLocation: "ನನ್ನ ಸ್ಥಳ ಪಡೆಯಿರಿ",
+      hospital: "ಆಸ್ಪತ್ರೆ",
+      clinic: "ಚಿಕಿತ್ಸಾಲಯ",
+      getDirections: "ದಿಕ್ಕುಗಳನ್ನು ಪಡೆಯಿರಿ",
+      call: "ಕರೆ ಮಾಡಿ"
     }
   };
 
   const currentText = text[language as keyof typeof text];
-
-  // Default location (Bangalore)
-  const defaultCenter: [number, number] = [12.9716, 77.5946];
-  const mapCenter: [number, number] = userLocation ? [userLocation.lat, userLocation.lng] : defaultCenter;
 
   const handleGetLocation = async () => {
     try {
@@ -57,6 +46,11 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
     } catch (error) {
       console.error('Failed to get location:', error);
     }
+  };
+
+  const openDirections = (lat: number, lng: number, name: string) => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&destination_place_id=${name}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -88,31 +82,62 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
             {loadingText}
           </div>
         )}
+        {userLocation && (
+          <div className="text-xs text-gray-500">
+            Your location: {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
+          </div>
+        )}
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="w-full h-[400px] rounded-b-lg overflow-hidden">
-          <MapContainer
-            center={mapCenter}
-            zoom={13}
-            style={{ height: '100%', width: '100%' }}
-            className="rounded-b-lg"
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            
-            <MapController center={userLocation ? [userLocation.lat, userLocation.lng] : null} />
-            
-            {userLocation && (
-              <UserLocationMarker userLocation={userLocation} language={language} />
-            )}
-            
+      <CardContent>
+        {hospitals.length > 0 ? (
+          <div className="space-y-3">
             {hospitals.map((hospital) => (
-              <HospitalMarker key={hospital.id} hospital={hospital} language={language} />
+              <Card key={hospital.id} className="p-4">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-red-600">{hospital.name}</h3>
+                    <p className="text-sm text-gray-600">
+                      {hospital.type === 'hospital' ? currentText.hospital : currentText.clinic}
+                    </p>
+                    {hospital.address && (
+                      <p className="text-xs text-gray-500 mt-1">{hospital.address}</p>
+                    )}
+                    <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+                      <MapPin className="h-3 w-3" />
+                      <span>{hospital.lat.toFixed(4)}, {hospital.lng.toFixed(4)}</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => openDirections(hospital.lat, hospital.lng, hospital.name)}
+                      className="bg-blue-500 hover:bg-blue-600"
+                    >
+                      {currentText.getDirections}
+                    </Button>
+                    {hospital.phone && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => window.open(`tel:${hospital.phone}`, '_blank')}
+                      >
+                        <Phone className="h-4 w-4 mr-1" />
+                        {currentText.call}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Card>
             ))}
-          </MapContainer>
-        </div>
+          </div>
+        ) : (
+          !isLoadingHospitals && (
+            <div className="text-center py-8 text-gray-500">
+              <Hospital className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>{language === "en" ? "Click 'Get My Location' to find nearby hospitals" : "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳನ್ನು ಹುಡುಕಲು 'ನನ್ನ ಸ್ಥಳ ಪಡೆಯಿರಿ' ಕ್ಲಿಕ್ ಮಾಡಿ"}</p>
+            </div>
+          )
+        )}
       </CardContent>
     </Card>
   );
