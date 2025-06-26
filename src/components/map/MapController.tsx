@@ -10,7 +10,8 @@ const MapController = ({ center }: MapControllerProps) => {
   const map = useMap();
   
   useEffect(() => {
-    if (center) {
+    if (center && map) {
+      console.log('Setting map view to:', center);
       map.setView(center, 14);
     }
   }, [center, map]);

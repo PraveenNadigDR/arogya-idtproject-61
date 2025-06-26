@@ -16,12 +16,18 @@ interface HospitalMapProps {
   language: string;
 }
 
-// Initialize Leaflet icons
-initializeLeafletIcons();
-
 const HospitalMap = ({ language }: HospitalMapProps) => {
   const { userLocation, isLoadingLocation, getCurrentLocation } = useUserLocation(language);
   const { hospitals, isLoadingHospitals, loadHospitals, loadingText } = useHospitals(language);
+
+  // Initialize Leaflet icons on component mount
+  useEffect(() => {
+    try {
+      initializeLeafletIcons();
+    } catch (error) {
+      console.error('Failed to initialize Leaflet icons:', error);
+    }
+  }, []);
 
   const text = {
     en: {
@@ -44,7 +50,9 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
 
   const handleGetLocation = async () => {
     try {
+      console.log('Getting location...');
       const location = await getCurrentLocation();
+      console.log('Location obtained:', location);
       await loadHospitals(location.lat, location.lng);
     } catch (error) {
       console.error('Failed to get location:', error);

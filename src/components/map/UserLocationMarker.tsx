@@ -17,6 +17,8 @@ const UserLocationMarker = ({ userLocation, language }: UserLocationMarkerProps)
   const currentText = text[language as keyof typeof text];
   const position: [number, number] = [userLocation.lat, userLocation.lng];
 
+  console.log('Rendering user location marker at:', position);
+
   return (
     <Marker position={position} icon={userIcon}>
       <Popup>

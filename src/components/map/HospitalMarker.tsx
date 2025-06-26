@@ -26,6 +26,8 @@ const HospitalMarker = ({ hospital, language }: HospitalMarkerProps) => {
   const currentText = text[language as keyof typeof text];
   const position: [number, number] = [hospital.lat, hospital.lng];
 
+  console.log('Rendering hospital marker:', hospital.name, 'at:', position);
+
   return (
     <Marker
       position={position}
