@@ -2,7 +2,6 @@
 import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { userIcon } from '@/utils/mapUtils';
-import type { LatLngExpression } from 'leaflet';
 
 interface UserLocationMarkerProps {
   userLocation: { lat: number; lng: number };
@@ -16,7 +15,7 @@ const UserLocationMarker = ({ userLocation, language }: UserLocationMarkerProps)
   };
 
   const currentText = text[language as keyof typeof text];
-  const position: LatLngExpression = [userLocation.lat, userLocation.lng];
+  const position: [number, number] = [userLocation.lat, userLocation.lng];
 
   return (
     <Marker position={position} icon={userIcon}>

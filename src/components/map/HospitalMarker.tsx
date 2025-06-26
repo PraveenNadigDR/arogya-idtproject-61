@@ -3,7 +3,6 @@ import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { HospitalData } from '@/types/hospital';
 import { hospitalIcon, openDirections } from '@/utils/mapUtils';
-import type { LatLngExpression } from 'leaflet';
 
 interface HospitalMarkerProps {
   hospital: HospitalData;
@@ -25,7 +24,7 @@ const HospitalMarker = ({ hospital, language }: HospitalMarkerProps) => {
   };
 
   const currentText = text[language as keyof typeof text];
-  const position: LatLngExpression = [hospital.lat, hospital.lng];
+  const position: [number, number] = [hospital.lat, hospital.lng];
 
   return (
     <Marker

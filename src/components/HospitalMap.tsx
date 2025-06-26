@@ -11,7 +11,6 @@ import { useHospitals } from '@/hooks/useHospitals';
 import MapController from './map/MapController';
 import UserLocationMarker from './map/UserLocationMarker';
 import HospitalMarker from './map/HospitalMarker';
-import type { LatLngExpression } from 'leaflet';
 
 interface HospitalMapProps {
   language: string;
@@ -40,8 +39,8 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
   const currentText = text[language as keyof typeof text];
 
   // Default location (Bangalore)
-  const defaultCenter: LatLngExpression = [12.9716, 77.5946];
-  const mapCenter: LatLngExpression = userLocation ? [userLocation.lat, userLocation.lng] : defaultCenter;
+  const defaultCenter: [number, number] = [12.9716, 77.5946];
+  const mapCenter: [number, number] = userLocation ? [userLocation.lat, userLocation.lng] : defaultCenter;
 
   const handleGetLocation = async () => {
     try {
