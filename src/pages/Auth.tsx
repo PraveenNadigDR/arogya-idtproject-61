@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mail, Lock, User, Heart } from 'lucide-react';
+import { Mail, Lock, User, Heart, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,11 +25,25 @@ const cleanupAuthState = () => {
   });
 };
 
+// Retry function for network requests
+const retryWithDelay = async (fn: () => Promise<any>, retries = 3, delay = 1000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      console.log(`Attempt ${i + 1} failed:`, error.message);
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+};
+
 const Auth = () => {
   const [email, setEmail] = useState('bnramachandra46@gmail.com');
   const [password, setPassword] = useState('Praveen2006$');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [connectionError, setConnectionError] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -45,6 +58,7 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setConnectionError(false);
 
     try {
       // Clean up any existing auth state
@@ -54,13 +68,12 @@ const Auth = () => {
       try {
         await supabase.auth.signOut({ scope: 'global' });
       } catch (err) {
-        // Continue even if this fails
         console.log('Global signout failed, continuing...');
       }
 
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error } = await supabase.auth.signUp({
+      const signUpOperation = () => supabase.auth.signUp({
         email,
         password,
         options: {
@@ -71,6 +84,8 @@ const Auth = () => {
         }
       });
 
+      const { error } = await retryWithDelay(signUpOperation);
+
       if (error) throw error;
 
       toast({
@@ -79,11 +94,21 @@ const Auth = () => {
       });
     } catch (error: any) {
       console.error('Sign up error:', error);
-      toast({
-        title: "Error creating account",
-        description: error.message,
-        variant: "destructive",
-      });
+      
+      if (error.message === 'Failed to fetch' || error.name === 'AuthRetryableFetchError') {
+        setConnectionError(true);
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to authentication service. Please check your internet connection and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error creating account",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -92,8 +117,11 @@ const Auth = () => {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setConnectionError(false);
 
     try {
+      console.log('Starting sign in process...');
+      
       // Clean up any existing auth state
       cleanupAuthState();
       
@@ -101,18 +129,20 @@ const Auth = () => {
       try {
         await supabase.auth.signOut({ scope: 'global' });
       } catch (err) {
-        // Continue even if this fails
         console.log('Global signout failed, continuing...');
       }
 
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const signInOperation = () => supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      const { data, error } = await retryWithDelay(signInOperation);
+
       if (error) throw error;
 
       if (data.user) {
+        console.log('Sign in successful:', data.user.id);
         toast({
           title: "Welcome back!",
           description: "You have been logged in successfully.",
@@ -123,11 +153,21 @@ const Auth = () => {
       }
     } catch (error: any) {
       console.error('Sign in error:', error);
-      toast({
-        title: "Error signing in",
-        description: error.message,
-        variant: "destructive",
-      });
+      
+      if (error.message === 'Failed to fetch' || error.name === 'AuthRetryableFetchError') {
+        setConnectionError(true);
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to authentication service. Please check your internet connection and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error signing in",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -143,6 +183,16 @@ const Auth = () => {
           </div>
           <p className="text-gray-600">Your Personal Health Companion</p>
         </div>
+
+        {connectionError && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-red-600" />
+            <div>
+              <p className="text-red-800 font-medium">Connection Issue</p>
+              <p className="text-red-600 text-sm">Having trouble connecting to the server. Please try again.</p>
+            </div>
+          </div>
+        )}
 
         <Card className="shadow-lg">
           <CardHeader>
