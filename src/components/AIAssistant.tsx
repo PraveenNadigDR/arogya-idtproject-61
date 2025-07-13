@@ -1,9 +1,10 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Mic, Send, MessageCircle, Stethoscope, Calendar, Pill, Settings } from "lucide-react";
+import { Mic, Send, MessageCircle, Stethoscope, Calendar, Pill, Settings, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -22,8 +23,9 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const [message, setMessage] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState("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");
+  const [apiKey, setApiKey] = useState(""); // Start with empty API key
   const [showSettings, setShowSettings] = useState(false);
+  const [useOfflineMode, setUseOfflineMode] = useState(true); // Default to offline mode
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -50,7 +52,10 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       send: "Send",
       listening: "Listening...",
       you: "You",
-      assistant: "Assistant"
+      assistant: "Assistant",
+      offlineMode: "Offline Mode (Demo Responses)",
+      apiKeyLabel: "OpenRouter API Key (Optional):",
+      saveApiKey: "Save API Key"
     },
     kn: {
       title: "ಆರೋಗ್ಯ ಸಹಾಯಕ",
@@ -60,7 +65,10 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       send: "ಕಳುಹಿಸಿ",
       listening: "ಕೇಳುತ್ತಿದೆ...",
       you: "ನೀವು",
-      assistant: "ಸಹಾಯಕ"
+      assistant: "ಸಹಾಯಕ",
+      offlineMode: "ಆಫ್‌ಲೈನ್ ಮೋಡ್ (ಡೆಮೋ ಪ್ರತಿಕ್ರಿಯೆಗಳು)",
+      apiKeyLabel: "OpenRouter API ಕೀ (ಐಚ್ಛಿಕ):",
+      saveApiKey: "API ಕೀ ಉಳಿಸಿ"
     }
   };
 
@@ -84,13 +92,50 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     }
   ];
 
+  const getSmartResponse = (userMessage: string) => {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Fever and headache
+    if (lowerMessage.includes("fever") || lowerMessage.includes("headache") || lowerMessage.includes("ಜ್ವರ") || lowerMessage.includes("ತಲೆನೋವು")) {
+      return language === "en" 
+        ? "For fever and headache: Rest well, drink plenty of fluids (8-10 glasses daily), and take paracetamol 500mg every 6 hours. Apply a cool compress to your forehead. If fever persists for more than 3 days or goes above 102°F, consult Dr. Ramesh at Hassan PHC immediately. Monitor symptoms and avoid strenuous activities."
+        : "ಜ್ವರ ಮತ್ತು ತಲೆನೋವಿಗೆ: ಚೆನ್ನಾಗಿ ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳಿ, ಸಾಕಷ್ಟು ನೀರು ಕುಡಿಯಿರಿ (ದಿನಕ್ಕೆ 8-10 ಗ್ಲಾಸ್), ಮತ್ತು 6 ಗಂಟೆಗಳಿಗೊಮ್ಮೆ ಪ್ಯಾರಾಸಿಟಮಾಲ್ 500mg ತೆಗೆದುಕೊಳ್ಳಿ. ಹಣೆಗೆ ತಂಪಾದ ಬಟ್ಟೆ ಇಡಿ. ಜ್ವರವು 3 ದಿನಗಳಿಗಿಂತ ಹೆಚ್ಚು ಕಾಲ ಇದ್ದರೆ ಅಥವಾ 102°F ಗಿಂತ ಹೆಚ್ಚಾದರೆ, ತಕ್ಷಣ ಹಾಸನ್ PHC ನಲ್ಲಿ ಡಾ. ರಮೇಶ್ ಅವರನ್ನು ಸಂಪರ್ಕಿಸಿ.";
+    }
+    
+    // Appointment booking
+    if (lowerMessage.includes("appointment") || lowerMessage.includes("book") || lowerMessage.includes("doctor") || lowerMessage.includes("ಅಪಾಯಿಂಟ್ಮೆಂಟ್") || lowerMessage.includes("ವೈದ್ಯ")) {
+      return language === "en" 
+        ? "To book an appointment: Dr. Ramesh is available Mon-Fri 9AM-5PM at Hassan PHC. Call 080-1234-5678 or visit directly. For specialists: Dr. Priya (Cardiologist) - Tue/Thu 2-6PM, Dr. Kumar (Pediatrician) - Mon/Wed/Fri 10AM-2PM. Emergency consultations available 24/7. Bring your health ID and previous medical records."
+        : "ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಬುಕ್ ಮಾಡಲು: ಡಾ. ರಮೇಶ್ ಸೋಮ-ಶುಕ್ರ 9AM-5PM ಹಾಸನ್ PHC ನಲ್ಲಿ ಲಭ್ಯ. 080-1234-5678 ಗೆ ಕರೆ ಮಾಡಿ ಅಥವಾ ನೇರವಾಗಿ ಭೇಟಿ ನೀಡಿ. ತಜ್ಞರಿಗೆ: ಡಾ. ಪ್ರಿಯಾ (ಹೃದಯರೋಗ ತಜ್ಞೆ) - ಮಂಗಳ/ಗುರು 2-6PM, ಡಾ. ಕುಮಾರ್ (ಮಕ್ಕಳ ತಜ್ಞ) - ಸೋಮ/ಬುಧ/ಶುಕ್ರ 10AM-2PM. 24/7 ತುರ್ತು ಸಲಹೆ ಲಭ್ಯ.";
+    }
+    
+    // Medicine information
+    if (lowerMessage.includes("medicine") || lowerMessage.includes("medication") || lowerMessage.includes("drug") || lowerMessage.includes("ಔಷಧ")) {
+      return language === "en" 
+        ? "Common medicines information: Paracetamol - for fever/pain, 500mg every 6-8 hours. Ibuprofen - for inflammation/pain, 400mg every 8 hours with food. Crocin - fever reducer, safe for children. Always take medicines after meals unless specified. Store in cool, dry place. Check expiry dates. Consult pharmacist or doctor for drug interactions."
+        : "ಸಾಮಾನ್ಯ ಔಷಧಗಳ ಮಾಹಿತಿ: ಪ್ಯಾರಾಸಿಟಮಾಲ್ - ಜ್ವರ/ನೋವಿಗೆ, 6-8 ಗಂಟೆಗಳಿಗೊಮ್ಮೆ 500mg. ಐಬುಪ್ರೋಫೆನ್ - ಉರಿಯೂತ/ನೋವಿಗೆ, ಆಹಾರದೊಂದಿಗೆ 8 ಗಂಟೆಗಳಿಗೊಮ್ಮೆ 400mg. ಕ್ರೋಸಿನ್ - ಜ್ವರ ಕಡಿಮೆ ಮಾಡುತ್ತದೆ, ಮಕ್ಕಳಿಗೆ ಸುರಕ್ಷಿತ. ನಿರ್ದಿಷ್ಟಪಡಿಸದ ಹೊರತು ಆಹಾರದ ನಂತರ ಔಷಧಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ.";
+    }
+    
+    // Greetings
+    if (lowerMessage.includes("hi") || lowerMessage.includes("hello") || lowerMessage.includes("hey") || lowerMessage.includes("ನಮಸ್ಕಾರ") || lowerMessage.includes("ಹಲೋ")) {
+      return language === "en" 
+        ? `Hello${userName ? ` ${userName}` : ''}! I'm here to help with your health questions. You can ask me about symptoms, medications, doctor appointments, or general health advice. What would you like to know today?`
+        : `ನಮಸ್ಕಾರ${userName ? ` ${userName}` : ''}! ನಿಮ್ಮ ಆರೋಗ್ಯ ಪ್ರಶ್ನೆಗಳಿಗೆ ಸಹಾಯ ಮಾಡಲು ನಾನು ಇಲ್ಲಿದ್ದೇನೆ. ನೀವು ಲಕ್ಷಣಗಳು, ಔಷಧಗಳು, ವೈದ್ಯರ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಅಥವಾ ಸಾಮಾನ್ಯ ಆರೋಗ್ಯ ಸಲಹೆಯ ಬಗ್ಗೆ ಕೇಳಬಹುದು. ಇಂದು ನೀವು ಏನು ತಿಳಿದುಕೊಳ್ಳಲು ಬಯಸುತ್ತೀರಿ?`;
+    }
+    
+    // Default response
+    return language === "en" 
+      ? "I'm here to help with health-related questions. You can ask me about symptoms, medications, doctor appointments, or general health advice. Could you please provide more specific details about what you'd like to know?"
+      : "ಆರೋಗ್ಯ ಸಂಬಂಧಿತ ಪ್ರಶ್ನೆಗಳಿಗೆ ಸಹಾಯ ಮಾಡಲು ನಾನು ಇಲ್ಲಿದ್ದೇನೆ. ನೀವು ಲಕ್ಷಣಗಳು, ಔಷಧಗಳು, ವೈದ್ಯರ ಅಪಾಯಿಂಟ್ಮೆಂಟ್ ಅಥವಾ ಸಾಮಾನ್ಯ ಆರೋಗ್ಯ ಸಲಹೆಯ ಬಗ್ಗೆ ಕೇಳಬಹುದು. ದಯವಿಟ್ಟು ನೀವು ತಿಳಿದುಕೊಳ್ಳಲು ಬಯಸುವ ಬಗ್ಗೆ ಹೆಚ್ಚು ನಿರ್ದಿಷ್ಟ ವಿವರಗಳನ್ನು ನೀಡಬಹುದೇ?";
+  };
+
   const callOpenRouterAPI = async (userMessage: string) => {
-    if (!apiKey) {
+    if (!apiKey || apiKey.trim() === "") {
       throw new Error("API key not provided");
     }
 
     const systemPrompt = language === "en" 
-      ? `You are a helpful health assistant${userName ? ` for ${userName}` : ''}. Provide practical health advice, help with symptoms, medicine information, and doctor appointments. Keep responses concise and helpful. Focus on local healthcare options.`
+      ? `You are a helpful health assistant${userName ? ` for ${userName}` : ''}. Provide practical health advice, help with symptoms, medicine information, and doctor appointments. Keep responses concise and helpful. Focus on local healthcare options in Hassan, Karnataka.`
       : `ನೀವು${userName ? ` ${userName} ಗೆ` : ''} ಸಹಾಯಕಾರಿ ಆರೋಗ್ಯ ಸಹಾಯಕರು. ಪ್ರಾಯೋಗಿಕ ಆರೋಗ್ಯ ಸಲಹೆ, ಲಕ್ಷಣಗಳೊಂದಿಗೆ ಸಹಾಯ, ಔಷಧ ಮಾಹಿತಿ ಮತ್ತು ವೈದ್ಯರ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗಳನ್ನು ಒದಗಿಸಿ. ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಸಂಕ್ಷಿಪ್ತ ಮತ್ತು ಸಹಾಯಕವಾಗಿ ಇರಿಸಿ.`;
 
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -140,7 +185,24 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     setIsLoading(true);
 
     try {
-      const aiResponse = await callOpenRouterAPI(messageText);
+      let aiResponse = "";
+      
+      // Try API if key is provided and offline mode is disabled
+      if (apiKey && !useOfflineMode) {
+        try {
+          aiResponse = await callOpenRouterAPI(messageText);
+        } catch (error) {
+          console.error('API call failed, falling back to offline mode:', error);
+          aiResponse = getSmartResponse(messageText);
+          toast({
+            title: language === "en" ? "Using Offline Mode" : "ಆಫ್‌ಲೈನ್ ಮೋಡ್ ಬಳಸಲಾಗುತ್ತಿದೆ",
+            description: language === "en" ? "API unavailable, using demo responses" : "API ಲಭ್ಯವಿಲ್ಲ, ಡೆಮೋ ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಬಳಸಲಾಗುತ್ತಿದೆ"
+          });
+        }
+      } else {
+        // Use offline mode
+        aiResponse = getSmartResponse(messageText);
+      }
       
       const assistantMessage: Message = {
         id: Date.now() + 1,
@@ -151,35 +213,18 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
 
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
-      console.error('API call failed:', error);
+      console.error('Error in handleSendMessage:', error);
       
-      // Fallback to simulated response
-      let response = "";
-      const lowerMessage = messageText.toLowerCase();
-
-      if (lowerMessage.includes("fever") || lowerMessage.includes("ಜ್ವರ")) {
-        response = language === "en" 
-          ? "For fever: Rest well, drink plenty of fluids, and take paracetamol as prescribed. If fever persists for more than 3 days or goes above 102°F, consult Dr. Ramesh at Hassan PHC immediately."
-          : "ಜ್ವರಕ್ಕೆ: ಚೆನ್ನಾಗಿ ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳಿ, ಸಾಕಷ್ಟು ನೀರು ಕುಡಿಯಿರಿ, ಮತ್ತು ನಿರ್ದೇಶಿಸಿದಂತೆ ಪ್ಯಾರಾಸಿಟಮಾಲ್ ತೆಗೆದುಕೊಳ್ಳಿ. ಜ್ವರವು 3 ದಿನಗಳಿಗಿಂತ ಹೆಚ್ಚು ಕಾಲ ಇದ್ದರೆ ಅಥವಾ 102°F ಗಿಂತ ಹೆಚ್ಚಾದರೆ, ತಕ್ಷಣ ಹಾಸನ್ PHC ನಲ್ಲಿ ಡಾ. ರಮೇಶ್ ಅವರನ್ನು ಸಂಪರ್ಕಿಸಿ.";
-      } else {
-        response = language === "en" 
-          ? "I'm having trouble connecting to the AI service. Please check your internet connection or try again later."
-          : "AI ಸೇವೆಗೆ ಸಂಪರ್ಕಿಸುವಲ್ಲಿ ಸಮಸ್ಯೆ ಇದೆ. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ ಅಥವಾ ನಂತರ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.";
-      }
-
       const assistantMessage: Message = {
         id: Date.now() + 1,
         type: "assistant",
-        content: response,
+        content: language === "en" 
+          ? "I'm having trouble processing your request. Please try again or check your internet connection."
+          : "ನಿಮ್ಮ ವಿನಂತಿಯನ್ನು ಪ್ರಕ್ರಿಯೆಗೊಳಿಸುವಲ್ಲಿ ಸಮಸ್ಯೆ ಇದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ ಅಥವಾ ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವನ್ನು ಪರಿಶೀಲಿಸಿ.",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
       setMessages(prev => [...prev, assistantMessage]);
-      
-      toast({
-        title: language === "en" ? "Connection Issue" : "ಸಂಪರ್ಕ ಸಮಸ್ಯೆ",
-        description: language === "en" ? "Using offline mode" : "ಆಫ್‌ಲೈನ್ ಮೋಡ್ ಬಳಸಲಾಗುತ್ತಿದೆ"
-      });
     } finally {
       setIsLoading(false);
     }
@@ -208,33 +253,71 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
     handleSendMessage(question);
   };
 
+  const handleSaveApiKey = () => {
+    setUseOfflineMode(false);
+    setShowSettings(false);
+    toast({
+      title: language === "en" ? "API Key Saved" : "API ಕೀ ಉಳಿಸಲಾಗಿದೆ",
+      description: language === "en" ? "Now using AI responses" : "ಈಗ AI ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಬಳಸಲಾಗುತ್ತಿದೆ"
+    });
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto h-[calc(100vh-120px)] flex flex-col">
-      {/* Settings - Only shown when toggled */}
+      {/* Status indicator */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {useOfflineMode ? (
+            <div className="flex items-center gap-2 text-amber-600 bg-amber-50 px-3 py-1 rounded-full text-sm">
+              <AlertCircle className="h-4 w-4" />
+              {currentText.offlineMode}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-green-600 bg-green-50 px-3 py-1 rounded-full text-sm">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              {language === "en" ? "AI Mode Active" : "AI ಮೋಡ್ ಸಕ್ರಿಯ"}
+            </div>
+          )}
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setShowSettings(!showSettings)}
+          className="text-gray-400 hover:text-gray-600"
+        >
+          <Settings className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Settings */}
       {showSettings && (
         <Card className="mb-4">
           <CardContent className="p-4">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-sm font-medium">{currentText.title}</h3>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  {currentText.apiKeyLabel}
+                </label>
+                <Input
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="sk-or-v1-..."
+                  className="text-sm"
+                />
+                <p className="text-xs text-gray-500">
+                  {language === "en" 
+                    ? "Get your free API key from openrouter.ai to enable AI responses"
+                    : "AI ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು openrouter.ai ನಿಂದ ನಿಮ್ಮ ಉಚಿತ API ಕೀ ಪಡೆಯಿರಿ"}
+                </p>
+              </div>
               <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowSettings(false)}
+                onClick={handleSaveApiKey}
+                disabled={!apiKey.trim()}
+                className="w-full bg-green-600 hover:bg-green-700"
               >
-                <Settings className="h-4 w-4" />
+                {currentText.saveApiKey}
               </Button>
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs text-gray-600">
-                {language === "en" ? "OpenRouter API Key:" : "OpenRouter API ಕೀ:"}
-              </label>
-              <Input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="sk-or-v1-..."
-                className="text-xs"
-              />
             </div>
           </CardContent>
         </Card>
@@ -242,17 +325,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
 
       {/* Quick Questions */}
       <div className="mb-4">
-        <div className="flex justify-between items-center mb-2">
-          <h3 className="text-sm font-medium text-gray-700">{currentText.quickQuestions}</h3>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setShowSettings(!showSettings)}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <Settings className="h-4 w-4" />
-          </Button>
-        </div>
+        <h3 className="text-sm font-medium text-gray-700 mb-2">{currentText.quickQuestions}</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
           {quickQuestions.map((q) => (
             <Button
@@ -287,7 +360,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
               <div className="text-xs opacity-70 mb-1">
                 {msg.type === "user" ? currentText.you : currentText.assistant}
               </div>
-              <p className="text-sm">{msg.content}</p>
+              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
               <div className="text-xs opacity-70 mt-1">{msg.timestamp}</div>
             </div>
           </div>
