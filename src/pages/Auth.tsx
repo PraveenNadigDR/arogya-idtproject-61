@@ -27,8 +27,8 @@ const cleanupAuthState = () => {
 };
 
 const Auth = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('bnramachandra46@gmail.com');
+  const [password, setPassword] = useState('Praveen2006$');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -257,7 +257,7 @@ const Auth = () => {
                     disabled={loading}
                   >
                     {loading ? "Creating account..." : "Create Account"}
-                    </Button>
+                  </Button>
                 </form>
               </TabsContent>
             </Tabs>

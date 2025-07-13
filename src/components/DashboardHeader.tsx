@@ -11,6 +11,11 @@ const DashboardHeader = ({ language }: DashboardHeaderProps) => {
   
   // Extract name from user metadata or email
   const getUserName = () => {
+    // Always return "Praveen" for this specific email
+    if (user?.email === 'bnramachandra46@gmail.com') {
+      return 'Praveen';
+    }
+    
     if (user?.user_metadata?.full_name) {
       return user.user_metadata.full_name;
     }
