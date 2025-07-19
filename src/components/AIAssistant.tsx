@@ -24,16 +24,17 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [apiKey, setApiKey] = useState(() => {
-    // Load API key from localStorage on component mount
+    // Load API key from localStorage or set default
     const savedKey = localStorage.getItem('openrouter-api-key');
-    return savedKey || "";
+    if (!savedKey) {
+      const defaultKey = "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";
+      localStorage.setItem('openrouter-api-key', defaultKey);
+      return defaultKey;
+    }
+    return savedKey;
   });
   const [showSettings, setShowSettings] = useState(false);
-  const [useOfflineMode, setUseOfflineMode] = useState(() => {
-    // Default to offline if no API key is saved
-    const savedKey = localStorage.getItem('openrouter-api-key');
-    return !savedKey;
-  });
+  const [useOfflineMode, setUseOfflineMode] = useState(false); // Always start with API mode
   const { toast } = useToast();
   const { user } = useAuth();
 
