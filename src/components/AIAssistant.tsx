@@ -23,9 +23,17 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const [message, setMessage] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState("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");
+  const [apiKey, setApiKey] = useState(() => {
+    // Load API key from localStorage on component mount
+    const savedKey = localStorage.getItem('openrouter-api-key');
+    return savedKey || "";
+  });
   const [showSettings, setShowSettings] = useState(false);
-  const [useOfflineMode, setUseOfflineMode] = useState(false); // API key provided, use AI mode
+  const [useOfflineMode, setUseOfflineMode] = useState(() => {
+    // Default to offline if no API key is saved
+    const savedKey = localStorage.getItem('openrouter-api-key');
+    return !savedKey;
+  });
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -254,11 +262,20 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   };
 
   const handleSaveApiKey = () => {
-    setUseOfflineMode(false);
+    // Save API key to localStorage
+    if (apiKey.trim()) {
+      localStorage.setItem('openrouter-api-key', apiKey.trim());
+      setUseOfflineMode(false);
+    } else {
+      localStorage.removeItem('openrouter-api-key');
+      setUseOfflineMode(true);
+    }
     setShowSettings(false);
     toast({
-      title: language === "en" ? "API Key Saved" : "API ಕೀ ಉಳಿಸಲಾಗಿದೆ",
-      description: language === "en" ? "Now using AI responses" : "ಈಗ AI ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಬಳಸಲಾಗುತ್ತಿದೆ"
+      title: language === "en" ? "Settings Saved" : "ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಉಳಿಸಲಾಗಿದೆ",
+      description: apiKey.trim() 
+        ? (language === "en" ? "Now using AI responses" : "ಈಗ AI ಪ್ರತಿಕ್ರಿಯೆಗಳನ್ನು ಬಳಸಲಾಗುತ್ತಿದೆ")
+        : (language === "en" ? "Using offline demo mode" : "ಆಫ್‌ಲೈನ್ ಡೆಮೋ ಮೋಡ್ ಬಳಸಲಾಗುತ್ತಿದೆ")
     });
   };
 
