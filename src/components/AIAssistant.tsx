@@ -23,7 +23,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const [message, setMessage] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState("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");
+  const [apiKey, setApiKey] = useState("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");
   const [showSettings, setShowSettings] = useState(false);
   const [useOfflineMode, setUseOfflineMode] = useState(false); // API key provided, use AI mode
   const { toast } = useToast();
