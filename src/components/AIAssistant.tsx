@@ -23,18 +23,9 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   const [message, setMessage] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState(() => {
-    // Load API key from localStorage or set default
-    const savedKey = localStorage.getItem('openrouter-api-key');
-    if (!savedKey) {
-      const defaultKey = "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";
-      localStorage.setItem('openrouter-api-key', defaultKey);
-      return defaultKey;
-    }
-    return savedKey;
-  });
+  const [apiKey, setApiKey] = useState("");
   const [showSettings, setShowSettings] = useState(false);
-  const [useOfflineMode, setUseOfflineMode] = useState(false); // Always start with API mode
+  const [useOfflineMode, setUseOfflineMode] = useState(true); // Always use demo mode
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -103,6 +94,22 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
 
   const getSmartResponse = (userMessage: string) => {
     const lowerMessage = userMessage.toLowerCase();
+    
+    // What to eat during fever
+    if (lowerMessage.includes("what to eat") && (lowerMessage.includes("fever") || lowerMessage.includes("ಜ್ವರ")) || 
+        lowerMessage.includes("fever diet") || lowerMessage.includes("food during fever")) {
+      return language === "en" 
+        ? "Foods to eat during fever: 1) Drink plenty of fluids - water, coconut water, herbal teas. 2) Light foods - rice porridge, khichdi, clear soups. 3) Fresh fruits - oranges, pomegranates, watermelon for vitamin C. 4) Ginger tea for nausea. 5) Avoid dairy, spicy, and oily foods. 6) Small frequent meals instead of large ones. Stay hydrated and rest well."
+        : "ಜ್ವರದ ಸಮಯದಲ್ಲಿ ತಿನ್ನಬೇಕಾದ ಆಹಾರ: 1) ಸಾಕಷ್ಟು ದ್ರವಗಳು - ನೀರು, ತೆಂಗಿನ ನೀರು, ಹರ್ಬಲ್ ಟೀ. 2) ಹಗುರ ಆಹಾರ - ಅನ್ನದ ಗಂಜಿ, ಖಿಚಡಿ, ಸಾರು. 3) ತಾಜಾ ಹಣ್ಣುಗಳು - ಕಿತ್ತಳೆ, ದಾಳಿಂಬೆ, ಕಲ್ಲಂಗಡಿ. 4) ವಾಂತಿಗೆ ಶುಂಠಿ ಚಹಾ. 5) ಹಾಲು, ಖಾರ, ಎಣ್ಣೆಯುಕ್ತ ಆಹಾರ ತಪ್ಪಿಸಿ.";
+    }
+    
+    // Paracetamol information
+    if (lowerMessage.includes("paracetamol") || lowerMessage.includes("acetaminophen") || 
+        lowerMessage.includes("what is paracetamol") || lowerMessage.includes("paracetamol used for")) {
+      return language === "en" 
+        ? "Paracetamol uses: 1) Reduces fever effectively. 2) Relieves mild to moderate pain (headache, toothache, muscle pain). 3) Safe for children and adults. 4) Dosage: Adults 500-1000mg every 4-6 hours (max 4g/day). 5) Take with water, can be taken with or without food. 6) Side effects: Rare when used correctly. 7) Warning: Do not exceed recommended dose - can cause liver damage."
+        : "ಪ್ಯಾರಾಸಿಟಮಾಲ್ ಬಳಕೆಗಳು: 1) ಜ್ವರವನ್ನು ಪರಿಣಾಮಕಾರಿಯಾಗಿ ಕಡಿಮೆ ಮಾಡುತ್ತದೆ. 2) ಸೌಮ್ಯದಿಂದ ಮಧ್ಯಮ ನೋವು ನಿವಾರಿಸುತ್ತದೆ. 3) ಮಕ್ಕಳು ಮತ್ತು ವಯಸ್ಕರಿಗೆ ಸುರಕ್ಷಿತ. 4) ಪ್ರಮಾಣ: ವಯಸ್ಕರಿಗೆ 4-6 ಗಂಟೆಗಳಿಗೊಮ್ಮೆ 500-1000mg. 5) ಆಹಾರದೊಂದಿಗೆ ಅಥವಾ ಇಲ್ಲದೆ ತೆಗೆದುಕೊಳ್ಳಬಹುದು. 6) ಎಚ್ಚರಿಕೆ: ಶಿಫಾರಸು ಮೀರಬೇಡಿ.";
+    }
     
     // Fever and headache
     if (lowerMessage.includes("fever") || lowerMessage.includes("headache") || lowerMessage.includes("ಜ್ವರ") || lowerMessage.includes("ತಲೆನೋವು")) {
