@@ -53,16 +53,16 @@ const Index = () => {
       
       <Header onNavigateToProfile={handleNavigateToProfile} />
       
-      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-7xl relative z-10">
+      <div className="container mx-auto px-2 sm:px-4 lg:px-6 py-2 sm:py-4 lg:py-8 max-w-7xl relative z-10">
         <div className="animate-slide-down">
           <DashboardHeader language={language} />
         </div>
 
         {/* Enhanced Main Content Tabs - Improved Mobile Design */}
-        <div className="mb-4 sm:mb-8">
+        <div className="mb-3 sm:mb-6 lg:mb-8">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <div className="flex justify-center mb-6 sm:mb-8 px-1 sm:px-2">
-              <TabsList className="grid grid-cols-4 bg-white/95 backdrop-blur-2xl border-0 shadow-2xl rounded-2xl sm:rounded-3xl p-1 sm:p-1.5 ring-1 ring-black/5 w-full max-w-xs sm:max-w-2xl gap-0.5 sm:gap-1 relative overflow-hidden">
+            <div className="flex justify-center mb-4 sm:mb-6 lg:mb-8 px-1 sm:px-2">
+              <TabsList className="grid grid-cols-4 bg-white/95 backdrop-blur-2xl border-0 shadow-2xl rounded-xl sm:rounded-2xl lg:rounded-3xl p-1 sm:p-1.5 ring-1 ring-black/5 w-full max-w-xs sm:max-w-lg lg:max-w-2xl gap-0.5 sm:gap-1 relative overflow-hidden">
                 {/* Enhanced background gradient for active state */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 via-purple-50/50 to-emerald-50/50 rounded-2xl sm:rounded-3xl"></div>
                 
@@ -122,23 +122,23 @@ const Index = () => {
             </div>
 
             <TabsContent value="dashboard" className="mt-0">
-              <div className="animate-fade-in-up space-y-4 sm:space-y-8">
+              <div className="animate-fade-in-up space-y-3 sm:space-y-6 lg:space-y-8">
                 <MainFeatureCards 
                   language={language} 
                   onNavigateToTab={navigateToTab}
                   onVideoCall={handleVideoCall}
                 />
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6 lg:gap-8">
                   {/* Left Column */}
-                  <div className="space-y-4 sm:space-y-8">
+                  <div className="space-y-3 sm:space-y-6 lg:space-y-8">
                     <div className="transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                       <QuickHealthCheck language={language} />
                     </div>
                   </div>
                   
                   {/* Right Column */}
-                  <div className="space-y-4 sm:space-y-8">
+                  <div className="space-y-3 sm:space-y-6 lg:space-y-8">
                     <div className="transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                       <HealthTips language={language} />
                     </div>
@@ -166,9 +166,9 @@ const Index = () => {
             </TabsContent>
 
             <TabsContent value="profile" className="mt-0 animate-fade-in-up">
-              <div className="space-y-4 sm:space-y-8">
+              <div className="space-y-3 sm:space-y-6 lg:space-y-8">
                 <Profile language={language} />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6 lg:gap-8">
                   <div className="transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                     <FamilyHealth language={language} />
                   </div>

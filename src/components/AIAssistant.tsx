@@ -288,19 +288,21 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto h-[calc(100vh-120px)] flex flex-col">
+    <div className="w-full max-w-4xl mx-auto h-[calc(100vh-120px)] flex flex-col px-2 sm:px-4">
       {/* Status indicator */}
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-3 sm:mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           {useOfflineMode ? (
-            <div className="flex items-center gap-2 text-amber-600 bg-amber-50 px-3 py-1 rounded-full text-sm">
-              <AlertCircle className="h-4 w-4" />
-              {currentText.offlineMode}
+            <div className="flex items-center gap-2 text-amber-600 bg-amber-50 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
+              <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">{currentText.offlineMode}</span>
+              <span className="sm:hidden">Demo Mode</span>
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-green-600 bg-green-50 px-3 py-1 rounded-full text-sm">
+            <div className="flex items-center gap-2 text-green-600 bg-green-50 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              {language === "en" ? "AI Mode Active" : "AI ಮೋಡ್ ಸಕ್ರಿಯ"}
+              <span className="hidden sm:inline">{language === "en" ? "AI Mode Active" : "AI ಮೋಡ್ ಸಕ್ರಿಯ"}</span>
+              <span className="sm:hidden">AI Mode</span>
             </div>
           )}
         </div>
@@ -308,7 +310,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
           variant="ghost"
           size="sm"
           onClick={() => setShowSettings(!showSettings)}
-          className="text-gray-400 hover:text-gray-600"
+          className="text-gray-400 hover:text-gray-600 self-end sm:self-auto"
         >
           <Settings className="h-4 w-4" />
         </Button>
@@ -349,9 +351,9 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       )}
 
       {/* Quick Questions */}
-      <div className="mb-4">
+      <div className="mb-3 sm:mb-4">
         <h3 className="text-sm font-medium text-gray-700 mb-2">{currentText.quickQuestions}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {quickQuestions.map((q) => (
             <Button
               key={q.id}
@@ -359,24 +361,24 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
               size="sm"
               onClick={() => handleQuickQuestion(q.question)}
               disabled={isLoading}
-              className="text-left justify-start border-green-200 text-green-700 hover:bg-green-50"
+              className="text-left justify-start border-green-200 text-green-700 hover:bg-green-50 text-xs sm:text-sm p-2 sm:p-3 h-auto"
             >
-              <q.icon className="h-4 w-4 mr-2" />
-              {q.question}
+              <q.icon className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+              <span className="truncate">{q.question}</span>
             </Button>
           ))}
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-3 mb-4 p-4 bg-gray-50 rounded-lg">
+      <div className="flex-1 overflow-y-auto space-y-2 sm:space-y-3 mb-3 sm:mb-4 p-2 sm:p-4 bg-gray-50 rounded-lg">
         {messages.map((msg) => (
           <div
             key={msg.id}
             className={`flex ${msg.type === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
-              className={`max-w-[80%] p-3 rounded-lg ${
+              className={`max-w-[85%] sm:max-w-[80%] p-2 sm:p-3 rounded-lg ${
                 msg.type === "user"
                   ? "bg-green-600 text-white"
                   : "bg-white border border-gray-200 text-gray-800"
@@ -385,14 +387,14 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
               <div className="text-xs opacity-70 mb-1">
                 {msg.type === "user" ? currentText.you : currentText.assistant}
               </div>
-              <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+              <p className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</p>
               <div className="text-xs opacity-70 mt-1">{msg.timestamp}</div>
             </div>
           </div>
         ))}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-white border border-gray-200 text-gray-800 p-3 rounded-lg">
+            <div className="bg-white border border-gray-200 text-gray-800 p-2 sm:p-3 rounded-lg">
               <div className="text-xs opacity-70 mb-1">{currentText.assistant}</div>
               <div className="flex items-center gap-1">
                 <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
@@ -405,7 +407,7 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
       </div>
 
       {/* Input */}
-      <div className="flex gap-2">
+      <div className="flex gap-1 sm:gap-2">
         <div className="flex-1 relative">
           <Input
             placeholder={currentText.typePlaceholder}
@@ -413,26 +415,26 @@ const AIAssistant = ({ language }: AIAssistantProps) => {
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && !isLoading && handleSendMessage()}
             disabled={isLoading}
-            className="pr-12"
+            className="pr-10 sm:pr-12 text-sm sm:text-base h-10 sm:h-11"
           />
           <Button
             size="sm"
             variant="ghost"
             onClick={handleVoiceInput}
             disabled={isListening || isLoading}
-            className={`absolute right-1 top-1 h-8 w-8 p-0 ${
+            className={`absolute right-0.5 sm:right-1 top-0.5 sm:top-1 h-7 w-7 sm:h-8 sm:w-8 p-0 ${
               isListening ? "text-red-600 animate-pulse" : "text-gray-400 hover:text-green-600"
             }`}
           >
-            <Mic className="h-4 w-4" />
+            <Mic className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </div>
         <Button
           onClick={() => handleSendMessage()}
           disabled={!message.trim() || isLoading}
-          className="bg-green-600 hover:bg-green-700"
+          className="bg-green-600 hover:bg-green-700 px-3 sm:px-4 h-10 sm:h-11"
         >
-          <Send className="h-4 w-4" />
+          <Send className="h-3 w-3 sm:h-4 sm:w-4" />
         </Button>
       </div>
 

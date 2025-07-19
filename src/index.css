@@ -306,3 +306,64 @@ h1, h2, h3, h4, h5, h6 {
 p {
   line-height: 1.7;
 }
+
+/* Enhanced Responsive Design & Mobile Optimizations */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  /* Ensure cards are mobile-friendly */
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  /* Mobile-specific animations */
+  .mobile-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  /* Improve touch targets */
+  button {
+    min-height: 44px;
+  }
+  
+  /* Better text sizing for mobile */
+  .text-responsive {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+  }
+  
+  /* Mobile-first spacing */
+  .space-y-mobile > * + * {
+    margin-top: 0.75rem;
+  }
+  
+  /* Better readability on small screens */
+  body {
+    font-size: 14px;
+  }
+  
+  /* Ensure scrollable areas work well on mobile */
+  .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Ensure proper sizing on all devices */
+@media (min-width: 768px) {
+  .space-y-mobile > * + * {
+    margin-top: 1.5rem;
+  }
+  
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1024px) {
+  .space-y-mobile > * + * {
+    margin-top: 2rem;
+  }
+}
