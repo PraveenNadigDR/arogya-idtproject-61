@@ -9,20 +9,20 @@ const LanguageSelector = ({ language, onLanguageChange }: LanguageSelectorProps)
     <div className="mt-8 text-center">
       <button
         onClick={() => onLanguageChange("en")}
-        className={`px-4 py-2 rounded-full ${
+        className={`px-4 py-2 rounded-full transition-colors mr-2 ${
           language === "en"
-            ? "bg-green-600 text-white"
-            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-        } mr-2`}
+            ? "bg-primary text-primary-foreground"
+            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+        }`}
       >
         English
       </button>
       <button
         onClick={() => onLanguageChange("kn")}
-        className={`px-4 py-2 rounded-full ${
+        className={`px-4 py-2 rounded-full transition-colors ${
           language === "kn"
-            ? "bg-green-600 text-white"
-            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            ? "bg-primary text-primary-foreground"
+            : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
         }`}
       >
         ಕನ್ನಡ

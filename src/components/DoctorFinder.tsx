@@ -89,7 +89,7 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
       {/* No results message */}
       {filteredDoctors.length === 0 && (
         <Card className="text-center p-6">
-          <p className="text-gray-500">
+          <p className="text-muted-foreground">
             {language === "en" ? "No doctors found. Try adjusting your search." : "ವೈದ್ಯರು ಸಿಗಲಿಲ್ಲ. ನಿಮ್ಮ ಹುಡುಕಾಟ ಬದಲಾಯಿಸಿ ಪ್ರಯತ್ನಿಸಿ."}
           </p>
         </Card>
@@ -99,9 +99,9 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
 
       {/* Appointment Booking Dialog */}
       <Dialog open={showBooking} onOpenChange={setShowBooking}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle></DialogTitle>
+        <DialogContent className="max-w-md bg-background border border-border p-0">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Book Appointment</DialogTitle>
           </DialogHeader>
           {selectedDoctor && (
             <AppointmentBooking

@@ -129,29 +129,16 @@ const LocationTracker = ({ language }: LocationTrackerProps) => {
   const getAddressFromCoordinates = async (lat: number, lng: number): Promise<string> => {
     try {
       setIsLoadingAddress(true);
+      // Use Nominatim directly as primary service (no API key required)
       const response = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=YOUR_API_KEY&language=${language === 'kn' ? 'kn' : 'en'}&pretty=1`
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=${language === 'kn' ? 'kn' : 'en'}`
       );
       
-      if (!response.ok) {
-        // Fallback to Nominatim if OpenCage fails
-        const nominatimResponse = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=${language === 'kn' ? 'kn' : 'en'}`
-        );
-        
-        if (nominatimResponse.ok) {
-          const data = await nominatimResponse.json();
-          return data.display_name || currentText.addressNotFound;
-        }
-        
-        throw new Error('Geocoding failed');
-      }
-      
-      const data = await response.json();
-      if (data.results && data.results.length > 0) {
-        return data.results[0].formatted;
+      if (response.ok) {
+        const data = await response.json();
+        return data.display_name || currentText.addressNotFound;
       } else {
-        throw new Error('No address found');
+        throw new Error('Geocoding failed');
       }
     } catch (error) {
       console.log('Geocoding error:', error);

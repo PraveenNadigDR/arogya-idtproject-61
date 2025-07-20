@@ -35,16 +35,17 @@ const EmergencyButton = ({ language }: EmergencyButtonProps) => {
   };
 
   return (
-    <Card className={`border-2 ${isEmergencyActive ? 'border-red-500 bg-red-50' : 'border-red-300 bg-red-50'} transition-all duration-300`}>
+    <Card className={`border-2 ${isEmergencyActive ? 'border-destructive bg-destructive/10' : 'border-destructive/50 bg-destructive/5'} transition-all duration-300`}>
       <CardContent className="p-4">
         <div className="text-center">
           <Button
             onClick={handleEmergency}
             disabled={isEmergencyActive}
+            variant="destructive"
             className={`w-full h-16 text-lg font-bold ${
               isEmergencyActive 
-                ? 'bg-red-700 hover:bg-red-800 animate-pulse' 
-                : 'bg-red-600 hover:bg-red-700'
+                ? 'animate-pulse' 
+                : ''
             } transition-all duration-300`}
           >
             <Phone className="h-6 w-6 mr-2" />
@@ -55,17 +56,17 @@ const EmergencyButton = ({ language }: EmergencyButtonProps) => {
           </Button>
 
           <div className="grid grid-cols-2 gap-2 mt-3">
-            <div className="flex items-center justify-center gap-1 text-xs text-red-700">
+            <div className="flex items-center justify-center gap-1 text-xs text-destructive">
               <MapPin className="h-3 w-3" />
               <span>{language === "en" ? "GPS Shared" : "GPS ಹಂಚಿಕೊಂಡಿದೆ"}</span>
             </div>
-            <div className="flex items-center justify-center gap-1 text-xs text-red-700">
+            <div className="flex items-center justify-center gap-1 text-xs text-destructive">
               <Users className="h-3 w-3" />
               <span>{language === "en" ? "Family Notified" : "ಕುಟುಂಬಕ್ಕೆ ತಿಳಿಸಲಾಗಿದೆ"}</span>
             </div>
           </div>
 
-          <p className="text-xs text-red-600 mt-2">
+          <p className="text-xs text-destructive/80 mt-2">
             {language === "en" 
               ? "Press for immediate medical assistance • SMS backup enabled"
               : "ತಕ್ಷಣದ ವೈದ್ಯಕೀಯ ಸಹಾಯಕ್ಕಾಗಿ ಒತ್ತಿರಿ • SMS ಬ್ಯಾಕಪ್ ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ"

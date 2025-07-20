@@ -58,7 +58,7 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Hospital className="h-5 w-5 text-red-500" />
+            <Hospital className="h-5 w-5 text-destructive" />
             <CardTitle className="text-lg">{currentText.title}</CardTitle>
           </div>
           <Button
@@ -75,15 +75,15 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
             {currentText.getLocation}
           </Button>
         </div>
-        <p className="text-sm text-gray-600">{currentText.subtitle}</p>
+        <p className="text-sm text-muted-foreground">{currentText.subtitle}</p>
         {isLoadingHospitals && (
-          <div className="flex items-center gap-2 text-sm text-blue-600">
+          <div className="flex items-center gap-2 text-sm text-primary">
             <Loader2 className="h-4 w-4 animate-spin" />
             {loadingText}
           </div>
         )}
         {userLocation && (
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-muted-foreground">
             Your location: {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}
           </div>
         )}
@@ -95,14 +95,14 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
               <Card key={hospital.id} className="p-4">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-red-600">{hospital.name}</h3>
-                    <p className="text-sm text-gray-600">
+                    <h3 className="font-semibold text-destructive">{hospital.name}</h3>
+                    <p className="text-sm text-muted-foreground">
                       {hospital.type === 'hospital' ? currentText.hospital : currentText.clinic}
                     </p>
                     {hospital.address && (
-                      <p className="text-xs text-gray-500 mt-1">{hospital.address}</p>
+                      <p className="text-xs text-muted-foreground/80 mt-1">{hospital.address}</p>
                     )}
-                    <div className="flex items-center gap-1 text-xs text-gray-500 mt-1">
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground/80 mt-1">
                       <MapPin className="h-3 w-3" />
                       <span>{hospital.lat.toFixed(4)}, {hospital.lng.toFixed(4)}</span>
                     </div>
@@ -111,7 +111,6 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
                     <Button
                       size="sm"
                       onClick={() => openDirections(hospital.lat, hospital.lng, hospital.name)}
-                      className="bg-blue-500 hover:bg-blue-600"
                     >
                       {currentText.getDirections}
                     </Button>
@@ -132,7 +131,7 @@ const HospitalMap = ({ language }: HospitalMapProps) => {
           </div>
         ) : (
           !isLoadingHospitals && (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted-foreground">
               <Hospital className="h-12 w-12 mx-auto mb-4 opacity-50" />
               <p>{language === "en" ? "Click 'Get My Location' to find nearby hospitals" : "ಹತ್ತಿರದ ಆಸ್ಪತ್ರೆಗಳನ್ನು ಹುಡುಕಲು 'ನನ್ನ ಸ್ಥಳ ಪಡೆಯಿರಿ' ಕ್ಲಿಕ್ ಮಾಡಿ"}</p>
             </div>
