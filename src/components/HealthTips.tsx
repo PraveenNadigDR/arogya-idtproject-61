@@ -59,69 +59,91 @@ const HealthTips = ({ language }: HealthTipsProps) => {
   const healthTips = [
     {
       id: 1,
-      category: "seasonal",
-      title: language === "en" ? "Monsoon Health Care" : "ಮಾನ್ಸೂನ್ ಆರೋಗ್ಯ ಆರೈಕೆ",
+      category: "exercise",
+      title: language === "en" ? "Heart-Healthy Walking for Hassan Residents" : "ಹಾಸನ್ ನಿವಾಸಿಗಳಿಗೆ ಹೃದಯ-ಆರೋಗ್ಯಕರ ನಡಿಗೆ",
       content: language === "en" 
-        ? "Drink turmeric milk before bed to boost immunity. Keep mosquito breeding areas clean."
-        : "ರೋಗನಿರೋಧಕ ಶಕ್ತಿ ಹೆಚ್ಚಿಸಲು ಮಲಗುವ ಮೊದಲು ಅರಿಶಿನ ಹಾಲು ಕುಡಿಯಿರಿ. ಸೊಳ್ಳೆ ಸಾಕಣೆ ಪ್ರದೇಶಗಳನ್ನು ಸ್ವಚ್ಛವಾಗಿಡಿ.",
-      icon: "🌧️",
+        ? "Walk 30 minutes daily in Hassan's parks like Gorur Dam area. Early morning walking strengthens heart muscles and reduces heart attack risk."
+        : "ಗೋರೂರ್ ಅಣೆಕಟ್ಟು ಪ್ರದೇಶದಂತಹ ಹಾಸನ್‌ನ ಉದ್ಯಾನವನಗಳಲ್ಲಿ ದಿನಕ್ಕೆ ೩೦ ನಿಮಿಷ ನಡೆಯಿರಿ. ಬೆಳಗಿನ ನಡಿಗೆ ಹೃದಯ ಸ್ನಾಯುಗಳನ್ನು ಬಲಪಡಿಸುತ್ತದೆ ಮತ್ತು ಹೃದಯಾಘಾತದ ಅಪಾಯವನ್ನು ಕಡಿಮೆ ಮಾಡುತ್ತದೆ.",
+      icon: "💓",
       urgency: "high",
-      likes: 245
+      likes: 412
     },
     {
       id: 2,
       category: "diet",
-      title: language === "en" ? "Ragi for Diabetes" : "ಮಧುಮೇಹಕ್ಕೆ ರಾಗಿ",
+      title: language === "en" ? "Hassan-Special Heart Diet" : "ಹಾಸನ್-ವಿಶೇಷ ಹೃದಯ ಆಹಾರ",
       content: language === "en" 
-        ? "Include ragi (finger millet) in your diet. It helps control blood sugar naturally."
-        : "ನಿಮ್ಮ ಆಹಾರದಲ್ಲಿ ರಾಗಿಯನ್ನು ಸೇರಿಸಿ. ಇದು ರಕ್ತದಲ್ಲಿನ ಸಕ್ಕರೆಯನ್ನು ನೈಸರ್ಗಿಕವಾಗಿ ನಿಯಂತ್ರಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
-      icon: "🌾",
-      urgency: "medium",
-      likes: 189
+        ? "Include local ragi, jowar, and green leafy vegetables. Limit oil to 3 tsp/day. Avoid processed foods and excess salt."
+        : "ಸ್ಥಳೀಯ ರಾಗಿ, ಜೋಳ ಮತ್ತು ಹಸಿರು ಎಲೆಕೋಸು ತರಕಾರಿಗಳನ್ನು ಸೇರಿಸಿ. ಎಣ್ಣೆಯನ್ನು ದಿನಕ್ಕೆ ೩ ಚಮಚಕ್ಕೆ ಸೀಮಿತಗೊಳಿಸಿ. ಸಂಸ್ಕರಿಸಿದ ಆಹಾರ ಮತ್ತು ಅಧಿಕ ಉಪ್ಪನ್ನು ತಪ್ಪಿಸಿ.",
+      icon: "🍃",
+      urgency: "high",
+      likes: 324
     },
     {
       id: 3,
-      category: "home",
-      title: language === "en" ? "Tulsi for Cough" : "ಕೆಮ್ಮಿಗೆ ತುಳಸಿ",
+      category: "mental",
+      title: language === "en" ? "Stress Management for Heart Health" : "ಹೃದಯ ಆರೋಗ್ಯಕ್ಕಾಗಿ ಒತ್ತಡ ನಿರ್ವಹಣೆ",
       content: language === "en" 
-        ? "Boil tulsi leaves with ginger and honey. Drink warm for cough relief."
-        : "ತುಳಸಿ ಎಲೆಗಳನ್ನು ಶುಂಠಿ ಮತ್ತು ಜೇನಿನೊಂದಿಗೆ ಕುದಿಸಿ. ಕೆಮ್ಮು ಪರಿಹಾರಕ್ಕಾಗಿ ಬೆಚ್ಚಗಿನ ಅಂದದಲ್ಲಿ ಕುಡಿಯಿರಿ.",
-      icon: "🌿",
-      urgency: "low",
-      likes: 312
+        ? "Practice pranayama 15 minutes daily. Avoid anger and sudden stress. Take breaks during work to reduce heart strain."
+        : "ದಿನಕ್ಕೆ ೧೫ ನಿಮಿಷ ಪ್ರಾಣಾಯಾಮ ಅಭ್ಯಾಸ ಮಾಡಿ. ಕೋಪ ಮತ್ತು ಹಠಾತ್ ಒತ್ತಡವನ್ನು ತಪ್ಪಿಸಿ. ಹೃದಯದ ಒತ್ತಡವನ್ನು ಕಡಿಮೆ ಮಾಡಲು ಕೆಲಸದ ಸಮಯದಲ್ಲಿ ವಿರಾಮ ತೆಗೆದುಕೊಳ್ಳಿ.",
+      icon: "🧘‍♂️",
+      urgency: "high",
+      likes: 289
     },
     {
       id: 4,
-      category: "exercise",
-      title: language === "en" ? "Morning Walk Benefits" : "ಬೆಳಗಿನ ನಡಿಗೆಯ ಪ್ರಯೋಜನಗಳು",
+      category: "home",
+      title: language === "en" ? "Garlic-Honey Heart Remedy" : "ಬೆಳ್ಳುಳ್ಳಿ-ಜೇನು ಹೃದಯ ಔಷಧ",
       content: language === "en" 
-        ? "20 minutes morning walk improves heart health and controls blood pressure."
-        : "೨೦ ನಿಮಿಷಗಳ ಬೆಳಗಿನ ನಡಿಗೆ ಹೃದಯದ ಆರೋಗ್ಯವನ್ನು ಸುಧಾರಿಸುತ್ತದೆ ಮತ್ತು ರಕ್ತದೊತ್ತಡವನ್ನು ನಿಯಂತ್ರಿಸುತ್ತದೆ.",
-      icon: "🚶‍♂️",
+        ? "Consume 2 cloves of raw garlic with honey on empty stomach daily. This helps reduce cholesterol and strengthens heart."
+        : "ದಿನಕ್ಕೆ ಖಾಲಿ ಹೊಟ್ಟೆಯಲ್ಲಿ ಜೇನಿನೊಂದಿಗೆ ೨ ಬೆಳ್ಳುಳ್ಳಿ ಗಿಣ್ಣುಗಳನ್ನು ಸೇವಿಸಿ. ಇದು ಕೊಲೆಸ್ಟ್ರಾಲ್ ಕಡಿಮೆ ಮಾಡಲು ಮತ್ತು ಹೃದಯವನ್ನು ಬಲಪಡಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
+      icon: "🧄",
+      urgency: "medium",
+      likes: 267
+    },
+    {
+      id: 5,
+      category: "seasonal",
+      title: language === "en" ? "Monsoon Heart Care in Hassan" : "ಹಾಸನ್‌ನಲ್ಲಿ ಮಾನ್ಸೂನ್ ಹೃದಯ ಆರೈಕೆ",
+      content: language === "en" 
+        ? "During monsoons, maintain regular exercise indoors. Keep blood pressure medications dry. Avoid heavy meals that strain the heart."
+        : "ಮಾನ್ಸೂನ್ ಸಮಯದಲ್ಲಿ, ಮನೆಯೊಳಗೆ ನಿಯಮಿತ ವ್ಯಾಯಾಮವನ್ನು ಮುಂದುವರಿಸಿ. ರಕ್ತದೊತ್ತಡದ ಔಷಧಿಗಳನ್ನು ಒಣವಾಗಿಡಿ. ಹೃದಯಕ್ಕೆ ಒತ್ತಡ ಉಂಟುಮಾಡುವ ಭಾರೀ ಊಟವನ್ನು ತಪ್ಪಿಸಿ.",
+      icon: "🌧️",
+      urgency: "medium",
+      likes: 201
+    },
+    {
+      id: 6,
+      category: "diet",
+      title: language === "en" ? "Omega-3 Rich Foods for Heart" : "ಹೃದಯಕ್ಕಾಗಿ ಒಮೆಗಾ-೩ ಸಮೃದ್ಧ ಆಹಾರಗಳು",
+      content: language === "en" 
+        ? "Include walnuts, flax seeds, and fish in your diet. These provide omega-3 fatty acids that protect against heart disease."
+        : "ನಿಮ್ಮ ಆಹಾರದಲ್ಲಿ ಅಕ್ರೋಡು, ಅಗಸೆ ಬೀಜಗಳು ಮತ್ತು ಮೀನನ್ನು ಸೇರಿಸಿ. ಇವು ಹೃದಯ ರೋಗದಿಂದ ರಕ್ಷಿಸುವ ಒಮೆಗಾ-೩ ಕೊಬ್ಬಿನಾಮ್ಲಗಳನ್ನು ಒದಗಿಸುತ್ತವೆ.",
+      icon: "🐟",
+      urgency: "medium",
+      likes: 186
+    },
+    {
+      id: 7,
+      category: "exercise",
+      title: language === "en" ? "Yoga for Heart Strength" : "ಹೃದಯ ಬಲಕ್ಕಾಗಿ ಯೋಗ",
+      content: language === "en" 
+        ? "Practice gentle yoga poses like Sukhasana and Bhujangasana. These improve heart circulation and reduce blood pressure."
+        : "ಸುಖಾಸನ ಮತ್ತು ಭುಜಂಗಾಸನದಂತಹ ಸೌಮ್ಯ ಯೋಗಾಸನಗಳನ್ನು ಅಭ್ಯಾಸ ಮಾಡಿ. ಇವು ಹೃದಯ ಪರಿಚಲನೆಯನ್ನು ಸುಧಾರಿಸುತ್ತವೆ ಮತ್ತು ರಕ್ತದೊತ್ತಡವನ್ನು ಕಡಿಮೆ ಮಾಡುತ್ತವೆ.",
+      icon: "🧘‍♀️",
       urgency: "medium",
       likes: 156
     },
     {
-      id: 5,
-      category: "mental",
-      title: language === "en" ? "Stress Relief with Pranayama" : "ಪ್ರಾಣಾಯಾಮದೊಂದಿಗೆ ಒತ್ತಡ ಪರಿಹಾರ",
+      id: 8,
+      category: "home",
+      title: language === "en" ? "Tulsi for Heart Health" : "ಹೃದಯ ಆರೋಗ್ಯಕ್ಕಾಗಿ ತುಳಸಿ",
       content: language === "en" 
-        ? "Practice deep breathing (pranayama) for 10 minutes daily to reduce stress and anxiety."
-        : "ಒತ್ತಡ ಮತ್ತು ಆತಂಕವನ್ನು ಕಡಿಮೆ ಮಾಡಲು ದಿನಕ್ಕೆ ೧೦ ನಿಮಿಷಗಳ ಕಾಲ ಆಳವಾದ ಉಸಿರಾಟ (ಪ್ರಾಣಾಯಾಮ) ಅಭ್ಯಾಸ ಮಾಡಿ.",
-      icon: "🧘‍♀️",
-      urgency: "medium",
-      likes: 198
-    },
-    {
-      id: 6,
-      category: "seasonal",
-      title: language === "en" ? "Summer Hydration" : "ಬೇಸಿಗೆಯ ನೀರಸಿಕೆ",
-      content: language === "en" 
-        ? "Drink tender coconut water and buttermilk to stay hydrated in summer."
-        : "ಬೇಸಿಗೆಯಲ್ಲಿ ನೀರಸಿಕೆಯನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಲು ಎಳೆ ತೆಂಗಿನ ನೀರು ಮತ್ತು ಮಜ್ಜಿಗೆ ಕುಡಿಯಿರಿ.",
-      icon: "🥥",
-      urgency: "high",
-      likes: 267
+        ? "Chew 5-7 fresh tulsi leaves every morning. Tulsi helps reduce cholesterol and strengthens heart muscles naturally."
+        : "ಪ್ರತಿ ಬೆಳಿಗ್ಗೆ ೫-೭ ತಾಜಾ ತುಳಸಿ ಎಲೆಗಳನ್ನು ಅಗಿಯಿರಿ. ತುಳಸಿ ಕೊಲೆಸ್ಟ್ರಾಲ್ ಕಡಿಮೆ ಮಾಡಲು ಮತ್ತು ಹೃದಯ ಸ್ನಾಯುಗಳನ್ನು ನೈಸರ್ಗಿಕವಾಗಿ ಬಲಪಡಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
+      icon: "🌿",
+      urgency: "low",
+      likes: 234
     }
   ];
 
@@ -193,29 +215,86 @@ const HealthTips = ({ language }: HealthTipsProps) => {
         ))}
       </div>
 
-      {/* Today's Special Tip */}
-      <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+      {/* Today's Special Tip - Hassan Heart Health Focus */}
+      <Card className="bg-gradient-to-r from-red-50 to-pink-50 border-red-200">
         <CardHeader className="pb-3">
-          <CardTitle className="text-md text-blue-800">
-            ⭐ {currentText.todaysTip}
+          <CardTitle className="text-md text-red-800 flex items-center gap-2">
+            <Heart className="h-5 w-5" />
+            💓 {currentText.todaysTip} - {language === "en" ? "Hassan District" : "ಹಾಸನ್ ಜಿಲ್ಲೆ"}
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="flex items-start gap-3">
-            <div className="text-2xl">🌟</div>
-            <div>
-              <h4 className="font-medium text-gray-800 mb-2">
+          <div className="bg-red-100 border border-red-200 rounded-lg p-4 mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="text-xl">⚠️</div>
+              <span className="font-semibold text-red-800">
                 {language === "en" 
-                  ? "Start your day with warm lemon honey water"
-                  : "ಬೆಚ್ಚಗಿನ ನಿಂಬೆ ಜೇನು ನೀರಿನೊಂದಿಗೆ ನಿಮ್ಮ ದಿನವನ್ನು ಪ್ರಾರಂಭಿಸಿ"
+                  ? "Health Alert for Hassan District"
+                  : "ಹಾಸನ್ ಜಿಲ್ಲೆಗೆ ಆರೋಗ್ಯ ಎಚ್ಚರಿಕೆ"
                 }
-              </h4>
-              <p className="text-sm text-gray-600">
-                {language === "en" 
-                  ? "This traditional remedy improves digestion, boosts immunity, and helps detoxify your body naturally."
-                  : "ಈ ಸಾಂಪ್ರದಾಯಿಕ ಔಷಧವು ಜೀರಣಕ್ರಿಯೆಯನ್ನು ಸುಧಾರಿಸುತ್ತದೆ, ರೋಗನಿರೋಧಕ ಶಕ್ತಿಯನ್ನು ಹೆಚ್ಚಿಸುತ್ತದೆ ಮತ್ತು ನಿಮ್ಮ ದೇಹವನ್ನು ನೈಸರ್ಗಿಕವಾಗಿ ವಿಷಮುಕ್ತಗೊಳಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
-                }
-              </p>
+              </span>
+            </div>
+            <p className="text-sm text-red-700">
+              {language === "en" 
+                ? "Heart attack cases are increasing in Hassan district. Follow these preventive measures daily."
+                : "ಹಾಸನ್ ಜಿಲ್ಲೆಯಲ್ಲಿ ಹೃದಯಾಘಾತದ ಪ್ರಕರಣಗಳು ಹೆಚ್ಚುತ್ತಿವೆ. ಈ ತಡೆಗಟ್ಟುವ ಕ್ರಮಗಳನ್ನು ದಿನನಿತ್ಯ ಅನುಸರಿಸಿ."
+              }
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">🚶‍♂️</div>
+              <div>
+                <h4 className="font-medium text-gray-800 mb-2">
+                  {language === "en" 
+                    ? "Daily 30-Minute Walk"
+                    : "ದಿನಕ್ಕೆ ೩೦ ನಿಮಿಷಗಳ ನಡಿಗೆ"
+                  }
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {language === "en" 
+                    ? "Walk for 30 minutes daily, preferably early morning. This strengthens your heart and improves circulation."
+                    : "ದಿನಕ್ಕೆ ೩೦ ನಿಮಿಷಗಳ ಕಾಲ, ಆದ್ಯತೆ ಬೆಳಗಿನ ಜಾವದಲ್ಲಿ ನಡೆಯಿರಿ. ಇದು ನಿಮ್ಮ ಹೃದಯವನ್ನು ಬಲಪಡಿಸುತ್ತದೆ ಮತ್ತು ರಕ್ತ ಪರಿಚಲನೆಯನ್ನು ಸುಧಾರಿಸುತ್ತದೆ."
+                  }
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">🥗</div>
+              <div>
+                <h4 className="font-medium text-gray-800 mb-2">
+                  {language === "en" 
+                    ? "Heart-Healthy Diet"
+                    : "ಹೃದಯ-ಆರೋಗ್ಯಕರ ಆಹಾರ"
+                  }
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {language === "en" 
+                    ? "Include ragi, jowar, green leafy vegetables, and fruits. Reduce oil, salt, and sugar intake."
+                    : "ರಾಗಿ, ಜೋಳ, ಹಸಿರು ಎಲೆಕೋಸು ತರಕಾರಿಗಳು ಮತ್ತು ಹಣ್ಣುಗಳನ್ನು ಸೇರಿಸಿ. ಎಣ್ಣೆ, ಉಪ್ಪು ಮತ್ತು ಸಕ್ಕರೆ ಸೇವನೆಯನ್ನು ಕಡಿಮೆ ಮಾಡಿ."
+                  }
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start gap-3">
+              <div className="text-2xl">🧘‍♀️</div>
+              <div>
+                <h4 className="font-medium text-gray-800 mb-2">
+                  {language === "en" 
+                    ? "Stress Management"
+                    : "ಒತ್ತಡ ನಿರ್ವಹಣೆ"
+                  }
+                </h4>
+                <p className="text-sm text-gray-600">
+                  {language === "en" 
+                    ? "Practice pranayama (breathing exercises) and meditation for 15 minutes daily. Avoid smoking and excessive alcohol."
+                    : "ದಿನಕ್ಕೆ ೧೫ ನಿಮಿಷಗಳ ಕಾಲ ಪ್ರಾಣಾಯಾಮ (ಉಸಿರಾಟದ ವ್ಯಾಯಾಮ) ಮತ್ತು ಧ್ಯಾನವನ್ನು ಅಭ್ಯಾಸ ಮಾಡಿ. ಧೂಮಪಾನ ಮತ್ತು ಅಧಿಕ ಮದ್ಯಪಾನವನ್ನು ತಪ್ಪಿಸಿ."
+                  }
+                </p>
+              </div>
             </div>
           </div>
         </CardContent>
