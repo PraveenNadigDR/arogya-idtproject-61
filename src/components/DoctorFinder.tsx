@@ -99,16 +99,18 @@ const DoctorFinder = ({ language }: DoctorFinderProps) => {
 
       {/* Appointment Booking Dialog */}
       <Dialog open={showBooking} onOpenChange={setShowBooking}>
-        <DialogContent className="max-w-md bg-background border border-border p-0">
+        <DialogContent className="max-w-md bg-background border border-border sm:max-w-md overflow-hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>Book Appointment</DialogTitle>
           </DialogHeader>
           {selectedDoctor && (
-            <AppointmentBooking
-              doctor={selectedDoctor}
-              language={language}
-              onClose={() => setShowBooking(false)}
-            />
+            <div className="p-0 -m-6">
+              <AppointmentBooking
+                doctor={selectedDoctor}
+                language={language}
+                onClose={() => setShowBooking(false)}
+              />
+            </div>
           )}
         </DialogContent>
       </Dialog>
