@@ -254,6 +254,74 @@ const GovernmentHealthSchemes = ({ language }: GovernmentHealthSchemesProps) => 
         en: "Website: npcbvi.mohfw.gov.in | State Blindness Control Society",
         kn: "ವೆಬ್‌ಸೈಟ್: npcbvi.mohfw.gov.in | ರಾಜ್ಯ ಕುರುಡುತನ ನಿಯಂತ್ರಣ ಸಮಿತಿ"
       }
+    },
+    {
+      id: 7,
+      name: {
+        en: "Modicare (Pradhan Mantri Suraksha Bima Yojana)",
+        kn: "ಮೋದಿಕೇರ್ (ಪ್ರಧಾನ ಮಂತ್ರಿ ಸುರಕ್ಷಾ ಬೀಮಾ ಯೋಜನೆ)"
+      },
+      icon: <Shield className="h-6 w-6" />,
+      website: "https://www.jansuraksha.gov.in/",
+      launched: "2015",
+      ministry: {
+        en: "Ministry of Financial Services",
+        kn: "ಹಣಕಾಸು ಸೇವೆಗಳ ಸಚಿವಾಲಯ"
+      },
+      description: {
+        en: "Accident insurance scheme providing coverage of ₹2 lakh",
+        kn: "₹2 ಲಕ್ಷ ರಕ್ಷಣೆ ಒದಗಿಸುವ ಅಪಘಾತ ವಿಮಾ ಯೋಜನೆ"
+      },
+      eligibility: {
+        en: ["Age 18-70 years", "Bank account holders", "Annual premium ₹12", "Indian citizens"],
+        kn: ["18-70 ವರ್ಷ ವಯಸ್ಸು", "ಬ್ಯಾಂಕ್ ಖಾತೆ ಹೊಂದಿರುವವರು", "ವಾರ್ಷಿಕ ಪ್ರೀಮಿಯಂ ₹12", "ಭಾರತೀಯ ನಾಗರಿಕರು"]
+      },
+      benefits: {
+        en: ["₹2 lakh accidental death", "₹1 lakh partial disability", "Low premium cost", "Easy claim process"],
+        kn: ["₹2 ಲಕ್ಷ ಅಕಸ್ಮಾತ್ ಮರಣ", "₹1 ಲಕ್ಷ ಭಾಗಶಃ ಅಂಗವೈಕಲ್ಯ", "ಕಡಿಮೆ ಪ್ರೀಮಿಯಂ ವೆಚ್ಚ", "ಸುಲಭ ಕ್ಲೇಮ್ ಪ್ರಕ್ರಿಯೆ"]
+      },
+      howToApply: {
+        en: ["Visit bank branch", "Fill application form", "Auto-debit setup", "SMS confirmation"],
+        kn: ["ಬ್ಯಾಂಕ್ ಶಾಖೆಗೆ ಭೇಟಿ ನೀಡಿ", "ಅರ್ಜಿ ಫಾರಂ ಭರ್ತಿ ಮಾಡಿ", "ಆಟೋ-ಡೆಬಿಟ್ ಸೆಟಪ್", "SMS ದೃಢೀಕರಣ"]
+      },
+      contact: {
+        en: "Website: jansuraksha.gov.in | Bank branches | Toll-free: 1800-180-1111",
+        kn: "ವೆಬ್‌ಸೈಟ್: jansuraksha.gov.in | ಬ್ಯಾಂಕ್ ಶಾಖೆಗಳು | ಟೋಲ್-ಫ್ರೀ: 1800-180-1111"
+      }
+    },
+    {
+      id: 8,
+      name: {
+        en: "Fat to Fit Programme",
+        kn: "ಫ್ಯಾಟ್ ಟು ಫಿಟ್ ಕಾರ್ಯಕ್ರಮ"
+      },
+      icon: <Activity className="h-6 w-6" />,
+      website: "https://fitindia.gov.in/fat-to-fit",
+      launched: "2020",
+      ministry: {
+        en: "Ministry of Youth Affairs & Sports",
+        kn: "ಯುವ ವ್ಯವಹಾರಗಳು ಮತ್ತು ಕ್ರೀಡಾ ಸಚಿವಾಲಯ"
+      },
+      description: {
+        en: "Weight management and fitness program for obesity control",
+        kn: "ಬೊಜ್ಜು ನಿಯಂತ್ರಣಕ್ಕಾಗಿ ತೂಕ ನಿರ್ವಹಣೆ ಮತ್ತು ಫಿಟ್ನೆಸ್ ಕಾರ್ಯಕ್ರಮ"
+      },
+      eligibility: {
+        en: ["Overweight individuals", "BMI above 25", "All age groups", "Government employees priority"],
+        kn: ["ಅಧಿಕ ತೂಕದ ವ್ಯಕ್ತಿಗಳು", "BMI 25 ಕ್ಕಿಂತ ಹೆಚ್ಚು", "ಎಲ್ಲಾ ವಯೋಮಾನದವರು", "ಸರ್ಕಾರಿ ನೌಕರರಿಗೆ ಆದ್ಯತೆ"]
+      },
+      benefits: {
+        en: ["Free fitness consultation", "Diet planning", "Exercise routines", "Progress tracking"],
+        kn: ["ಉಚಿತ ಫಿಟ್ನೆಸ್ ಸಲಹೆ", "ಆಹಾರ ಯೋಜನೆ", "ವ್ಯಾಯಾಮ ದಿನಚರಿಗಳು", "ಪ್ರಗತಿ ಟ್ರ್ಯಾಕಿಂಗ್"]
+      },
+      howToApply: {
+        en: ["Register on Fit India portal", "BMI assessment", "Join local programs", "Download mobile app"],
+        kn: ["ಫಿಟ್ ಇಂಡಿಯಾ ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ನೋಂದಾಯಿಸಿ", "BMI ಮೌಲ್ಯಮಾಪನ", "ಸ್ಥಳೀಯ ಕಾರ್ಯಕ್ರಮಗಳಿಗೆ ಸೇರಿ", "ಮೊಬೈಲ್ ಅಪ್ಲಿಕೇಶನ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ"]
+      },
+      contact: {
+        en: "Website: fitindia.gov.in | Email: fitindia@sports.gov.in | Social: @FitIndiaOff",
+        kn: "ವೆಬ್‌ಸೈಟ್: fitindia.gov.in | ಇಮೇಲ್: fitindia@sports.gov.in | ಸಾಮಾಜಿಕ: @FitIndiaOff"
+      }
     }
   ];
 

@@ -192,7 +192,7 @@ const Index = () => {
 
             <TabsContent value="profile" className="mt-0 animate-fade-in-up">
               <div className="space-y-3 sm:space-y-6 lg:space-y-8">
-                <Profile language={language} />
+                <Profile language={language} onLanguageChange={handleLanguageChange} />
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6 lg:gap-8">
                   <div className="transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                     <FamilyHealth language={language} />

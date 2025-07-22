@@ -12,12 +12,14 @@ import ProfileEditManager from "@/components/profile/ProfileEditManager";
 import NotificationManager from "@/components/NotificationManager";
 import { useProfileState } from "@/hooks/useProfileState";
 import { useNotifications } from "@/hooks/useNotifications";
+import LanguageSelector from "@/components/LanguageSelector";
 
 interface ProfileProps {
   language: string;
+  onLanguageChange?: (language: string) => void;
 }
 
-const Profile = ({ language }: ProfileProps) => {
+const Profile = ({ language, onLanguageChange }: ProfileProps) => {
   const { profile, setProfile, showInfoForm, setShowInfoForm, saveProfile } = useProfileState();
   const { toast } = useToast();
   
@@ -168,6 +170,13 @@ const Profile = ({ language }: ProfileProps) => {
           />
 
           <HealthIDCard language={language} profile={profile} />
+
+          {onLanguageChange && (
+            <LanguageSelector 
+              language={language}
+              onLanguageChange={onLanguageChange}
+            />
+          )}
         </div>
       )}
     </ProfileEditManager>
