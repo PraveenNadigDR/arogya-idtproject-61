@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Ambulance, Phone, MapPin, Clock, Navigation, AlertTriangle, Users, Zap } from "lucide-react";
+import { Ambulance, Phone, MapPin, Clock, Navigation, AlertTriangle } from "lucide-react";
+import GovernmentHealthSchemes from "@/components/GovernmentHealthSchemes";
 import { useToast } from "@/hooks/use-toast";
 
 interface EmergencyServicesProps {
@@ -344,54 +345,8 @@ const EmergencyServices = ({ language }: EmergencyServicesProps) => {
         </Card>
       )}
 
-      {/* Emergency Contacts */}
-      <Card className="bg-orange-50 border-orange-200">
-        <CardContent className="p-4">
-          <h4 className="font-medium text-orange-800 mb-3 flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            {currentText.emergencyContacts}
-          </h4>
-          <div className="space-y-2 text-sm text-orange-700">
-            <div className="flex items-center justify-between">
-              <span>• {currentText.police}</span>
-              <Button size="sm" variant="outline" className="h-6 px-2 text-xs">
-                <Phone className="h-3 w-3 mr-1" />
-                {language === "en" ? "Call" : "ಕರೆ"}
-              </Button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>• {currentText.fire}</span>
-              <Button size="sm" variant="outline" className="h-6 px-2 text-xs">
-                <Phone className="h-3 w-3 mr-1" />
-                {language === "en" ? "Call" : "ಕರೆ"}
-              </Button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>• {currentText.helpline}</span>
-              <Button size="sm" variant="outline" className="h-6 px-2 text-xs">
-                <Phone className="h-3 w-3 mr-1" />
-                {language === "en" ? "Call" : "ಕರೆ"}
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Emergency Tips */}
-      <Card className="bg-yellow-50 border-yellow-200">
-        <CardContent className="p-4">
-          <h4 className="font-medium text-yellow-800 mb-3 flex items-center gap-2">
-            <Zap className="h-4 w-4" />
-            {currentText.emergencyTips}
-          </h4>
-          <div className="space-y-1 text-sm text-yellow-700">
-            <p>• {currentText.tip1}</p>
-            <p>• {currentText.tip2}</p>
-            <p>• {currentText.tip3}</p>
-            <p>• {currentText.tip4}</p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Government Health Schemes */}
+      <GovernmentHealthSchemes language={language} />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileInfoForm from "@/components/profile/ProfileInfoForm";
 import PersonalInfoCard from "@/components/profile/PersonalInfoCard";
 import MedicalInfoCard from "@/components/profile/MedicalInfoCard";
-import EmergencyContactCard from "@/components/profile/EmergencyContactCard";
+
 import HealthIDCard from "@/components/profile/HealthIDCard";
 import BookedAppointments from "@/components/profile/BookedAppointments";
 import ProfileFormActions from "@/components/profile/ProfileFormActions";
@@ -159,13 +159,6 @@ const Profile = ({ language }: ProfileProps) => {
             text={currentText}
           />
 
-          <EmergencyContactCard
-            language={language}
-            profile={profile}
-            setProfile={setProfile}
-            isEditing={isEditing}
-            text={currentText}
-          />
 
           <ProfileFormActions
             isEditing={isEditing}
