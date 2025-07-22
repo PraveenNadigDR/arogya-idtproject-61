@@ -170,13 +170,6 @@ const Profile = ({ language, onLanguageChange }: ProfileProps) => {
           />
 
           <HealthIDCard language={language} profile={profile} />
-
-          {onLanguageChange && (
-            <LanguageSelector 
-              language={language}
-              onLanguageChange={onLanguageChange}
-            />
-          )}
         </div>
       )}
     </ProfileEditManager>

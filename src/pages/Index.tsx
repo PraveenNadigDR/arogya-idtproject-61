@@ -175,24 +175,47 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
+
+                <LanguageSelector 
+                  language={language}
+                  onLanguageChange={handleLanguageChange}
+                />
               </div>
             </TabsContent>
 
             <TabsContent value="doctors" className="mt-0 animate-fade-in-up">
-              <DoctorFinder language={language} />
+              <div className="space-y-6">
+                <DoctorFinder language={language} />
+                <LanguageSelector 
+                  language={language}
+                  onLanguageChange={handleLanguageChange}
+                />
+              </div>
             </TabsContent>
 
             <TabsContent value="ai-assistant" className="mt-0 animate-fade-in-up">
-              <AIAssistant language={language} />
+              <div className="space-y-6">
+                <AIAssistant language={language} />
+                <LanguageSelector 
+                  language={language}
+                  onLanguageChange={handleLanguageChange}
+                />
+              </div>
             </TabsContent>
 
             <TabsContent value="emergency" className="mt-0 animate-fade-in-up">
-              <EmergencyServices language={language} />
+              <div className="space-y-6">
+                <EmergencyServices language={language} />
+                <LanguageSelector 
+                  language={language}
+                  onLanguageChange={handleLanguageChange}
+                />
+              </div>
             </TabsContent>
 
             <TabsContent value="profile" className="mt-0 animate-fade-in-up">
               <div className="space-y-3 sm:space-y-6 lg:space-y-8">
-                <Profile language={language} onLanguageChange={handleLanguageChange} />
+                <Profile language={language} />
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6 lg:gap-8">
                   <div className="transform hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl">
                     <FamilyHealth language={language} />
@@ -210,11 +233,6 @@ const Index = () => {
           showVideoCall={showVideoCall}
           onOpenChange={setShowVideoCall}
           language={language}
-        />
-
-        <LanguageSelector 
-          language={language}
-          onLanguageChange={handleLanguageChange}
         />
       </div>
     </div>
