@@ -62,19 +62,19 @@ const MainFeatureCards = ({ language, onNavigateToTab, onVideoCall }: MainFeatur
       {/* Main Feature Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Quick Consult */}
-        <Card className="group hover:shadow-xl transition-all duration-500 border-0 bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 hover:scale-105 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <Card className="group card-interactive animate-fade-in stagger-1 cursor-pointer relative overflow-hidden border-0 shadow-soft hover:shadow-warm">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary-glow/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <CardHeader className="pb-3 relative z-10">
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-              <Stethoscope className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary-glow rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-soft">
+              <Stethoscope className="h-6 w-6 text-primary-foreground" />
             </div>
-            <CardTitle className="text-lg font-bold text-slate-800">{currentText.quickConsult}</CardTitle>
-            <p className="text-sm text-slate-600">{currentText.consultDesc}</p>
+            <CardTitle className="text-lg font-bold text-foreground">{currentText.quickConsult}</CardTitle>
+            <p className="text-sm text-muted-foreground">{currentText.consultDesc}</p>
           </CardHeader>
           <CardContent className="relative z-10">
             <Button 
               onClick={() => onNavigateToTab('doctors')}
-              className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="btn-warm w-full border-0"
             >
               <Heart className="h-4 w-4 mr-2" />
               {currentText.consultNow}
@@ -83,19 +83,19 @@ const MainFeatureCards = ({ language, onNavigateToTab, onVideoCall }: MainFeatur
         </Card>
 
         {/* Book Appointment */}
-        <Card className="group hover:shadow-xl transition-all duration-500 border-0 bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 hover:scale-105 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-sky-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <Card className="group card-interactive animate-fade-in stagger-2 cursor-pointer relative overflow-hidden border-0 shadow-soft hover:shadow-warm">
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <CardHeader className="pb-3 relative z-10">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-sky-500 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-              <Calendar className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-br from-accent to-warning rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-soft">
+              <Calendar className="h-6 w-6 text-accent-foreground" />
             </div>
-            <CardTitle className="text-lg font-bold text-slate-800">{currentText.bookAppointment}</CardTitle>
-            <p className="text-sm text-slate-600">{currentText.appointmentDesc}</p>
+            <CardTitle className="text-lg font-bold text-foreground">{currentText.bookAppointment}</CardTitle>
+            <p className="text-sm text-muted-foreground">{currentText.appointmentDesc}</p>
           </CardHeader>
           <CardContent className="relative z-10">
             <Button 
               onClick={() => onNavigateToTab('doctors')}
-              className="w-full bg-gradient-to-r from-blue-500 to-sky-500 hover:from-blue-600 hover:to-sky-600 border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="btn-warm w-full border-0"
             >
               <Clock className="h-4 w-4 mr-2" />
               {currentText.bookNow}
@@ -104,19 +104,19 @@ const MainFeatureCards = ({ language, onNavigateToTab, onVideoCall }: MainFeatur
         </Card>
 
         {/* AI Assistant */}
-        <Card className="group hover:shadow-xl transition-all duration-500 border-0 bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50 hover:scale-105 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-violet-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <Card className="group card-interactive animate-fade-in stagger-3 cursor-pointer relative overflow-hidden border-0 shadow-soft hover:shadow-warm">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <CardHeader className="pb-3 relative z-10">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-500 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-              <MessageCircle className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-soft">
+              <MessageCircle className="h-6 w-6 text-primary-foreground" />
             </div>
-            <CardTitle className="text-lg font-bold text-slate-800">{currentText.aiAssistant}</CardTitle>
-            <p className="text-sm text-slate-600">{currentText.aiDesc}</p>
+            <CardTitle className="text-lg font-bold text-foreground">{currentText.aiAssistant}</CardTitle>
+            <p className="text-sm text-muted-foreground">{currentText.aiDesc}</p>
           </CardHeader>
           <CardContent className="relative z-10">
             <Button 
               onClick={() => onNavigateToTab('ai-assistant')}
-              className="w-full bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="btn-warm w-full border-0"
             >
               <MessageCircle className="h-4 w-4 mr-2" />
               {currentText.chatNow}
@@ -125,19 +125,19 @@ const MainFeatureCards = ({ language, onNavigateToTab, onVideoCall }: MainFeatur
         </Card>
 
         {/* Video Call */}
-        <Card className="group hover:shadow-xl transition-all duration-500 border-0 bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 hover:scale-105 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <Card className="group card-interactive animate-fade-in stagger-4 cursor-pointer relative overflow-hidden border-0 shadow-soft hover:shadow-warm">
+          <div className="absolute inset-0 bg-gradient-to-br from-warning/5 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <CardHeader className="pb-3 relative z-10">
-            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-              <Phone className="h-6 w-6 text-white" />
+            <div className="w-12 h-12 bg-gradient-to-br from-warning to-accent rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-soft">
+              <Phone className="h-6 w-6 text-warning-foreground" />
             </div>
-            <CardTitle className="text-lg font-bold text-slate-800">{currentText.videoCall}</CardTitle>
-            <p className="text-sm text-slate-600">{currentText.videoDesc}</p>
+            <CardTitle className="text-lg font-bold text-foreground">{currentText.videoCall}</CardTitle>
+            <p className="text-sm text-muted-foreground">{currentText.videoDesc}</p>
           </CardHeader>
           <CardContent className="relative z-10">
             <Button 
               onClick={onVideoCall}
-              className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 border-0 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="btn-warm w-full border-0"
             >
               <Phone className="h-4 w-4 mr-2" />
               {currentText.startCall}
